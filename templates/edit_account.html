@@ -1,0 +1,49 @@
+{% extends '_layout.html' %}
+
+{% block head %}Edit Account Page{% endblock %}
+
+{% block body %}
+<form>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+            <div class="form-group mt-2">
+                <label for="profilePhoto">Rating</label>
+                <select class="form-select" name="profilePhoto" id="profilePhoto" required>
+                    <option value="">Select</option>
+                    <option value="1"><img src=pfp1.jpg></option>
+                    <option value="2"><img src=pfp1.jpg></option>
+                    <option value="3"><img src=pfp1.jpg></option>
+                    <option value="4"><img src=pfp1.jpg></option>
+                    <option value="5"><img src=pfp1.jpg></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Name</label>
+                <input type="name" class="form-control" id="exampleFormControlInput1" placeholder="First, Last">
+            </div>
+            &nbsp;
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">About Me</label>
+                <textarea name="about" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            &nbsp;
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+    </div>
+        <div class="row">
+            <div class="col"> 
+            </div>
+            <div class="col-md-auto">
+            </div>
+        <div class="col col-lg-2">
+            <button type="button" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
