@@ -1,10 +1,50 @@
 {% extends '_layout.html' %}
 
+
+
 {% block head %}
+
+    {% if title is not defined %}
+        <title>Dummy Title (hopefully you're testing)</title>
+    {% else %}
+        <title>{{title}}</title>
+    {% endif %}
 
 {% endblock %}
 
-{% block body %}
 
+
+{% block body %}
+<!-- main post -->
+<div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;">
+    <div class="card-header whitetext"> <img src="{{ url_for('static', filename='default_user.png') }}" class="img-fluid pfp rounded" alt="">Posted by user(link to profile) on date(link to indiviual post)</div>
+    <div class="card-body">
+      <h5 class="card-title whitetext">title of post</h5>
+      <p class="card-text whitetext">Peepee man 2 is the greatest movie ot ever hit the theaters. it expanded on Peepee man in such an amazing way and the 2nd movie adding the new main villan of poopoo boy made the movie even more of a masterpiece. I have went and seen this movie at least 3 times in theaters and are going for the 4th time tonight and wanted to share my thoughts and state that Peepee man 2 is a masterpiece.</p>
+    </div>
+  </div>
+
+<!-- comment -->
+<div class="card text-white bg-dark mb-3">
+  <div class="card-header whitetext"> <img src="{{ url_for('static', filename='default_user.png') }}" class="img-fluid pfp rounded" alt="">Posted by user(link to profile) on date(link to indiviual post)</div>
+  <div class="card-body">
+    <h5 class="card-title whitetext">RE: title of post</h5>
+    <p class="card-text whitetext">content for reply</p>
+  </div>
+</div>
+
+<!-- comment -->
+<div class="card text-white bg-dark mb-3">
+  <div class="card-header">Reply</div>
+  <div class="card-body">
+      <form action="/create_post" method="post">
+        <div class="form-group">
+          <textarea class="form-control" id="body" rows="3"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3">Reply</button>
+      </form>
+  </div>
+</div>
 
 {% endblock %}
