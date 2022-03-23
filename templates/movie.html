@@ -1,10 +1,24 @@
 {% extends '_layout.html' %}
 
 {% block title %}
-
+{{ movie.title }}
 {% endblock %}
 
 {% block body %}
-
+<div class="container">
+    <div class="row">
+        <div class="col">
+        <!--this is where the funny thing the movie poster go -->
+        <h1>hi this is a filler</h1> 
+        </div>
+        <div class="col-6">
+            <h1>{{ movie.title }}</h1>
+            <h3>{{ movie.director }}</h3>
+            <p>{{ movie.desctription }}</p>
+        </div>
+    
+    </div>
+        
+</div>
 
 {% endblock %}
