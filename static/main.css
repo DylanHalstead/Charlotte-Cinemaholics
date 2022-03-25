@@ -28,6 +28,12 @@ h1{
     color:white
 }
 
+.movie-row-title{
+    color: white;
+    font-size: 20pt;
+    margin-bottom: 10px;
+}
+
 .whitetext{
     color: white;
 }
@@ -38,22 +44,23 @@ h1{
 
 .movie-card-sm {
     position: relative;
-    width:14%;
-    height:53px;
+    width:150px;
+    height:60px;
     background: #2E2E2E;
     border-radius: 0 0 .3em .3em;
     word-wrap: break-word;
 }
 
-.card-ratings {
-    vertical-align: bottom;
+.card-ratings-sm {
+    position: relative;
+    top: 2px;
 }
 
 .movie-title-sm {
     text-align: center;
     font-size: 8pt;
     margin-bottom: 0;
-    padding: .25em 1em 0 1em;
+    padding: .5em 1em 0 1em;
 }
 
 .uncc-rating-sm {
@@ -76,7 +83,20 @@ h1{
     position: absolute;
 }
 
+.movie-sm {
+    margin: 0 50px 100px 0;
+}
+
+.movie-row {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.last-in-row {
+    margin-right:0;
+}
+
 .star-imdb-sm {
     position: absolute;
-    margin-left: 1.1em;
+    margin-left: .35em;
 }
