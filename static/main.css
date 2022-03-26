@@ -1,41 +1,94 @@
-.pfp{
-    width: 2.5%;
-}
-
-.card1{
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-top: 2.5%;
-}
-
-.body{
-    background-color: #121212;
-}
-
-.content{
-    padding: 0 6em 0;
-}
-
-nav{
+/* Default Values */
+nav {
     background-color: #2e2e2e;
 }
 
-p{
+.body {
+    background-color: #121212;
+}
+
+.content {
+    padding: 0 6em 0;
+}
+
+p {
     color:white
 
 }
-h1{
+
+h1 {
     color:white
 }
 
-.movie-row-title{
+.whitetext {
+    color: white;
+}
+
+footer {
+    background-color: #2e2e2e;
+}
+
+footer table {
+    width: 100%;
+}
+
+.footer-link {
+    font-size: 10pt;
+    color: #989898;
+}
+
+.footer-link:hover {
+    color: #989898;
+}
+
+#git {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+#authors p, #authors-intro {
+    font-style: italic;
+    font-weight: lighter;
+    text-align: right;
+    margin: 0 1em 0 0;
+}
+
+#austin {
+    padding-top: .5em;
+}
+
+#dylan {
+    padding-bottom: .5em;
+}
+
+#authors {
+    right: auto;
+    width: 10%;
+}
+
+#authors-intro-cell {
+    right: auto;
+    width: 22%;
+}
+
+.author-footer {
+    margin: auto 0 auto auto;
+    font-size: 10pt;
+}
+
+/* Home Page */
+.movie-row-title {
     color: white;
     font-size: 20pt;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
-.whitetext{
-    color: white;
+.movie-row-link:hover {
+    text-decoration-color: white;
+}
+
+.movie-sm-link:hover {
+    text-decoration: none;
 }
 
 .movie-poster-sm {
@@ -51,9 +104,11 @@ h1{
     word-wrap: break-word;
 }
 
-.card-ratings-sm {
-    position: relative;
-    top: 2px;
+.movie-card-content-sm {
+    position: absolute;
+    bottom: 0;
+    left: 16.25%;
+    margin-bottom: 4px;
 }
 
 .movie-title-sm {
@@ -63,28 +118,37 @@ h1{
     padding: .5em 1em 0 1em;
 }
 
-.uncc-rating-sm {
-    font-size: 8pt;
-    color: #00703C;
-    margin-left: 1.5em;
-    line-height: 1.2em;
-}
-
-.imdb-rating-sm {
-    text-align: right;
-    font-size: 8pt;
-    color: #B3A369;
-    margin-right: .2em;
-    line-height: 1.2em;
-}
-
 /*Bad fix for issue with icons, works but wish there was a cleaner way I knew*/
 .star-uncc-sm {
     position: absolute;
 }
 
+.star-imdb-sm {
+    position: absolute;
+    margin-left: 1.65em;
+}
+
+.uncc-rating-sm {
+    font-size: 8pt;
+    line-height: 13px;
+    color: #00703C;
+    margin: 0 0 0 1.5em;
+}
+
+.imdb-rating-sm {
+    font-size: 8pt;
+    line-height: 13px;
+    color: #B3A369;
+    margin: 0 0 0 4em;
+}
+
 .movie-sm {
     margin: 0 50px 100px 0;
+    transition: 1s ease;
+}
+
+.movie-sm:hover {
+    transform: scale(1.1)
 }
 
 .movie-row {
@@ -93,10 +157,16 @@ h1{
 }
 
 .last-in-row {
-    margin-right:0;
+    margin-right: 0;
 }
 
-.star-imdb-sm {
-    position: absolute;
-    margin-left: .35em;
+/* */
+.pfp{
+    width: 2.5%;
+}
+
+.card1{
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 2.5%;
 }
