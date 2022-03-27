@@ -5,6 +5,7 @@ nav {
 
 .body {
     background-color: #121212;
+    color:white;
 }
 
 .content {
@@ -163,6 +164,7 @@ footer table {
 /* */
 .pfp{
     width: 2.5%;
+    margin-right: 1%;
 }
 
 .card1{
