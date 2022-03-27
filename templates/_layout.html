@@ -51,10 +51,29 @@
       </ul>
     </div>
   </nav>
+  
   <div class="content">
     {% block body %}{% endblock %}
   </div>
-  <script src="../static/main.js"></script>
+
+  <footer class="footer">
+      <table>
+        <tr>
+          <td>
+            <a id="git" class="footer-link" href="https://github.com/DylanHalstead/3155_Final">Git Repo</a>
+            <a class="footer-link" href="report.html">Report A Problem</a>
+          </td>
+          <td id="authors-intro-cell" class="author-footer">
+            <p id="authors-intro">A Website by:</p>
+          </td>
+          <td id="authors" class="author-footer">
+            <p id="austin">Austin Hadenger</p>
+            <p id="alex">Alex Stahlman</p>
+            <p id="dylan">Dylan Halstead</p>
+          </td>
+        </tr>
+      </table>
+  </footer>
   <!-- Bootstrap JavaScript -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
