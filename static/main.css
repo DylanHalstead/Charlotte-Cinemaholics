@@ -76,6 +76,10 @@ footer table {
     font-size: 10pt;
 }
 
+label {
+    color: white;
+}
+
 /* Home Page */
 .movie-row-title {
     color: white;
@@ -169,4 +173,9 @@ footer table {
     margin-left: 5%;
     margin-right: 5%;
     margin-top: 2.5%;
+}
+
+/* Report a Problem */
+#submit-report {
+    margin-bottom: 200px;
 }
