@@ -155,7 +155,7 @@ label {
     transform: scale(1.1)
 }
 
-.movie-row {
+.movie-table {
     margin-left: auto;
     margin-right: auto;
 }
@@ -178,4 +178,20 @@ label {
 /* Report a Problem */
 #submit-report {
     margin-bottom: 200px;
+}
+
+/* Account page */
+.pfp-large {
+    border: 2px solid white;
+    border-radius: 2%;
+}
+
+.username-large {
+    color: white;
+    font-size: 56pt;
+}
+
+.account-description {
+    width: 90%;
+    font-size: 14pt;
 }
