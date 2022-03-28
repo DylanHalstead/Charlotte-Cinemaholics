@@ -21,3 +21,7 @@ def report():
 @app.get('/username')
 def account():
     return render_template('account.html')
+
+@app.get('/username/edit')
+def edit_account():
+    return render_template("edit_account.html")
