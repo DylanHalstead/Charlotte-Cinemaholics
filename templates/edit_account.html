@@ -4,9 +4,10 @@
 
 {% block body %}
 <form>
-    <div class="container">
-        <div class="row">
-            <div class="col">
+    <table>
+        <td>
+
+            <tr>
                 <div class="form-group mt-2">
                     <p>Please Select A Profile Photo</p>
                     <label for="profilePhoto">Profile Photo</label>
@@ -19,33 +20,28 @@
                         <option value="5"><img src=..static/pfp5.png></option>
                     </select>
                 </div>
+            </tr>
+            <tr>
                 <div class="form-group">
                     <label for="exampleFormControlInput1">Name</label>
                     <input type="name" name="name" class="form-control" id="exampleFormControlInput1" placeholder="First, Last">
                 </div>
                 &nbsp;
+            </tr>
+            <tr>
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">About Me</label>
                     <textarea name="about" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                 </div>
                 &nbsp;
-            </div>
-            <div class="col">
-            </div>
-            <div class="col">
-            </div>
-            <div class="row">
-                <div class="col"> 
-                    &nbsp;
-                </div>
-                <div class="col-md-auto">
-                    &nbsp;
-                </div>
+            </tr>
+            </td>
+            <td>
             <div class="col col-lg-2">
                 <button type="button" class="btn btn-primary">Submit</button>
             </div>
-        </div>
-    </div>
+            </td>
+        </table>
 </form>
 
 {% endblock %}
