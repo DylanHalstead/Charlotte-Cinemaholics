@@ -3,9 +3,12 @@ nav {
     background-color: #2e2e2e;
 }
 
+.nav-pfp {
+    margin-top: 15%;
+}
+
 .body {
     background-color: #121212;
-    color:white;
 }
 
 .content {
@@ -13,11 +16,6 @@ nav {
 }
 
 p {
-    color:white
-
-}
-
-h1 {
     color:white
 }
 
@@ -81,16 +79,16 @@ label {
     color: white;
 }
 
-/* Home Page */
+/* Home Page & Movie Card */
+.movie-table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .movie-row-title {
     color: white;
     font-size: 20pt;
     margin-bottom: 20px;
-}
-
-.movies {
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .movie-row-link:hover {
@@ -112,7 +110,6 @@ label {
     height:60px;
     background: #2E2E2E;
     border-radius: 0 0 .3em .3em;
-    word-wrap: break-word;
 }
 
 .movie-card-content-sm {
@@ -129,7 +126,6 @@ label {
     padding: .5em 1em 0 1em;
 }
 
-/*Bad fix for issue with icons, works but wish there was a cleaner way I knew*/
 .star-uncc-sm {
     position: absolute;
 }
@@ -154,16 +150,16 @@ label {
 }
 
 .movie-sm {
-    margin: 0 50px 100px 0;
-    transition: 1s ease;
+    margin: 0 25px 100px 25px;
+    transition: .75s ease;
+}
+
+.last-row {
+    margin: 0 25px 50px 25px;
 }
 
 .movie-sm:hover {
     transform: scale(1.1)
-}
-
-.last-movie {
-    margin-right: 0;
 }
 
 .movie-table {
@@ -205,12 +201,19 @@ label {
 }
 
 /* All Movies */
-.movie-table {
-    margin-left: auto;
-    margin-right: auto;
+.pagination > li > a
+{
+    background-color: #2E2E2E;
+    color: white;
+    transition: .25s ease;
 }
 
-.navigation-button {
-    display: flex;
-    justify-content: center;
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+{
+    color: #B3A369;
+    background-color: #121212;
+    border-color: #ddd;
 }
