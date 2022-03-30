@@ -1,8 +1,15 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 from blueprints.posts_blueprint import router as posts_router
 from blueprints.movie_blueprint import router as movie_router
 from blueprints.account_blueprint import router as account_router
+from dotenv import load_dotenv
+
+load_dotenv()
+db_user = os.getenv('DB_USER', 'root')
+db_pass = os.getenv('DB_PASS')
+connection_string = f'mysql://{db_user}:{db_pass}@localhost:3306/final'
 
 app = Flask(__name__)
 
