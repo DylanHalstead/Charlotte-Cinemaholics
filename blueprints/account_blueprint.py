@@ -1,3 +1,4 @@
+# Might make sense for blueprints to be inside the src directory
 from flask import Blueprint, abort, redirect, render_template, request
 from src.models import db
 from datetime import datetime
