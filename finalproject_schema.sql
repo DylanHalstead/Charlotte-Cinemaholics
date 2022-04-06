@@ -3,13 +3,13 @@ CREATE DATABASE cinemaholics_db;
 USE cinemaholics_db;
 
 CREATE TABLE IF NOT EXISTS users (
-    users_id   INT           AUTO_INCREMENT,
+    users_id   INT          AUTO_INCREMENT,
     username  VARCHAR(255)  NOT NULL,
     email     VARCHAR(255)  NOT NULL,
     passkey   VARCHAR(255)  NOT NULL,
     pfp       VARCHAR(255)  NOT NULL,
     about     TEXT(65535)   NULL,
-    PRIMARY KEY (user_id)    
+    PRIMARY KEY (user_id)
 );
 
 CREATE TABLE IF NOT EXISTS posts (

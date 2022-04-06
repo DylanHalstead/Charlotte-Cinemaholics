@@ -102,6 +102,7 @@ label {
 .movie-poster-sm {
     border-radius: .3em .3em 0 0;
     width: 9em;
+    height: 13.5em;
 }
 
 .movie-card-sm {
@@ -216,4 +217,12 @@ label {
     color: #B3A369;
     background-color: #121212;
     border-color: #ddd;
+}
+
+.btn-group > .btn:focus {
+    box-shadow: none;
+}
+
+.dropdown-menu > a:hover {
+    background-color: #6c6c6c;
 }
