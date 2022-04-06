@@ -27,10 +27,14 @@ def imdb_scrape_poster(imdb_id):
     
     return imdb_img_url
 
+# Pre-Load movie dictionairy
+top_films = imdb.get_top250_movies()
+# Very slow to load all 250 url's, just grabbing first 25 for now
+for movie in range(25):
+    # Add poster to each film, format movieID with 'tt' in front
+    top_films[movie]['cover url'] = imdb_scrape_poster(f'tt{top_films[movie].movieID}')
+
+# Routers
 @router.get('/top-films')
 def all_movies():
-    top_films = imdb.get_top250_movies()
-    for movie in range(20):
-        # Add poster to each film, format movieID with 'tt' in front
-        top_films[movie]['cover url'] = imdb_scrape_poster(f'tt{top_films[movie].movieID}')
     return render_template('all_movies.html', top_films=top_films)
