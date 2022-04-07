@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
-from blueprints.posts_blueprint import router as posts_router
-from blueprints.movie_blueprint import router as movie_router
-from blueprints.account_blueprint import router as account_router
+from src.blueprints.posts_blueprint import router as posts_router
+from src.blueprints.movie_blueprint import router as movie_router
+from src.blueprints.account_blueprint import router as account_router
 
 import os
 from dotenv import load_dotenv
