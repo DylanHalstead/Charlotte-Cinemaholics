@@ -11,8 +11,8 @@ def account():
     user = User.query.get_or_404(user_id)
     user2 = User.query.filter_by(user_id=user.user_id).first()
     user_playlist_name = 'Watchlist'
-    #user_playlist = Playlist.query.filter_by(user_id = User_Playlist.playlist_id).all()
-    #playlist = Playlist.query.filter_by(user_playlist = Playlist.playlist_id).first()
+    #user_playlist = User_Playlist.query.filter_by(user_id = User_Playlist.user_id).all()
+    #playlist = Playlist.query.filter_by(user_playlist = User_Playlist.playlist_id).first()
     return render_template('account.html', user2=user2)
 
 @router.get('/username/edit')
