@@ -31,14 +31,8 @@ app.register_blueprint(posts_router)
 app.register_blueprint(movie_router)
 app.register_blueprint(account_router)
 
+
 @app.get('/report')
 def report():
     return render_template('report.html')
 
-@app.get('/username')
-def account():
-    return render_template('account.html')
-
-@app.get('/username/edit')
-def edit_account():
-    return render_template("edit_account.html")
