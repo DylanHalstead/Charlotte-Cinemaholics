@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS users_playlist  (
 CREATE TABLE IF NOT EXISTS movie  (
 	movie_id     INT,
     UNCC_rating  DECIMAL,
+    cover_URL    VARCHAR(255),
     PRIMARY KEY (movie_id)
 );
 
