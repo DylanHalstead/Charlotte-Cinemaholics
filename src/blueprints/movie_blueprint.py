@@ -1,5 +1,5 @@
 from flask import Blueprint, abort, redirect, render_template, request, session
-from models import db
+from models import db, Movie
 from datetime import datetime
 
 from imdb import Cinemagoer
@@ -33,6 +33,7 @@ top_films = imdb.get_top250_movies()
 for movie in range(25):
     # Add poster to each film, format movieID with 'tt' in front
     top_films[movie]['cover url'] = imdb_scrape_poster(f'tt{top_films[movie].movieID}')
+    top_25 = Movie(movie_id=top_films[movie].movieID, poster_url=top_films[movie]['cover url'], UNCC_rating=0)
     db.session.add()
 
 popular_films = imdb.get_popular100_movies()

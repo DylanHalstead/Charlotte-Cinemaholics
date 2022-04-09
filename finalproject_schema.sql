@@ -3,7 +3,7 @@ CREATE DATABASE cinemaholics_db;
 USE cinemaholics_db;
 
 CREATE TABLE IF NOT EXISTS users (
-    user_id   INT          AUTO_INCREMENT,
+    user_id   INT           AUTO_INCREMENT,
     username  VARCHAR(255)  NOT NULL,
     email     VARCHAR(255)  NOT NULL,
     passkey   VARCHAR(255)  NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS posts (
     post_id    INT           AUTO_INCREMENT,
-    user_id   INT           NOT NULL,
+    user_id    INT           NOT NULL,
     title      VARCHAR(255)  NOT NULL,
     body       TEXT(65535)   NOT NULL,
     post_time  VARCHAR(255)  NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS posts (
 CREATE TABLE IF NOT EXISTS replies (
 	reply_id   INT            AUTO_INCREMENT,
     post_id    INT            NOT NULL,
-    user_id   INT            NOT NULL,
+    user_id    INT            NOT NULL,
     body       TEXT(65535)    NOT NULL,
     post_time  VARCHAR(255)   NOT NULL,
     likes      INT            NOT NULL,
@@ -52,9 +52,17 @@ CREATE TABLE IF NOT EXISTS users_playlist  (
 
 CREATE TABLE IF NOT EXISTS movie  (
 	movie_id     INT,
-    UNCC_rating  DECIMAL,
-    cover_URL    VARCHAR(255),
+	poster_URL   VARCHAR(255),
     PRIMARY KEY (movie_id)
+);
+
+CREATE TABLE IF NOT EXISTS user_ratings (
+    user_id      INT,
+    movie_id     INT,
+    user_rating  FLOAT  NULL,
+    PRIMARY KEY (user_id, movie_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
 );
 
 CREATE TABLE IF NOT EXISTS playlist_movie (

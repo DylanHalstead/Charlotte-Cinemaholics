@@ -4,6 +4,7 @@ from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
 from src.blueprints.movie_blueprint import router as movie_router
 from src.blueprints.account_blueprint import router as account_router
+from src.models import db
 from dotenv import load_dotenv
 
 load_dotenv()
