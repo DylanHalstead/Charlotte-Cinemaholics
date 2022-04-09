@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, render_template, request
+from flask import Blueprint, abort, redirect, render_template, request, session
 from models import db
 from datetime import datetime
 
