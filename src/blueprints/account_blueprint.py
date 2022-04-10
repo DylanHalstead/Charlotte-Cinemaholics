@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, abort, redirect, render_template, request, session
-from models import db
+from src.models import db
 from datetime import datetime
 from flask_bcrypt import Bcrypt
 

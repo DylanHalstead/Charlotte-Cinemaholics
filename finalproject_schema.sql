@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS playlist  (
     PRIMARY KEY (playlist_id)
 );
 
-CREATE TABLE IF NOT EXISTS users_playlist  (
-	user_id     INT,
+CREATE TABLE IF NOT EXISTS user_playlist  (
+	user_id      INT,
 	playlist_id  INT,
     PRIMARY KEY (user_id, playlist_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS users_playlist  (
 
 CREATE TABLE IF NOT EXISTS movie  (
 	movie_id     INT,
-	poster_URL   VARCHAR(255),
+	poster_url   VARCHAR(255),
     PRIMARY KEY (movie_id)
 );
 
@@ -68,8 +68,10 @@ CREATE TABLE IF NOT EXISTS user_ratings (
 CREATE TABLE IF NOT EXISTS playlist_movie (
     playlist_id    INT,
     movie_id       INT,
+    movie_rank     INT,
     PRIMARY KEY (playlist_id, movie_id),
     FOREIGN KEY (playlist_id) REFERENCES playlist(playlist_id),
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
 );
 
+SELECT * FROM movie;

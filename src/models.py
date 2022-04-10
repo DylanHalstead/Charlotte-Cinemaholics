@@ -2,7 +2,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-
 class Post(db.Model):
     __tablename__ = 'posts'
     post_id = db.Column(db.Integer, primary_key=True)
@@ -28,24 +27,24 @@ class Reply(db.Model):
     def __repr__(self):
         return f'Reply({self.reply_id}, {self.post_id}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
 
-user_ratings = db.Table(
-    'user_ratings',
-    movie_id = db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True),
-    user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True),
-    user_rating = db.Column('user_rating', db.Float, nullable = False)
-)
-
 user_playlist = db.Table(
     'user_playlist',
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True),
-    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.playlist_id'),primary_key=True)
+    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True),
+    db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.playlist_id'),primary_key=True)
+)
+
+user_ratings = db.Table(
+    'user_ratings',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True),
+    db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True),
+    db.Column('user_rating', db.Float, nullable = False)
 )
 
 playlist_movie = db.Table(
     'playlist_movie',
-    playlist_id = db.Column(db.Integer, primary_key=True),
-    playlist_name = db.Column(db.String, nullable = False),
-    movie_rank = db.Column(db.Integer, nullable = False)
+    db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.playlist_id'), primary_key=True),
+    db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True),
+    db.Column('movie_rank', db.Integer, nullable = False)
 )
 
 class User(db.Model):
@@ -68,13 +67,15 @@ class Playlist(db.Model):
     playlist_id = db.Column(db.Integer, primary_key=True)
     playlist_name = db.Column(db.String, nullable = False)
 
+    playlist_movie = db.relationship('Movie', secondary=playlist_movie, backref='playlist_movies')
+
     def __repr__(self):
         return f'Playlist({self.playlist_id}, {self.playlist_name})'
 
 class Movie(db.Model):
     __tablename__ = 'movie'
     movie_id = db.Column(db.Integer, primary_key=True)
-    poster_url = db.Column(db.String, nullable=True)
+    poster_url = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return f'User({self.movie_id}, {self.poster_url}, {self.title}, {self.IMDB_rating}, {self.UNCC_rating})'

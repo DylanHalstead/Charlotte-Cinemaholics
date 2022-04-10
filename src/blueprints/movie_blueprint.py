@@ -1,5 +1,5 @@
 from flask import Blueprint, abort, redirect, render_template, request, session
-from models import db, Movie
+from src.models import db, Movie
 from datetime import datetime
 
 from imdb import Cinemagoer
@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import json
 
 router = Blueprint('movie_router', __name__, url_prefix='/movies')
+
 imdb = Cinemagoer()
 
 # Function scrapes IMDb using IMDb ID 'tt0107290' to find movie's poser.
@@ -32,14 +33,13 @@ top_films = imdb.get_top250_movies()
 # Very slow to load all 250 url's, just grabbing first 25 for now
 for movie in range(25):
     # Add poster to each film, format movieID with 'tt' in front
-    top_films[movie]['cover url'] = imdb_scrape_poster(f'tt{top_films[movie].movieID}')
-    top_25 = Movie(movie_id=top_films[movie].movieID, poster_url=top_films[movie]['cover url'], UNCC_rating=0)
-    db.session.add()
+    top_cover = imdb_scrape_poster(f'tt{top_films[movie].movieID}')
+    top_25 = Movie(movie_id=int(top_films[movie].movieID), poster_url=top_cover)
+    db.session.add(top_25)
+db.session.commit()
 
 popular_films = imdb.get_popular100_movies()
 worst_films = imdb.get_bottom100_movies()
-# Add when database is built
-community_films = {}
 
 # Routers
 @router.get('/top-films')

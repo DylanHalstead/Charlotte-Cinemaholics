@@ -21,6 +21,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
+
 db.init_app(app)
 
 @app.get('/')
