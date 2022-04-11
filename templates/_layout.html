@@ -38,7 +38,7 @@
     </div>
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
       <ul class="navbar-nav ml-auto">
-        <li><img src="../static/pfp/default_user.png" alt="Default PFP" class="nav-pfp" width="30px"></li>
+        <li><img src="../static/pfp/{{session['user']['pfp']}}" alt="Default PFP" class="nav-pfp" width="30px"></li>
         <li class="nav-item dropdown">
           {% if 'user' in session %}
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"

@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS cinemaholics_db;
+-- DROP DATABASE IF EXISTS cinemaholics_db;
 CREATE DATABASE IF NOT EXISTS cinemaholics_db;
 USE cinemaholics_db;
 
@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS user_playlist  (
     FOREIGN KEY (playlist_id) REFERENCES playlist(playlist_id)
 );
 
-CREATE TABLE IF NOT EXISTS movie  (
+CREATE TABLE IF NOT EXISTS movie (
 	movie_id     INT,
-	poster_url   VARCHAR(255),
+	poster_url   VARCHAR(500),
     PRIMARY KEY (movie_id)
 );
 
