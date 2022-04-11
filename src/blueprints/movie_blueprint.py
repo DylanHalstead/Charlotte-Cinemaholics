@@ -41,7 +41,7 @@ def all_movies():
 
 def getTopMovies(): 
     for movie in range(25): # Very slow to load all 250 url's, just grabbing first 25 for now
-        if False:
+        if movie not in Movie.query.all():
             # Add poster to each film, format movieID with 'tt' in front
             top_films[movie]['cover url'] = imdb_scrape_poster(f'tt{top_films[movie].movieID}')
             id = int(top_films[movie].movieID)

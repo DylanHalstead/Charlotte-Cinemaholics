@@ -8,9 +8,9 @@
 <form class="form-signin" action="/register" method="post">
     <h3 class="mb-3 font-weight-normal whitetext">Create An Account</h1>
     <label for="email">Email address (uncc.edu)</label>
-    <input type="email" name="email" id="email" class="form-control mb-5" placeholder="norm@uncc.edu" pattern="[A-Za-z0-9._]+@uncc.edu$" required autofocus>
+    <input type="email" name="email" id="email" class="form-control mb-5" placeholder="norm@uncc.edu" pattern="[A-Za-z0-9._]+@uncc.edu$" required autofocus autocomplete="off">
     <label for="username">Username (Max 15 Characters)</label>
-    <input type="text" name="username" id="usernamne" class="form-control mb-5" placeholder="NormTheNiner22" pattern="[^\s]+" maxlength="15" title="Make sure you have no spaces">
+    <input type="text" name="username" id="username" class="form-control mb-5" placeholder="NormTheNiner22" pattern="[^\s]+" maxlength="15" title="Make sure you have no spaces">
     <div class="form-group mt-5 mb-4">
         <div>
             <label for="profilePhoto">Profile Pic</label>
@@ -25,7 +25,7 @@
         </select>
     </div>
     <label for="inputPassword">Password</label>
-    <input type="password" id="inputPassword" class="form-control mb-5" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}[^\s]+" title="Must contain at least one number, one uppercase and lowercase letter, and at least 8 or more characters (No Spaces)" required>
+    <input type="password" name="password" id="password" class="form-control mb-5" placeholder="NotmyPassword24" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}[^\s]+" title="Must contain at least one number, one uppercase and lowercase letter, and at least 8 or more characters (No Spaces)" required>
     <button class="btn btn-lg btn-signin mb-5 px-4" type="submit">Create Account</button>
 </form>
 {% endblock %}

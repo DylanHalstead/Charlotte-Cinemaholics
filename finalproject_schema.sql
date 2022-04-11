@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS cinemaholics_db;
-CREATE DATABASE cinemaholics_db;
+CREATE DATABASE IF NOT EXISTS cinemaholics_db;
 USE cinemaholics_db;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -74,4 +74,4 @@ CREATE TABLE IF NOT EXISTS playlist_movie (
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
 );
 
-SELECT * FROM movie;
+SELECT * FROM users;

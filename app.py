@@ -7,6 +7,7 @@ from src.blueprints.account_blueprint import router as account_router
 from src.models import db, User
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 
 load_dotenv()
 db_user = os.getenv('DB_USER', 'root')
@@ -20,9 +21,12 @@ connection_string = f'mysql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 bcrypt = Bcrypt(app)
+app.secret_key = os.getenv('SECRET_KEY')
 
 db.init_app(app)
+db = SQLAlchemy(app)
 
 @app.get('/')
 def index():
@@ -51,7 +55,7 @@ def edit_account():
 def get_login():
     if 'user' in session:
         return render_template('/')
-    return render_template('signin.html')
+    return render_template('login.html')
 
 @app.post('/login')
 def login():
@@ -64,14 +68,17 @@ def login():
     existing_user = User.query.filter_by(email=email).first()
 
     if not existing_user or existing_user.user_id == 0:
+        print('Not in db')
         return redirect('/fail')
 
     if not bcrypt.check_password_hash(existing_user.passkey, password):
+        print('password incorrect')
         return redirect('/fail')
 
     session['user'] = {
-        'email': email,
+        'username': existing_user.username,
         'user_id': existing_user.user_id,
+        'pfp': existing_user.pfp
     }
 
     return redirect('/')
@@ -89,8 +96,8 @@ def register():
     username = request.form.get('username', '')
     password = request.form.get('password', '')
 
-    # Make sure user follows requirements creating an account
-    if (email == '' or '@uncc.edu' not in email or username == '' or len(username) > 15 or ' ' in password or username == '' or len(password) < 8 or ' ' in password):
+    # Make sure to add backend so user follows requirements creating an account
+    if email == '' or username == '' or password == '':
         abort(400)
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -105,6 +112,15 @@ def register():
         'user_id': new_user.user_id,
         'pfp': new_user.pfp
     }
+
+    return redirect('/')
+
+@app.get('/logout')
+def logout():
+    if 'user' not in session:
+        abort(401)
+
+    del session['user']
 
     return redirect('/')
 
