@@ -79,6 +79,18 @@ label {
     color: white;
 }
 
+.btn-outline {
+    color: #00703C;
+    background-color: transparent;
+    /* default btn makes border transparent, couldnt get it to turn off without important */
+    border: 1px solid #00703C !important;
+}
+
+.btn-outline:hover {
+    color: white;
+    background-color: #00703C;
+}
+
 /* Home Page & Movie Card */
 .movie-table {
     margin-left: auto;
@@ -125,6 +137,8 @@ label {
     font-size: 8pt;
     margin-bottom: 0;
     padding: .5em 1em 0 1em;
+    height: 40px;
+    overflow: hidden;
 }
 
 .star-uncc-sm {
@@ -225,4 +239,15 @@ label {
 
 .dropdown-menu > a:hover {
     background-color: #6c6c6c;
+}
+
+/* Login and Create Account */
+.login-logo {
+    width: 15em;
+    height: 15em;
+}
+
+.btn-signin {
+    color: white;
+    background-color: #00703C;
 }
