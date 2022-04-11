@@ -48,3 +48,12 @@ def getTopMovies():
             top_25 = Movie(movie_id=id, poster_url=top_films[movie]['cover url'])
             db.session.add(top_25)
             db.session.commit()
+shawshank = imdb.get_movie(top_films[0].movieID)
+# f = open("top250.py", "a")
+# f.write("top250 = {")
+# # Very slow to load all 250 url's, just grabbing first 25 for now
+# for movie in range(5):
+#     # Add poster to each film, format movieID with 'tt' in front
+#     top_films[movie]['cover url'] = imdb_scrape_poster(f'tt{top_films[movie].movieID}')
+# f.write()
+print(top_films)

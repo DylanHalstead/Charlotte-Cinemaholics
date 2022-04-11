@@ -38,6 +38,7 @@ app.register_blueprint(posts_router)
 app.register_blueprint(movie_router)
 app.register_blueprint(account_router)
 
+
 @app.get('/report')
 def report():
     return render_template('report.html')

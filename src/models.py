@@ -61,6 +61,15 @@ class User(db.Model):
     def __repr__(self):
         return f'User({self.user_id}, {self.username}, {self.email}, {self.pfp}, {self.about})'
 
+
+class User_Playlist(db.Model):
+    __tablename__ = 'users_playlist'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
+    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.playlist_id'),primary_key=True)
+
+    def __repr__(self):
+        return f'User_Playlist({self.user_id}, {self.playlist_id})'
+
 class Playlist(db.Model):
     __tablename__ = 'playlist'
     playlist_id = db.Column(db.Integer, primary_key=True)

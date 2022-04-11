@@ -1,23 +1,22 @@
 {% extends '_layout.html' %}
 
-{% block title %}username{% endblock %}
+{% block title %}{{user2.username}} | Account Page{% endblock %}
 
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="col">
-                <img src="../static/pfp/default_user.png" alt="Account Pfp" width="90%" class="pfp-large mb-5">
+                <img src={{user2.pfp}} alt="Account Pfp" width="90%" class="pfp-large mb-5">
                 <h2 class="whitetext mb-3">About Me</h2>
+
                 <p class="account-description">
-                    This is some stuff about me.
-                    blah blah blah blah blah blah blah blah. 
-                    blah blah blah blah blah blah blah blah blah blah blah blah. 
-                    blah blah blah blah
+                    {{user2.about}}
                 </p>
             </div>
             <div class="col">
-                <h1 class="username-large mb-3">Username</h1>
+                <h1 class="username-large mb-3">{{user2.username}}</h1>
                 <table>
+                    <!--NEED TO IMPLEMENT WATCHLIST FROM user_playlist-->
                     <tr col><td colspan="2"><h2 class="movie-row-title">Watchlist</h2></td></tr>
                     <tr>
                         {% for i in range(3) %}
@@ -53,6 +52,7 @@
                     </tr>
                     <tr col><td colspan="2"><h2 class="movie-row-title">Your Rated Films</h2></td></tr>
                     <tr>
+                        <!--NEED TO IMPLEMENT RATED FILMS FROM user_playlist-->
                         {% for i in range(3) %}
                         <td>
                             <!-- Movie Card Template -->
