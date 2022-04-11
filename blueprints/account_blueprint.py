@@ -16,15 +16,15 @@ def account():
     return render_template('account.html', user2=user2)
 
 @router.get('/username/edit')
-def edit_account():
+def get_edit_account():
     return render_template("edit_account.html")
 
-#@router.post('/username/edit')
-#def edit_account():
-#    profilePhoto = request.form.get('profilePhoto')
-#    username = request.form.get('name')
-#    aboutMe = request.form.get('about')
-#    return redirect('/username')
+@router.post('/username/edit')
+def edit_account():
+    profilePhoto = request.form.get('profilePhoto')
+    username = request.form.get('name')
+    aboutMe = request.form.get('about')
+    return redirect('/username')
 
 def createDummyUser(): #dummy users to test post functionality, when logging in gets implemented this will be removed
     if User.query.first() == None:
