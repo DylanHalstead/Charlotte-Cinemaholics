@@ -1,0 +1,31 @@
+{% extends '_layout.html' %}
+{% block title %}Create Account{% endblock %}
+
+{% block body %}
+<div class="text-center">
+    <img class="login-logo" src="../static/cinemaholics-logo-white.png" alt="Cinemaholics-logo.png">
+</div>
+<form class="form-signin" action="/register" method="post">
+    <h3 class="mb-3 font-weight-normal whitetext">Create An Account</h1>
+    <label for="email">Email address (uncc.edu)</label>
+    <input type="email" name="email" id="email" class="form-control mb-5" placeholder="norm@uncc.edu" pattern="[A-Za-z0-9._]+@uncc.edu$" required autofocus>
+    <label for="username">Username (Max 15 Characters)</label>
+    <input type="text" name="username" id="usernamne" class="form-control mb-5" placeholder="NormTheNiner22" pattern="[^\s]+" maxlength="15" title="Make sure you have no spaces">
+    <div class="form-group mt-5 mb-4">
+        <div>
+            <label for="profilePhoto">Profile Pic</label>
+        </div>
+        <select class="form-select" name="profilePhoto" id="profilePhoto">
+            <option value="default_user.png"><p>Default Image</p></option>
+            <option value="pfp1.png"><p>UNCC Logo</p></option>
+            <option value="pfp2.png"><p>Forest</p></option>
+            <option value="pfp3.png"><p>Movie Reel</p></option>
+            <option value="pfp4.png"><p>Old TV</p></option>
+            <option value="pfp5.png"><p>Mountains</p></option>
+        </select>
+    </div>
+    <label for="inputPassword">Password</label>
+    <input type="password" id="inputPassword" class="form-control mb-5" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}[^\s]+" title="Must contain at least one number, one uppercase and lowercase letter, and at least 8 or more characters (No Spaces)" required>
+    <button class="btn btn-lg btn-signin mb-5 px-4" type="submit">Create Account</button>
+</form>
+{% endblock %}

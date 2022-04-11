@@ -11,7 +11,6 @@ class Post(db.Model):
     post_time = db.Column(db.String, nullable=False)
     likes = db.Column(db.Integer, nullable = False)
     
-
     def __repr__(self):
         return f'Post({self.post_id}, {self.title}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
 
@@ -56,8 +55,8 @@ class User(db.Model):
     pfp = db.Column(db.String, nullable=False)
     about = db.Column(db.String, nullable=True)
 
-    rating = db.relationship('Movie', secondary=user_ratings, backref='ratings')
-    user_playlist = db.relationship('Playlist', secondary=user_playlist, backref='playlists')
+    movie_rating = db.relationship('Movie', secondary=user_ratings, backref='user_rating')
+    users_playlist = db.relationship('Playlist', secondary=user_playlist, backref='users_playlist')
 
     def __repr__(self):
         return f'User({self.user_id}, {self.username}, {self.email}, {self.pfp}, {self.about})'
@@ -67,7 +66,7 @@ class Playlist(db.Model):
     playlist_id = db.Column(db.Integer, primary_key=True)
     playlist_name = db.Column(db.String, nullable = False)
 
-    playlist_movie = db.relationship('Movie', secondary=playlist_movie, backref='playlist_movies')
+    playlist_movie = db.relationship('Movie', secondary=playlist_movie, backref='playlist_movie')
 
     def __repr__(self):
         return f'Playlist({self.playlist_id}, {self.playlist_name})'
@@ -75,7 +74,7 @@ class Playlist(db.Model):
 class Movie(db.Model):
     __tablename__ = 'movie'
     movie_id = db.Column(db.Integer, primary_key=True)
-    poster_url = db.Column(db.String(255), nullable=True)
+    poster_url = db.Column(db.String, nullable=True)
 
     def __repr__(self):
-        return f'User({self.movie_id}, {self.poster_url}, {self.title}, {self.IMDB_rating}, {self.UNCC_rating})'
+        return f'Movie({self.movie_id}, {self.poster_url})'

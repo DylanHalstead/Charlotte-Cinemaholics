@@ -8,10 +8,6 @@ router = Blueprint('account_router', __name__, url_prefix='/account')
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
-@router.get('/signin')
-def sign_in():
-    return render_template('signin.html')
-
 @router.get('/edit')
 def edit_account():
     return render_template('edit_account.html')
