@@ -35,25 +35,19 @@ worst_films = imdb.get_bottom100_movies()
 # Routers
 @router.get('/top-films')
 def all_movies():
-    getTopMovies()
+    parseMovieDict(top_films)
     return render_template('top_250.html', top_films=top_films)
 
 
-def getTopMovies(): 
-    for movie in range(25): # Very slow to load all 250 url's, just grabbing first 25 for now
-        if movie not in Movie.query.all():
+def parseMovieDict(movieDict): 
+    for movie in movieDict: # Very slow to load all 250 url's, just grabbing first 25 for now
+        print(int(movie.movieID))
+        if len(Movie.query.filter_by(movie_id=movie.movieID).all()) == 0:
             # Add poster to each film, format movieID with 'tt' in front
-            top_films[movie]['cover url'] = imdb_scrape_poster(f'tt{top_films[movie].movieID}')
-            id = int(top_films[movie].movieID)
-            top_25 = Movie(movie_id=id, poster_url=top_films[movie]['cover url'])
+            movie['cover url'] = imdb_scrape_poster(f'tt{movie.movieID}')
+            id = int(movie.movieID)
+            top_25 = Movie(movie_id=id, poster_url=movie['cover url'])
             db.session.add(top_25)
             db.session.commit()
-shawshank = imdb.get_movie(top_films[0].movieID)
-# f = open("top250.py", "a")
-# f.write("top250 = {")
-# # Very slow to load all 250 url's, just grabbing first 25 for now
-# for movie in range(5):
-#     # Add poster to each film, format movieID with 'tt' in front
-#     top_films[movie]['cover url'] = imdb_scrape_poster(f'tt{top_films[movie].movieID}')
-# f.write()
-print(top_films)
+        else:
+            movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url
