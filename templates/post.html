@@ -18,6 +18,11 @@
       <h5 class="card-title whitetext">{{post.title}}</h5>
       <p class="card-text whitetext">{{post.body}}</p>
     </div>
+    <div class="card-footer">
+      {% if 'user' in session and session['user'].get('user_id') == user.user_id %}
+      <a href="/posts/{{post.post_id}}/edit" class="link-light">Edit post</a>
+      {% endif %}
+    </div>
   </div>
 
 {% for reply in replies %}
@@ -30,12 +35,17 @@
         <h5 class="card-title whitetext">RE: {{post.title}}</h5>
         <p class="card-text whitetext">{{reply.body}}</p>
       </div>
+      <div class="card-footer">
+        {% if 'user' in session and session['user'].get('user_id') == user.user_id %}
+        <a href="/posts/{{post.post_id}}/edit" class="link-light">Edit post</a>
+        {% endif %}
+      </div>
     </div>
     {% endif %}
   {% endfor %}
 {% endfor %}
 
-<!-- add comment -->
+<!-- reply form -->
 <div class="card text-white bg-dark mb-3">
   <div class="card-header">Reply</div>
   <div class="card-body">
