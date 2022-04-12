@@ -25,6 +25,8 @@ p {
 
 .footer {
     background-color: #2e2e2e;
+    position: relative;
+    margin-top: auto;
 }
 
 footer table {

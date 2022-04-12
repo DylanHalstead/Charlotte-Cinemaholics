@@ -1,15 +1,18 @@
 from flask import Blueprint, abort, redirect, render_template, request, session
 from src.models import db, Movie
 from datetime import datetime
-
-from imdb import Cinemagoer
 import requests
 from bs4 import BeautifulSoup
 import json
+from imdb import Cinemagoer
 
 router = Blueprint('movie_router', __name__, url_prefix='/movies')
 
-imdb = Cinemagoer()
+# Pre-Load imdb & popular movie dictionairy
+imdbpy = Cinemagoer()
+top_films = imdbpy.get_top250_movies()
+popular_films = imdbpy.get_popular100_movies()
+worst_films = imdbpy.get_bottom100_movies()
 
 # Function scrapes IMDb using IMDb ID 'tt0107290' to find movie's poser.
 # Function modified and based on https://github.com/tomkeith/imdb-scraper
@@ -28,10 +31,6 @@ def imdb_scrape_poster(imdb_id):
     
     return imdb_img_url
 
-# Pre-Load movie dictionairy
-top_films = imdb.get_top250_movies()
-popular_films = imdb.get_popular100_movies()
-worst_films = imdb.get_bottom100_movies()
 # Routers
 @router.get('/top-films')
 def all_movies():
@@ -41,7 +40,6 @@ def all_movies():
 
 def parseMovieDict(movieDict): 
     for movie in movieDict: # Very slow to load all 250 url's, just grabbing first 25 for now
-        print(int(movie.movieID))
         if len(Movie.query.filter_by(movie_id=movie.movieID).all()) == 0:
             # Add poster to each film, format movieID with 'tt' in front
             movie['cover url'] = imdb_scrape_poster(f'tt{movie.movieID}')
