@@ -78,6 +78,7 @@ def login():
         return redirect('/fail')
 
     session['user'] = {
+        'email': existing_user.email,
         'username': existing_user.username,
         'user_id': existing_user.user_id,
         'pfp': existing_user.pfp
@@ -110,7 +111,8 @@ def register():
 
     # Go ahead and log in user once they're in the database
     session['user'] = {
-        'username': username,
+        'email': new_user.email,
+        'username': new_user.username,
         'user_id': new_user.user_id,
         'pfp': new_user.pfp
     }
