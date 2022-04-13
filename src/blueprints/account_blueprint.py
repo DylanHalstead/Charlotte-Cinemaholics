@@ -8,14 +8,14 @@ router = Blueprint('account_router', __name__)
 
 @router.get('/username')
 def account():
-    createDummyUser()
-    user_id = 1
-    user = User.query.get_or_404(user_id)
-    user2 = User.query.filter_by(user_id=user.user_id).first()
+    sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
+    if 'user' not in session:
+        abort('/login')
+
     user_playlist_name = 'Watchlist'
     #user_playlist = User_Playlist.query.filter_by(user_id = User_Playlist.user_id).all()
     #playlist = Playlist.query.filter_by(user_playlist = User_Playlist.playlist_id).first()
-    return render_template('account.html', user2=user2)
+    return render_template('account.html', sessionUser=sessionUser)
 
 @router.get('/username/edit')
 def get_edit_account():
@@ -25,12 +25,16 @@ def get_edit_account():
 def edit_account():
     if 'user' in session:
         profilePhoto = request.form.get('profilePhoto')
-        username = request.form.get('name')
+        username = request.form.get('username')
         aboutMe = request.form.get('about')
-        user = User.query.filter_by(email = session['user']['email'])
+        user = User.query.filter_by(email = session['user']['email']).first()
+        print(user.pfp)
         user.username = username
         user.pfp = profilePhoto
         user.about = aboutMe
+        session['user']['username'] = username
+        session['user']['pfp'] = profilePhoto
+        session['user']['about'] = aboutMe
         db.session.commit()
         return redirect('/username')
     return redirect('/')
