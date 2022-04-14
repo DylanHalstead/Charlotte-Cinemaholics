@@ -48,13 +48,12 @@ def create_post():
 
     return redirect(f'/posts/{new_post.post_id}')
 
-@router.post('/<post_id>/')
+@router.post('/<post_id>')
 def create_reply(post_id):
     #createDummyUsers()
     if 'user' in session:
         user_id = session['user'].get('user_id')
         body = request.form.get('body', '')
-        now = datetime.now()
         time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         likes = 0
 
@@ -99,30 +98,28 @@ def update_post(post_id):
 @router.get('/<int:post_id>/reply/<int:reply_id>/edit')
 def get_edit_reply_form(post_id, reply_id): 
     #TODO add check if user is a moderator as well
-    post = Post.query.get_or_404(post_id)
-    reply = Post.query.get_or_404(reply_id)
+    reply = Reply.query.get_or_404(reply_id)
+    
     if 'user' in session:
         user_id = session['user'].get('user_id')
         if reply.user_id == user_id:
-            return render_template('edit_reply.html', post=post, reply = reply)
+            return render_template('edit_reply.html', reply = reply)
             
-    return redirect(f'/posts/{post_id}')
+    return redirect(f'/posts/{reply.post_id}')
 
 @router.post('/<int:post_id>/reply/<int:reply_id>/edit')
 def edit_reply(post_id, reply_id): 
     reply = Reply.query.get_or_404(reply_id)
-    title = request.form.get('title', '')
     body = request.form.get('body', '')
 
-    if body == '' or title == '':
+    if body == '':
         abort(400)
 
-    reply.title = title
     reply.body = body
 
     db.session.commit()
 
-    return redirect(f'/posts/{post_id}')
+    return redirect(f'/posts/{reply.post_id}')
 
 
 
@@ -131,6 +128,17 @@ def edit_reply(post_id, reply_id):
 @router.post('/<post_id>/delete')
 def delete_post(post_id):
     post_to_delete = Post.query.get_or_404(post_id)
+    if 'user' in session:
+        user_id = session['user'].get('user_id')
+        if post_to_delete.user_id == user_id:
+            db.session.delete(post_to_delete)
+            db.session.commit()
+            return redirect('/posts/')
+    return redirect('/posts/{post_id}')
+
+@router.post('/<int:post_id>/reply/<int:reply_id>/delete')
+def delete_reply(post_id, reply_id):
+    post_to_delete = Reply.query.get_or_404(reply_id)
     if 'user' in session:
         user_id = session['user'].get('user_id')
         if post_to_delete.user_id == user_id:
