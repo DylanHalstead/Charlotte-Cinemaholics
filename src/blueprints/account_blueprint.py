@@ -1,6 +1,7 @@
 from flask import Blueprint, abort, redirect, render_template, request, redirect
 from src.models import db, User, Playlist, User_Playlist
 from datetime import datetime
+from app import session
 #from app import user
 
 router = Blueprint('account_router', __name__)
@@ -22,14 +23,17 @@ def get_edit_account():
 
 @router.post('/username/edit')
 def edit_account():
-    profilePhoto = request.form.get('profilePhoto')
-    username = request.form.get('name')
-    aboutMe = request.form.get('about')
-    #user.username = username
-    #user.pfp = profilePhoto
-    #user.about = aboutMe
-    #db.session.commit()
-    return redirect('/username')
+    if 'user' in session:
+        profilePhoto = request.form.get('profilePhoto')
+        username = request.form.get('name')
+        aboutMe = request.form.get('about')
+        user = User.query.filter_by(email = session['user']['email'])
+        user.username = username
+        user.pfp = profilePhoto
+        user.about = aboutMe
+        db.session.commit()
+        return redirect('/username')
+    return redirect('/')
 
 def createDummyUser(): #dummy users to test post functionality, when logging in gets implemented this will be removed
     if User.query.first() == None:
