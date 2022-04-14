@@ -5,11 +5,7 @@
 <div class="card text-white bg-dark mb-3 card1">
   <div class="card-header">Edit Reply</div>
   <div class="card-body">
-      <form action="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" method="post">
-        <div class="form-group mt-2">
-            <label for="movieTitle">Title</label>
-            <input type="text" class="form-control" name="title" id="title" value="{{reply.title}}" autocomplete="off" required>
-        </div>
+      <form action="/posts/{{reply.post_id}}/reply/{{reply.reply_id}}/edit" method="post">
         <div class="form-group">
           <textarea class="form-control" name="body" id="body" rows="10">{{reply.body}}</textarea>
         </div>
@@ -18,7 +14,7 @@
         
       </form>
 
-      <form action="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/delete" method="post">
+      <form action="/posts/{{reply.post_id}}/reply/{{reply.reply_id}}/delete" method="post">
         <button type="submit" class="btn btn-danger mt-3">Delete</button> 
       </form>
   </div>
