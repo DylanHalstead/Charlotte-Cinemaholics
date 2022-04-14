@@ -184,6 +184,14 @@ label {
     margin-right: auto;
 }
 
+#index-intro {
+    color: white;
+    text-align: center;
+    border: 2px solid white;
+    padding: 2% 0 2% 0;
+    margin-bottom: 5%;
+}
+
 /* */
 .pfp{
     width: 2.5%;
