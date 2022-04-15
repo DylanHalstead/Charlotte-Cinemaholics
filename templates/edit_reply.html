@@ -1,0 +1,23 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+
+<div class="card text-white bg-dark mb-3 card1">
+  <div class="card-header">Edit Reply</div>
+  <div class="card-body">
+      <form action="/posts/{{reply.post_id}}/reply/{{reply.reply_id}}/edit" method="post">
+        <div class="form-group">
+          <textarea class="form-control" name="body" id="body" rows="10">{{reply.body}}</textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        
+      </form>
+
+      <form action="/posts/{{reply.post_id}}/reply/{{reply.reply_id}}/delete" method="post">
+        <button type="submit" class="btn btn-danger mt-3">Delete</button> 
+      </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -37,7 +37,7 @@
       </div>
       <div class="card-footer">
         {% if 'user' in session and session['user'].get('user_id') == user.user_id %}
-        <a href="/posts/{{post.post_id}}/edit" class="link-light">Edit</a>
+        <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" class="link-light">Edit</a>
         {% endif %}
       </div>
     </div>
