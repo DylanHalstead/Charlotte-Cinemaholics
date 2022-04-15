@@ -32,9 +32,12 @@ def edit_account():
         user.username = username
         user.pfp = profilePhoto
         user.about = aboutMe
-        session['user']['username'] = username
-        session['user']['pfp'] = profilePhoto
-        session['user']['about'] = aboutMe
+        session['user'] = {
+            'email': user.email,
+            'username': user.username,
+            'user_id': user.user_id,
+            'pfp': user.pfp
+        }
         db.session.commit()
         return redirect('/username')
     return redirect('/')
