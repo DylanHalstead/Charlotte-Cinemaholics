@@ -51,3 +51,15 @@ def parseMovieDict(movieDict):
             db.session.commit()
         else:
             movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url
+
+@router.get('/<movie_id>')
+def movie_page(movie_id):
+    single_movie = imdbpy.get_movie(movie_id)
+    parseMovie(single_movie)
+    return render_template('movie.html', single_movie=single_movie)
+
+def parseMovie(movie):
+    if len(Movie.query.filter_by(movie_id=movie.movieID).all()) == 0:
+        movie['cover url'] = imdb_scrape_poster(f'tt{movie.movieID}')
+    else:
+        movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url

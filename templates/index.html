@@ -47,7 +47,7 @@
         {% for b in range(5) %}
         <td>
             <!-- Movie Card Template -->
-            <a href="{{top_films[b].movieID}}" class="movie-sm-link">
+            <a href="/movies/{{top_films[b].movieID}}" class="movie-sm-link">
                 <div class="movie-sm">
                     <img class="movie-poster-sm" src="{{top_films[b]['cover url']}}" alt="{{top_films[b]['title']}}.jpg" width="150px">
                     <div class="movie-card-sm">
