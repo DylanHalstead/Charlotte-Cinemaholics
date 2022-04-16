@@ -1,19 +1,19 @@
 {% extends '_layout.html' %}
 
-{% block title %}{{user2.username}} | Account Page{% endblock %}
+{% block title %}{{sessionUser.username}} | Account Page{% endblock %}
 
 {% block body %}
     <div class="container">
         <div class="row">
             <div class="col">
-                <img src=../static/pfp/{{user2.pfp}} alt="Account_Pfp.png" width="90%" class="pfp-large mb-5">
+                <img src=../static/pfp/{{sessionUser.pfp}} alt="Account_Pfp.png" width="90%" class="pfp-large mb-5">
                 <h2 class="whitetext mb-3">About Me</h2>
                 <p class="account-description">
-                    {{user2.about}}
+                    {{sessionUser.about}}
                 </p>
             </div>
             <div class="col">
-                <h1 class="username-large mb-3">{{user2.username}}</h1>
+                <h1 class="username-large mb-3">{{sessionUser.username}}</h1>
                 <table>
                     <!--NEED TO IMPLEMENT WATCHLIST FROM user_playlist-->
                     <tr col><td colspan="2"><h2 class="movie-row-title">Watchlist</h2></td></tr>
