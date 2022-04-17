@@ -56,7 +56,12 @@ def parseMovieDict(movieDict):
 def movie_page(movie_id):
     single_movie = imdbpy.get_movie(movie_id)
     parseMovie(single_movie)
-    return render_template('movie.html', single_movie=single_movie)
+    # Grab user review if it exists
+    if(single_movie['plot'][1]):
+        review = single_movie['plot'][1][:single_movie['plot'][1].find('::')]
+    else:
+        review = single_movie['plot'][0]
+    return render_template('movie.html', single_movie=single_movie, review=review)
 
 def parseMovie(movie):
     if len(Movie.query.filter_by(movie_id=movie.movieID).all()) == 0:

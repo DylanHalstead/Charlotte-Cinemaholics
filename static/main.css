@@ -26,7 +26,7 @@ p {
 .footer {
     background-color: #2e2e2e;
     position: relative;
-    margin-top: auto;
+    margin-top: 5em;
 }
 
 footer table {
@@ -171,12 +171,21 @@ label {
     transition: .75s ease;
 }
 
-.last-row {
-    margin: 0 25px 50px 25px;
-}
-
 .movie-sm:hover {
     transform: scale(1.1)
+}
+
+.movie-sm-last {
+    margin-bottom: 0;
+    transition: .75s ease;
+}
+
+.movie-sm-last:hover {
+    transform: scale(1.1)
+}
+
+.last-row {
+    margin: 0 25px 50px 25px;
 }
 
 .movie-table {
@@ -260,4 +269,90 @@ label {
 .btn-signin {
     color: white;
     background-color: #00703C;
+}
+
+/* Movie Page */
+#single-movie-table td.center {
+    text-align: center;
+}
+
+#movie-poster {
+    height: 30em;
+    width: 20em;
+}
+
+#movie-title {
+    color: white;
+    font-size: 32pt;
+    text-align: left;
+}
+
+#movie-director {
+    color: white;
+    font-size: 20pt;
+    text-align: left;
+}
+
+#movie-description {
+    color: white;
+    font-size: 14pt;
+    text-align: left;
+}
+
+#single-movie-table td, table td * {
+    vertical-align: top;
+}
+
+#rating-label {
+    font-size: 12pt;
+}
+
+#rating {
+    font-size: 12pt;
+    width: 3em;
+}
+
+/* Remove arrow from number form */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+.star-uncc-lg {
+    height: 1.5em;
+    width: 1.5em;
+}
+
+#rating-btn {
+    background-color: transparent;
+    border: none;
+    padding-right: 0;
+}
+
+.movie-info-lg {
+    background-color: #2e2e2e;
+}
+
+#imdb-review-lg {
+    font-size: 10pt;
+    margin-bottom: 0;
+    color: #B3A369;
+}
+
+#uncc-review-lg {
+    font-size: 10pt;
+    margin-bottom: 0;
+    color: #00703C;
+}
+
+.star-md {
+    margin-top: .2em;
+    margin-right: .1em;
+    height: .9em;
+    width: .9em;
 }
