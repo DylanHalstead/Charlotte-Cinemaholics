@@ -1,11 +1,6 @@
 from flask import Blueprint, abort, redirect, render_template, request, session
-<<<<<<< HEAD
 from datetime import datetime, timedelta
-=======
-from datetime import datetime
->>>>>>> b46c73f97053a63fb14f2d817d4b95ac4f89707b
 from src.models import Edits, Post, Reply, User, db
-import random #need to remove
 import math
 
 router = Blueprint('posts_router', __name__, url_prefix='/posts')
@@ -16,6 +11,7 @@ def all_posts():
     for post in all_posts:
         old_time = post.post_time
         post.post_time = getTime(old_time)
+        
     users = User.query.all()
 
     return render_template('all_posts.html', posts=all_posts, users = users)
@@ -31,7 +27,6 @@ def get_post(post_id):
 
     reply_edits = []
     for reply in replies:
-<<<<<<< HEAD
         old_time = reply.post_time
         reply.post_time = getTime(old_time)
 
@@ -40,11 +35,6 @@ def get_post(post_id):
             if edit.reply_id != None and reply.reply_id == edit.reply_id:
                 old_time = edit.time
                 edit.time = getTime(old_time)
-=======
-        temp = []
-        for edit in edits:
-            if edit.reply_id != None and reply.reply_id == edit.reply_id:
->>>>>>> b46c73f97053a63fb14f2d817d4b95ac4f89707b
                 temp.append(edit)
         if len(temp) != 0:
             reply_edits.append(temp[len(temp)-1]) 
@@ -53,14 +43,10 @@ def get_post(post_id):
     descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(post_id=post_id, reply_id = None)
 
     post_edit = descending.first()
-<<<<<<< HEAD
     if post_edit != None:
         old_time = post_edit.time
         post_edit.time = getTime(old_time)
 
-=======
-    
->>>>>>> b46c73f97053a63fb14f2d817d4b95ac4f89707b
     users = User.query.all()
     user = User.query.filter_by(user_id=post.user_id).first()
     return render_template('post.html', post = post, replies = replies, user = user, users = users, post_e = post_edit, reply_e = reply_edits)
