@@ -1,18 +1,18 @@
 {% extends '_layout.html' %}
 
-{% block title %}{{sessionUser.username}} | Account Page{% endblock %}
+{% block title %}{{user.username}} | Account Page{% endblock %}
 
 {% block body %}
+<h1 class="whitetext mb-3">{{user.username}}'s posts</h1>
 {% for post in posts %}
+
 <div class="card text-white bg-dark mb-3" style="max-width: 100%;">
   <div class="card-header">
       <h5><a href="/posts/{{post.post_id}}" style = "text-decoration: none;">{{post.title}}</a></h5>
   </div>
-      {% if user.user_id == post.user_id %}
         <div class="card-body">
           <p class="card-text"><img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} {{post.post_time}}</p>
         </div>
-      {% endif %}
 </div>
   {% endfor %}
 {% endblock %}
