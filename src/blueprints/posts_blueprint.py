@@ -1,6 +1,6 @@
 from flask import Blueprint, abort, redirect, render_template, request, session
 from datetime import datetime
-from src.models import Post, Reply, User, db
+from src.models import Edits, Post, Reply, User, db
 import random #need to remove
 
 router = Blueprint('posts_router', __name__, url_prefix='/posts')
@@ -16,9 +16,25 @@ def all_posts():
 def get_post(post_id):
     post = Post.query.get_or_404(post_id)
     replies = Reply.query.filter_by(post_id=post_id)
+    edits = Edits.query.filter_by(post_id=post_id)
+
+    reply_edits = []
+    for reply in replies:
+        temp = []
+        for edit in edits:
+            if edit.reply_id != None and reply.reply_id == edit.reply_id:
+                temp.append(edit)
+        if len(temp) != 0:
+            reply_edits.append(temp[len(temp)-1]) 
+    
+        
+    descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(post_id=post_id, reply_id = None)
+
+    post_edit = descending.first()
+    
     users = User.query.all()
     user = User.query.filter_by(user_id=post.user_id).first()
-    return render_template('post.html', post = post, replies = replies, user = user, users = users)
+    return render_template('post.html', post = post, replies = replies, user = user, users = users, post_e = post_edit, reply_e = reply_edits)
 
 
 @router.get('/new')
@@ -83,13 +99,15 @@ def update_post(post_id):
     post = Post.query.get_or_404(post_id)
     title = request.form.get('title', '')
     body = request.form.get('body', '')
-
+    reason = request.form.get('reason', '')
+    time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    edit = Edits(user_id = session['user'].get('user_id'), post_id = post_id, reason = reason, time = time)
     if body == '' or title == '':
         abort(400)
 
     post.title = title
     post.body = body
-
+    db.session.add(edit)
     db.session.commit()
 
     return redirect(f'/posts/{post_id}')
@@ -111,14 +129,16 @@ def get_edit_reply_form(post_id, reply_id):
 def edit_reply(post_id, reply_id): 
     reply = Reply.query.get_or_404(reply_id)
     body = request.form.get('body', '')
+    reason = request.form.get('reason', '')
+    time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    edit = Edits(user_id = session['user'].get('user_id'),post_id = reply.post_id, reply_id = reply_id, reason = reason, time = time)
 
     if body == '':
         abort(400)
 
     reply.body = body
-
+    db.session.add(edit)
     db.session.commit()
-
     return redirect(f'/posts/{reply.post_id}')
 
 
