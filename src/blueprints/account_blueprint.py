@@ -15,7 +15,7 @@ def account():
     user_playlist_name = 'Watchlist'
     #user_playlist = User_Playlist.query.filter_by(user_id = User_Playlist.user_id).all()
     #playlist = Playlist.query.filter_by(user_playlist = User_Playlist.playlist_id).first()
-    return render_template('account.html', sessionUser=sessionUser)
+    return render_template('account.html', user=sessionUser)
 
 @router.get('/username/edit')
 def get_edit_account():
