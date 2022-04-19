@@ -19,7 +19,7 @@ CineForms
   {% for user in users %}
       {% if user.user_id == post.user_id %}
         <div class="card-body">
-          <p class="card-text"><img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} on {{post.post_time}}</p>
+          <p class="card-text"><img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} {{post.post_time}}</p>
         </div>
       {% endif %}
   {% endfor %}

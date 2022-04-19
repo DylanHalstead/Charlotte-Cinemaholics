@@ -13,10 +13,19 @@
 {% block body %}
 <!-- main post -->
 <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
-    <div class="card-header whitetext"> <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} on {{post.post_time}}</div>
+    <div class="card-header whitetext"> <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} {{post.post_time}}</div>
     <div class="card-body">
       <h5 class="card-title whitetext">{{post.title}}</h5>
       <p class="card-text whitetext">{{post.body}}</p>
+      {% for user in users %}
+      {% if user.user_id == post_e.user_id %}
+      {% if post_e.reason != '' %}
+      <footer class="blockquote-footer">Last edited by {{user.username}} {{post_e.time}} for {{post_e.reason}}</footer>
+      {% else %}
+      <footer class="blockquote-footer">Last edited by {{user.username}} {{post_e.time}}</footer>
+      {% endif %}
+      {% endif %}
+      {% endfor %}
     </div>
     <div class="card-footer">
       {% if 'user' in session and session['user'].get('user_id') == user.user_id %}
@@ -30,7 +39,7 @@
   <!-- comment -->
   {% if user.user_id == reply.user_id %}
     <div class="card text-white bg-dark mb-3">
-      <div class="card-header whitetext"> <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} on {{reply.post_time}}</div>
+      <div class="card-header whitetext"> <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} {{reply.post_time}}</div>
       <div class="card-body">
         <h5 class="card-title whitetext">RE: {{post.title}}</h5>
         <p class="card-text whitetext">{{reply.body}}</p>
