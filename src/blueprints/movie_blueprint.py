@@ -51,3 +51,10 @@ def parseMovieDict(movieDict):
             db.session.commit()
         else:
             movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url
+
+@router.post('/search')
+def search_movie():
+    searched = request.form.get('search')
+    movies = imdbpy.search_movie(searched)
+    parseMovieDict(movies)
+    return render_template('search.html', searched=searched, movies = movies)
