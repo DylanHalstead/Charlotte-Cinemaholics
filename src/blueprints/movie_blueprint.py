@@ -42,6 +42,7 @@ def all_movies():
 def parseMovieDict(movieDict): 
     print('Grabbing films, this can take a while')
     for movie in movieDict: # Very slow to load all 250 url's, just grabbing first 25 for now
+        print(movie.movieID)
         if len(Movie.query.filter_by(movie_id=movie.movieID).all()) == 0:
             # Add poster to each film, format movieID with 'tt' in front
             movie['cover url'] = imdb_scrape_poster(f'tt{movie.movieID}')
@@ -100,3 +101,10 @@ def post_rating(movie_id):
     db.session.add(new_review)
     db.session.commit()
     return redirect(f'/movies/{movie_id}')
+
+@router.post('/search')
+def search_movie():
+    searched = request.form.get('search')
+    movies = imdbpy.search_movie(searched)
+    parseMovieDict(movies)
+    return render_template('search.html', searched=searched, movies = movies)

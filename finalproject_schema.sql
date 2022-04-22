@@ -74,4 +74,16 @@ CREATE TABLE IF NOT EXISTS playlist_movie (
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
 );
 
-SELECT * FROM user_ratings;
+CREATE TABLE IF NOT EXISTS edits (
+    edit_id    INT AUTO_INCREMENT,
+    user_id       INT NOT NULL,
+    post_id     INT,
+	reply_id     INT,
+    reason  VARCHAR(255)   NOT NULL,
+    time  VARCHAR(255)   NOT NULL,
+    PRIMARY KEY (edit_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (post_id) REFERENCES posts(post_id),
+    FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
+    
+);

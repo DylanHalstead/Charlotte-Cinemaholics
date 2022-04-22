@@ -1,7 +1,8 @@
 from flask import Blueprint, abort, redirect, render_template, request, redirect
-from src.models import db, User, Playlist, User_Playlist
+from src.models import db, User, Playlist, User_Playlist, Post
 from datetime import datetime
 from app import session
+from src.blueprints.posts_blueprint import getTime
 #from app import user
 
 router = Blueprint('account_router', __name__)
@@ -16,6 +17,19 @@ def account():
     #user_playlist = User_Playlist.query.filter_by(user_id = User_Playlist.user_id).all()
     #playlist = Playlist.query.filter_by(user_playlist = User_Playlist.playlist_id).first()
     return render_template('account.html', sessionUser=sessionUser)
+
+@router.get('/username/posts')
+def account_posts():
+    
+    if 'user' not in session:
+        abort('/login')
+    else:
+        sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
+        posts = Post.query.filter_by(user_id=sessionUser.user_id)
+        for post in posts:
+            tmp = post.post_time
+            post.post_time = getTime(tmp)
+        return render_template('account_posts.html', user=sessionUser, posts = posts)
 
 @router.get('/username/edit')
 def get_edit_account():
