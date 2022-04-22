@@ -47,7 +47,11 @@
                         </svg>
                     </td>
                     <td>
-                        <p id="uncc-review-lg">UNCC TEST</p>
+                        {% if uncc_rating_info['votes'] != 1 %}
+                        <p id="uncc-review-lg">{{ uncc_rating_info['rating'] }}, {{ uncc_rating_info['votes'] }} votes</p>
+                        {% else %}
+                        <p id="uncc-review-lg">{{ uncc_rating_info['rating'] }}, {{ uncc_rating_info['votes'] }} vote</p>
+                        {% endif %}
                     </td>
                 </tr>
                 <tr>
@@ -57,7 +61,11 @@
                         </svg>
                     </td>
                     <td>
+                        {% if single_movie['votes'] != 1 %}
                         <p id="imdb-review-lg">{{ single_movie['rating'] }}, {{ single_movie['votes'] }} votes</p>
+                        {% else %}
+                        <p id="imdb-review-lg">{{ single_movie['rating'] }}, {{ single_movie['votes'] }} vote</p>
+                        {% endif %}
                     </td>
                 </tr>
             </table>

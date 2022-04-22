@@ -61,13 +61,27 @@ def movie_page(movie_id):
         review = single_movie['plot'][1][:single_movie['plot'][1].find('::')]
     else:
         review = single_movie['plot'][0]
-    return render_template('movie.html', single_movie=single_movie, review=review)
+    uncc_ratings = UserRating.query.filter_by(movie_id=single_movie.movieID).all()
+    uncc_rating_info = averageFilm(uncc_ratings)
+    return render_template('movie.html', single_movie=single_movie, review=review, uncc_rating_info=uncc_rating_info)
 
 def parseMovie(movie):
     if len(Movie.query.filter_by(movie_id=movie.movieID).all()) == 0:
         movie['cover url'] = imdb_scrape_poster(f'tt{movie.movieID}')
     else:
         movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url
+
+def averageFilm(user_ratings):
+    total_ratings = 0
+    rating_sum = 0
+    for rating in user_ratings:
+        total_ratings += 1
+        rating_sum += rating.movie_rating
+    rating_info = {
+        'rating': rating_sum,
+        'votes': total_ratings
+    }
+    return rating_info
 
 @router.post('/<movie_id>')
 def post_rating(movie_id):
