@@ -87,3 +87,15 @@ class Movie(db.Model):
 
     def __repr__(self):
         return f'Movie({self.movie_id}, {self.poster_url})'
+
+class Edits(db.Model):
+    __tablename__ = 'edits'
+    edit_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id'), nullable = True)
+    reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id'), nullable = True)
+    reason = db.Column(db.String, nullable=True)
+    time = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return f'Edits({self.post_id}, {self.user_id}, {self.post_id}, {self.reply_id}, {self.reason}, {self.time})'
