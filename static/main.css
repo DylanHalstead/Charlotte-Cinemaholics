@@ -185,8 +185,13 @@ label {
 }
 
 /* */
-.pfp{
+.pfp-allposts{
     width: 2.5%;
+    margin-right: 1%;
+}
+
+.pfp{
+    width: 50%;
     margin-right: 1%;
 }
 
@@ -210,6 +215,24 @@ label {
 .username-large {
     color: white;
     font-size: 56pt;
+}
+
+.post_title{
+    color: white;
+    font-size: 21pt;
+    font-style: bold;
+}
+
+.userinfo{
+    padding-right: 0;
+    padding-left: 0;
+    text-align: center;
+    margin: 0%;
+    background-color: #32383e;
+}
+
+.right-text{
+    text-align: right;
 }
 
 .account-description {

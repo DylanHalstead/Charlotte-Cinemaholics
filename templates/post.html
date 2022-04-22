@@ -13,25 +13,57 @@
 {% block body %}
 <!-- main post -->
 <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
-    <div class="card-header whitetext"> <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} {{post.post_time}}</div>
-    <div class="card-body">
-      <h5 class="card-title whitetext">{{post.title}}</h5>
-      <p class="card-text whitetext">{{post.body}}</p>
-      {% for user in users %}
-      {% if user.user_id == post_e.user_id %}
-      {% if post_e.reason != '' %}
-      <footer class="blockquote-footer">Last edited by {{user.username}} {{post_e.time}} for {{post_e.reason}}</footer>
-      {% else %}
-      <footer class="blockquote-footer">Last edited by {{user.username}} {{post_e.time}}</footer>
-      {% endif %}
-      {% endif %}
-      {% endfor %}
+    <div class="card-header whitetext"> 
+      <div class="row">
+        <div class="col-sm-10"><span class = "post_title">{{post.title}}</span> posted {{post.post_time}}</div>
+        <div class="col-sm-2 right-text">
+            {% if 'user' in session and session['user'].get('user_id') == user.user_id %}
+            <a href="/posts/{{post.post_id}}/edit" class="link-light">Edit</a>
+            {% endif %}
+        </div>
+      </div> 
+      
     </div>
-    
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-2 userinfo">
+          <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">
+          <br>
+         <h5>{{user.username}}</h5>
+         Reputation: {{user.get_reputation()}}
+         <br>
+         Posts: {{user.get_posts_and_reply_count()}}
+        </div>
+        <div class="col-sm-10">
+          <p class="card-text whitetext">{{post.body}}</p>
+          {% for u in users %}
+          {% if u.user_id == post_e.user_id %}
+          {% if post_e.reason != '' %}
+          <footer class="blockquote-footer">Last edited by {{u.username}} {{post_e.time}} for {{post_e.reason}}</footer>
+          {% else %}
+          <footer class="blockquote-footer">Last edited by {{u.username}} {{post_e.time}}</footer>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div> 
+    </div>
     <div class="card-footer">
-      {% if 'user' in session and session['user'].get('user_id') == user.user_id %}
-      <a href="/posts/{{post.post_id}}/edit" class="link-light">Edit</a>
-      {% endif %}
+      <div class="row">
+        <div class="col-sm-4">
+          
+        </div>
+        <div class="col-sm-8 right-text">
+          {% if session_user != None %}
+            {% if session_user.has_liked_post(post) %}
+              <a href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='unlike') }}">Unlike</a>
+            {% else %}
+              <a href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='like') }}">Like</a>
+            {% endif %}
+          {% endif %}
+          {{ post.likes.count() }} likes
+        </div>
+      </div> 
     </div>
   </div>
 
@@ -39,27 +71,51 @@
   {% for user in users %}
   <!-- comment -->
   {% if user.user_id == reply.user_id %}
-    <div class="card text-white bg-dark mb-3">
-      <div class="card-header whitetext"> <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} {{reply.post_time}}</div>
-      <div class="card-body">
-        <h5 class="card-title whitetext">RE: {{post.title}}</h5>
-        <p class="card-text whitetext">{{reply.body}}</p>
-        {% for e in reply_e %}
-        {% if user.user_id == e.user_id and e.reply_id == reply.reply_id %}
-        {% if e.reason != '' %}
-        <footer class="blockquote-footer">Last edited by {{user.username}} {{e.time}} for {{e.reason}}</footer>
-        {% else %}
-        <footer class="blockquote-footer">Last edited by {{user.username}} {{e.time}}</footer>
-        {% endif %}
-        {% endif %}
-        {% endfor %}
-      </div>
-      <div class="card-footer">
-        {% if 'user' in session and session['user'].get('user_id') == user.user_id %}
-        <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" class="link-light">Edit</a>
-        {% endif %}
-      </div>
+  <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
+    <div class="card-header whitetext"> 
+      <div class="row">
+        <div class="col-sm-10"><span class = "post_title">RE: {{post.title}}</span> posted {{post.post_time}}</div>
+        <div class="col-sm-2 right-text">
+            {% if 'user' in session and session['user'].get('user_id') == user.user_id %}
+            <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" class="link-light">Edit</a>
+            {% endif %}
+        </div>
+      </div> 
+      
     </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-2 userinfo">
+          <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">
+          <br>
+          <h5>{{user.username}}</h5>
+        </div>
+        <div class="col-sm-8">
+          <p class="card-text whitetext">{{reply.body}}</p>
+          {% for e in reply_e %}
+          {% if user.user_id == e.user_id and e.reply_id == reply.reply_id %}
+          {% if e.reason != '' %}
+          <footer class="blockquote-footer">Last edited by {{user.username}} {{e.time}} for {{e.reason}}</footer>
+          {% else %}
+          <footer class="blockquote-footer">Last edited by {{user.username}} {{e.time}}</footer>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div> 
+      <div class="row">
+        <div class="col-sm-2 userinfo"></div>
+        <div class="col-sm-10"></div>
+      </div>   
+    </div>
+    <div class="card-footer">
+      <div class="row">
+        <div class="col-sm-3">
+          
+        </div>
+      </div> 
+    </div>
+  </div>
     {% endif %}
   {% endfor %}
 {% endfor %}
