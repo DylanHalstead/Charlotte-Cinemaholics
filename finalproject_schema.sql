@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS movie (
 CREATE TABLE IF NOT EXISTS user_ratings (
     user_id      INT,
     movie_id     INT,
-    user_rating  FLOAT  NULL,
+    user_rating  FLOAT,
     PRIMARY KEY (user_id, movie_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
@@ -74,4 +74,4 @@ CREATE TABLE IF NOT EXISTS playlist_movie (
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
 );
 
-SELECT * FROM users;
+SELECT * FROM user_ratings;

@@ -1,6 +1,6 @@
 from ctypes.wintypes import PWIN32_FIND_DATAA
 from flask import Blueprint, abort, redirect, render_template, request, session
-from src.models import db, Movie
+from src.models import db, Movie, User, UserRating
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
@@ -68,3 +68,21 @@ def parseMovie(movie):
         movie['cover url'] = imdb_scrape_poster(f'tt{movie.movieID}')
     else:
         movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url
+
+@router.post('/<movie_id>')
+def post_rating(movie_id):
+    user_rating = request.form.get('rating', -1)
+
+    if user_rating == -1:
+        abort(400)
+
+    reviee = User.query.filter_by(user_id=session['user']['user_id']).first()
+    movie = Movie.query.filter_by(movie_id=movie_id).first()
+    new_review = UserRating(movie_rating=user_rating)
+    new_review.user = reviee
+    new_review.movie = movie
+    movie.user_rating.append(new_review)
+    # movie_id=movie_id, movie_rating=user_rating
+    db.session.add(new_review)
+    db.session.commit()
+    return redirect(f'/movies/{movie_id}')
