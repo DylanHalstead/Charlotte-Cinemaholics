@@ -208,6 +208,20 @@ def like_action(post_id, action):
             db.session.commit()
         return redirect(request.referrer)
 
+@router.route('/like/<int:post_id>/<int:reply_id>/<action>')
+def like_action_reply(post_id,reply_id, action):
+    reply = Reply.query.filter_by(reply_id=reply_id).first_or_404()
+    if 'user' in session:
+        user_id = session['user'].get('user_id')
+        current_user = User.query.get(user_id)
+        if action == 'like':
+            current_user.like_reply(reply)
+            db.session.commit()
+        if action == 'unlike':
+            current_user.unlike_reply(reply)
+            db.session.commit()
+        return redirect(request.referrer)
+
 
 def getTime(time_str):
     datetime_object = datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')

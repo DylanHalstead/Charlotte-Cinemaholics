@@ -88,7 +88,10 @@
         <div class="col-sm-2 userinfo">
           <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">
           <br>
-          <h5>{{user.username}}</h5>
+         <h5>{{user.username}}</h5>
+         Reputation: {{user.get_reputation()}}
+         <br>
+         Posts: {{user.get_posts_and_reply_count()}}
         </div>
         <div class="col-sm-8">
           <p class="card-text whitetext">{{reply.body}}</p>
@@ -110,8 +113,18 @@
     </div>
     <div class="card-footer">
       <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-4">
           
+        </div>
+        <div class="col-sm-8 right-text">
+          {% if session_user != None %}
+            {% if session_user.has_liked_reply(reply) %}
+              <a href="{{ url_for('posts_router.like_action_reply', post_id=post.post_id,reply_id=reply.reply_id, action='unlike') }}">Unlike</a>
+            {% else %}
+              <a href="{{ url_for('posts_router.like_action_reply', post_id=post.post_id,reply_id=reply.reply_id, action='like') }}">Like</a>
+            {% endif %}
+          {% endif %}
+          {{ reply.likes.count() }} likes
         </div>
       </div> 
     </div>

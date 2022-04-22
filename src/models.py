@@ -20,7 +20,7 @@ class Reply(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     body = db.Column(db.String, nullable=False)
     post_time = db.Column(db.String, nullable=False)
-    likes = db.relationship('PostLike', backref='replies', lazy='dynamic')
+    likes = db.relationship('ReplyLike', backref='replies', lazy='dynamic')
     
     def __repr__(self):
         return f'Reply({self.reply_id}, {self.post_id}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
@@ -76,13 +76,28 @@ class User(db.Model):
                 post_id=post.post_id).delete()
 
     def has_liked_post(self, post):
-        temp = PostLike.query.filter(
-            PostLike.user_id == self.user_id,
-            PostLike.post_id == post.post_id).count() > 0
-        print(self.username + " has liked post? = " + str(temp))
         return PostLike.query.filter(
             PostLike.user_id == self.user_id,
             PostLike.post_id == post.post_id).count() > 0
+
+    def like_reply(self, reply):
+        if not self.has_liked_reply(reply):
+            like = ReplyLike(user_id=self.user_id, reply_id=reply.reply_id)
+            db.session.add(like)
+
+    def unlike_reply(self, reply):
+        
+        if self.has_liked_reply(reply):
+            print(self.username + " unliked " + str(reply.reply_id))
+            ReplyLike.query.filter_by(
+                user_id=self.user_id,
+                reply_id=reply.reply_id).delete()
+
+    def has_liked_reply(self, reply):
+        
+        return ReplyLike.query.filter(
+            ReplyLike.user_id == self.user_id,
+            ReplyLike.reply_id == reply.reply_id).count() > 0
     
     def get_posts_count(self):
         return Post.query.filter(Post.user_id == self.user_id).count()
@@ -96,8 +111,11 @@ class User(db.Model):
     def get_reputation(self):
         reputation = 0
         user_posts = Post.query.filter(Post.user_id == self.user_id)
+        user_replies = Reply.query.filter(Reply.user_id == self.user_id)
         for p in user_posts:
             reputation += p.likes.count()
+        for r in user_replies:
+            reputation += r.likes.count()
         return reputation
 
     def __repr__(self):
@@ -148,5 +166,9 @@ class PostLike(db.Model):
     like_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id', ondelete='CASCADE'))
-    reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id', ondelete='CASCADE'), nullable = True)
-    
+
+class ReplyLike(db.Model):
+    __tablename__ = 'reply_like'
+    like_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id', ondelete='CASCADE'))

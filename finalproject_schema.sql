@@ -88,10 +88,16 @@ CREATE TABLE IF NOT EXISTS post_like (
     like_id    INT AUTO_INCREMENT,
     user_id       INT NOT NULL,
     post_id     INT NOT NULL,
-	reply_id     INT,
     PRIMARY KEY (like_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (post_id) REFERENCES posts(post_id),
+    FOREIGN KEY (post_id) REFERENCES posts(post_id)
+);
+
+CREATE TABLE IF NOT EXISTS reply_like (
+    like_id    INT AUTO_INCREMENT,
+    user_id       INT NOT NULL,
+    reply_id     INT NOT NULL,
+    PRIMARY KEY (like_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
-    
 );
