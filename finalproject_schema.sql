@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS replies (
 
 
 CREATE TABLE IF NOT EXISTS playlist  (
-	playlist_id     INT		AUTO_INCREMENT,
+	playlist_id     INT		     AUTO_INCREMENT,
     playlist_name   VARCHAR(255) NOT NULL,
     PRIMARY KEY (playlist_id)
 );
@@ -51,15 +51,22 @@ CREATE TABLE IF NOT EXISTS user_playlist  (
 );
 
 CREATE TABLE IF NOT EXISTS movie (
-	movie_id     INT,
-	poster_url   VARCHAR(500),
+	movie_id     VARCHAR(255),
+    title        VARCHAR(255)  NOT NULL,
+    director     VARCHAR(255)  NOT NULL,
+    about        TEXT(65535)   NULL, 
+    poster_url   VARCHAR(255)  NULL,
+    imdb_rating  FLOAT         NOT NULL,
+    imdb_votes   INT           NOT NULL,
+    uncc_rating  FLOAT         NOT NULL,
+    uncc_votes   INT           NOT NULL,
     PRIMARY KEY (movie_id)
 );
 
 CREATE TABLE IF NOT EXISTS user_ratings (
     user_id      INT,
-    movie_id     INT,
-    user_rating  FLOAT,
+    movie_id     VARCHAR(255),
+    user_rating  FLOAT          NOT NULL,
     PRIMARY KEY (user_id, movie_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
@@ -67,7 +74,7 @@ CREATE TABLE IF NOT EXISTS user_ratings (
 
 CREATE TABLE IF NOT EXISTS playlist_movie (
     playlist_id    INT,
-    movie_id       INT,
+    movie_id       VARCHAR(255),
     movie_rank     INT,
     PRIMARY KEY (playlist_id, movie_id),
     FOREIGN KEY (playlist_id) REFERENCES playlist(playlist_id),
@@ -75,15 +82,16 @@ CREATE TABLE IF NOT EXISTS playlist_movie (
 );
 
 CREATE TABLE IF NOT EXISTS edits (
-    edit_id    INT AUTO_INCREMENT,
-    user_id       INT NOT NULL,
-    post_id     INT,
-	reply_id     INT,
-    reason  VARCHAR(255)   NOT NULL,
-    time  VARCHAR(255)   NOT NULL,
+    edit_id    INT            AUTO_INCREMENT,
+    user_id    INT            NOT NULL,
+    post_id    INT,
+	reply_id   INT,
+    reason     VARCHAR(255)   NOT NULL,
+    time       VARCHAR(255)   NOT NULL,
     PRIMARY KEY (edit_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (post_id) REFERENCES posts(post_id),
     FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
-    
 );
+
+select * from movie;
