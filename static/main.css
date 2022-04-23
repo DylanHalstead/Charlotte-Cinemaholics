@@ -195,6 +195,13 @@ label {
     margin-right: 1%;
 }
 
+.like-image{
+    width: 50%;
+}
+.like-button{
+    max-width:35%;
+    max-height: 125%;
+}
 .card1{
     margin-left: 5%;
     margin-right: 5%;
