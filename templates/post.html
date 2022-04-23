@@ -8,11 +8,17 @@
 
 {% endblock %}
 
-
+{% if scroll %}
+<script>
+    document.getElementById('{{ scroll }}').scrollIntoView();
+    // or
+    document.location.hash = '#' + '{{ scroll }}';
+</script>
+{% endif %}
 
 {% block body %}
 <!-- main post -->
-<div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
+<div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;" id="post-{{post.post_id}}"> 
     <div class="card-header whitetext"> 
       <div class="row">
         <div class="col-sm-10"><span class = "post_title">{{post.title}}</span> posted {{post.post_time}}</div>
@@ -50,18 +56,26 @@
     </div>
     <div class="card-footer">
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-2">
+          {{ post.likes.count() }} likes
+        </div>
+        <div class="col-sm-8">
           
         </div>
-        <div class="col-sm-8 right-text">
+        <div class="col-sm-2 right-text">
+          
           {% if session_user != None %}
             {% if session_user.has_liked_post(post) %}
-              <a href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='unlike') }}">Unlike</a>
+              <a class="btn btn-outline-secondary btn-sm active like-button" href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='unlike') }}" role="button">
+                <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
+              </a>
             {% else %}
-              <a href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='like') }}">Like</a>
+              <a class="btn btn-outline-secondary btn-sm like-button" href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='like') }}" role="button">
+                <img src="../static/like-icon.png" class="img-fluid like-image" alt="Like">
+              </a>
             {% endif %}
           {% endif %}
-          {{ post.likes.count() }} likes
+          
         </div>
       </div> 
     </div>
@@ -71,7 +85,7 @@
   {% for user in users %}
   <!-- comment -->
   {% if user.user_id == reply.user_id %}
-  <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
+  <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;" id="reply-{{reply.reply_id}}"> 
     <div class="card-header whitetext"> 
       <div class="row">
         <div class="col-sm-10"><span class = "post_title">RE: {{post.title}}</span> posted {{post.post_time}}</div>
@@ -113,18 +127,26 @@
     </div>
     <div class="card-footer">
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-2">
+          {{ reply.likes.count() }} likes
+        </div>
+        <div class="col-sm-8">
           
         </div>
-        <div class="col-sm-8 right-text">
+        <div class="col-sm-2 right-text">
+          
           {% if session_user != None %}
             {% if session_user.has_liked_reply(reply) %}
-              <a href="{{ url_for('posts_router.like_action_reply', post_id=post.post_id,reply_id=reply.reply_id, action='unlike') }}">Unlike</a>
+              <a class="btn btn-outline-secondary btn-sm like-button" href="{{ url_for('posts_router.like_action_reply', post_id=post.post_id,reply_id=reply.reply_id, action='unlike') }}" role="button">
+                <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
+              </a>
             {% else %}
-              <a href="{{ url_for('posts_router.like_action_reply', post_id=post.post_id,reply_id=reply.reply_id, action='like') }}">Like</a>
+              <a class="btn btn-outline-secondary btn-sm active like-button" href="{{ url_for('posts_router.like_action_reply', post_id=post.post_id,reply_id=reply.reply_id, action='like') }}" role="button">
+                <img src="../static/like-icon.png" class="img-fluid like-image" alt="Like">
+              </a>
             {% endif %}
           {% endif %}
-          {{ reply.likes.count() }} likes
+          
         </div>
       </div> 
     </div>

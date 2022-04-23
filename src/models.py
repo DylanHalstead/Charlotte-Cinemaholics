@@ -86,7 +86,6 @@ class User(db.Model):
             db.session.add(like)
 
     def unlike_reply(self, reply):
-        
         if self.has_liked_reply(reply):
             print(self.username + " unliked " + str(reply.reply_id))
             ReplyLike.query.filter_by(
