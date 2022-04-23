@@ -66,11 +66,11 @@
           
           {% if session_user != None %}
             {% if session_user.has_liked_post(post) %}
-              <a class="btn btn-outline-secondary btn-sm active like-button" href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='unlike') }}" role="button">
+              <a class="btn btn-outline-secondary btn-sm like-button" href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='unlike') }}" role="button">
                 <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
               </a>
             {% else %}
-              <a class="btn btn-outline-secondary btn-sm like-button" href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='like') }}" role="button">
+              <a class="btn btn-outline-secondary btn-sm active like-button" href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='like') }}" role="button">
                 <img src="../static/like-icon.png" class="img-fluid like-image" alt="Like">
               </a>
             {% endif %}
