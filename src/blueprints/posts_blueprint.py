@@ -1,6 +1,6 @@
-from flask import Blueprint, abort, redirect, render_template, request, session
+from flask import Blueprint, abort, redirect, render_template, request, session, url_for
 from datetime import datetime, timedelta
-from src.models import Edits, Post, Reply, User, db, PostLike
+from src.models import Edits, Post, Reply, User, db, PostLike, ReplyLike
 import math
 
 router = Blueprint('posts_router', __name__, url_prefix='/posts')
@@ -10,7 +10,6 @@ def all_posts():
     all_posts = Post.query.order_by(Post.post_id.desc()).all()
     for post in all_posts:
         old_time = post.post_time
-        print(getTime(old_time))
         if getTime(old_time) != None:
             post.post_time = getTime(old_time)
         
@@ -73,7 +72,6 @@ def get_new_post_form():
 @router.post('/')
 def create_post():
     title = request.form.get('title', '')
-    print(title)
     user_id = session['user'].get('user_id')
     body = request.form.get('body', '')
     time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -162,10 +160,6 @@ def edit_reply(post_id, reply_id):
     db.session.commit()
     return redirect(f'/posts/{reply.post_id}')
 
-
-
-
-#TODO add delete post page
 @router.post('/<post_id>/delete')
 def delete_post(post_id):
     post_to_delete = Post.query.get_or_404(post_id)
@@ -178,6 +172,7 @@ def delete_post(post_id):
                 reply.post_id = None
             for edit in edits:
                 edit.post_id = None
+            PostLike.query.filter_by(post_id=post_id).delete()
             db.session.delete(post_to_delete)
             db.session.commit()
             return redirect('/posts/')
@@ -189,6 +184,12 @@ def delete_reply(post_id, reply_id):
     if 'user' in session:
         user_id = session['user'].get('user_id')
         if post_to_delete.user_id == user_id:
+            edits = Edits.query.filter_by(reply_id=reply_id)
+            for edit in edits:
+                edit.post_id = None
+            ReplyLike.query.filter_by(reply_id=reply_id).delete()
+
+                
             db.session.delete(post_to_delete)
             db.session.commit()
             return redirect('/posts/')
@@ -270,3 +271,20 @@ def createDummyUsers(): #dummy users to test post functionality
         db.session.add(user2)
         db.session.add(user3)
         db.session.commit()
+
+
+# ⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝ 
+#⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇ 
+#⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀ 
+#⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀
+#⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀
+#⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀
+#⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋
+
+#          No Posts?
