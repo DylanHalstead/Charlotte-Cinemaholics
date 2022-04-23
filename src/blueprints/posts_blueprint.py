@@ -255,8 +255,8 @@ def getTime(time_str):
             if minute < 1:
                 return "just now"
             if minute == 1:
-                return str(minute) + " ago"
-            return str(minute) + "s ago"
+                return str(minute) + " minute ago"
+            return str(minute) + " minutes ago"
     else: 
         return str(time.days) + " days ago"
     
