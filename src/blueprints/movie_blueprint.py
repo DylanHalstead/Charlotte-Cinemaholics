@@ -52,10 +52,6 @@ def parseMovieDict(movieDict):
             db.session.commit()
         else:
             movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url
-
-<<<<<<< HEAD
-@router.post('/search/')
-=======
 @router.get('/<movie_id>')
 def movie_page(movie_id):
     single_movie = imdbpy.get_movie(movie_id)
@@ -106,7 +102,6 @@ def post_rating(movie_id):
     return redirect(f'/movies/{movie_id}')
 
 @router.post('/search')
->>>>>>> 2c6127673ea95ac4537ccb15798d11d22b00555a
 def search_movie():
     searched = request.form.get('search')
     movies = imdbpy.search_movie(searched)
