@@ -3,7 +3,8 @@
 {% block title %}Charlotte Cinemaholics{% endblock %}
 
 {% block body %}
-<table class="movie-table">
+<h1 id="index-intro">Welcome to Charlotte Cinemaholics</h1>
+<table class="movie-table mb-3">
     <tr>
         <td colspan="5"><a href="#" class="movie-row-link"><h2 class="movie-row-title">Your Watchlist</h2></a></td>
     </tr>
@@ -46,7 +47,7 @@
         {% for b in range(5) %}
         <td>
             <!-- Movie Card Template -->
-            <a href="{{top_films[b].movieID}}" class="movie-sm-link">
+            <a href="/movies/{{top_films[b].movieID}}" class="movie-sm-link">
                 <div class="movie-sm">
                     <img class="movie-poster-sm" src="{{top_films[b]['cover url']}}" alt="{{top_films[b]['title']}}.jpg" width="150px">
                     <div class="movie-card-sm">
@@ -82,7 +83,7 @@
         <td>
             <!-- Movie Card Template -->
             <a href="{{popular_films[c].movieID}}" class="movie-sm-link">
-                <div class="movie-sm">
+                <div class="movie-sm-last">
                     <img class="movie-poster-sm" src="{{popular_films[c]['cover url']}}" alt="{{popular_films[c]['title']}}.jpg" width="150px">
                     <div class="movie-card-sm">
                         <p class="movie-title-sm">{{popular_films[c]['title']}}</p>

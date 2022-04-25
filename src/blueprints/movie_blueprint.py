@@ -1,6 +1,6 @@
 from ctypes.wintypes import PWIN32_FIND_DATAA
 from flask import Blueprint, abort, redirect, render_template, request, session
-from src.models import db, Movie
+from src.models import db, Movie, User, UserRating
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
@@ -53,7 +53,60 @@ def parseMovieDict(movieDict):
         else:
             movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url
 
+<<<<<<< HEAD
 @router.post('/search/')
+=======
+@router.get('/<movie_id>')
+def movie_page(movie_id):
+    single_movie = imdbpy.get_movie(movie_id)
+    parseMovie(single_movie)
+    # Grab user review if it exists
+    if(single_movie['plot'][1]):
+        review = single_movie['plot'][1][:single_movie['plot'][1].find('::')]
+    else:
+        review = single_movie['plot'][0]
+    uncc_ratings = UserRating.query.filter_by(movie_id=single_movie.movieID).all()
+    uncc_rating_info = averageFilm(uncc_ratings)
+    return render_template('movie.html', single_movie=single_movie, review=review, uncc_rating_info=uncc_rating_info)
+
+def parseMovie(movie):
+    if len(Movie.query.filter_by(movie_id=movie.movieID).all()) == 0:
+        movie['cover url'] = imdb_scrape_poster(f'tt{movie.movieID}')
+    else:
+        movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url
+
+def averageFilm(user_ratings):
+    total_ratings = 0
+    rating_sum = 0
+    for rating in user_ratings:
+        total_ratings += 1
+        rating_sum += rating.movie_rating
+    rating_info = {
+        'rating': rating_sum,
+        'votes': total_ratings
+    }
+    return rating_info
+
+@router.post('/<movie_id>')
+def post_rating(movie_id):
+    user_rating = request.form.get('rating', -1)
+
+    if user_rating == -1:
+        abort(400)
+
+    reviee = User.query.filter_by(user_id=session['user']['user_id']).first()
+    movie = Movie.query.filter_by(movie_id=movie_id).first()
+    new_review = UserRating(movie_rating=user_rating)
+    new_review.user = reviee
+    new_review.movie = movie
+    movie.user_rating.append(new_review)
+    # movie_id=movie_id, movie_rating=user_rating
+    db.session.add(new_review)
+    db.session.commit()
+    return redirect(f'/movies/{movie_id}')
+
+@router.post('/search')
+>>>>>>> 2c6127673ea95ac4537ccb15798d11d22b00555a
 def search_movie():
     searched = request.form.get('search')
     movies = imdbpy.search_movie(searched)
