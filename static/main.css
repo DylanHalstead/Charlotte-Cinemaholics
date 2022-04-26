@@ -259,6 +259,10 @@ label {
     text-align: right;
 }
 
+.admin-text{
+    color: gold;
+}
+
 .account-description {
     width: 90%;
     font-size: 14pt;
