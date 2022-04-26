@@ -99,7 +99,7 @@ def create_reply(post_id):
         db.session.add(reply)
         db.session.commit()
 
-    return redirect(f'/posts/{post_id}')
+    return redirect(f'/posts/{post_id}#reply-{reply.reply_id}')
 
 @router.get('/<post_id>/edit')
 def get_edit_post_form(post_id): 
@@ -133,7 +133,6 @@ def update_post(post_id):
 
 @router.get('/<int:post_id>/reply/<int:reply_id>/edit')
 def get_edit_reply_form(post_id, reply_id): 
-    #TODO add check if user is a moderator as well
     reply = Reply.query.get_or_404(reply_id)
     
     if 'user' in session:
@@ -142,7 +141,7 @@ def get_edit_reply_form(post_id, reply_id):
         if reply.user_id == user_id or usr.isAdmin():
             return render_template('edit_reply.html', reply = reply)
             
-    return redirect(f'/posts/{reply.post_id}')
+    return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
 @router.post('/<int:post_id>/reply/<int:reply_id>/edit')
 def edit_reply(post_id, reply_id): 
@@ -158,7 +157,7 @@ def edit_reply(post_id, reply_id):
     reply.body = body
     db.session.add(edit)
     db.session.commit()
-    return redirect(f'/posts/{reply.post_id}')
+    return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
 @router.post('/<post_id>/delete')
 def delete_post(post_id):
