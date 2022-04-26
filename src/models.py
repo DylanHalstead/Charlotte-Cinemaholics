@@ -40,7 +40,7 @@ class UserRating(db.Model):
     user = db.relationship('User', back_populates='movie_rating')
     movie = db.relationship('Movie', back_populates='user_rating')
 
-class playlist_movie(db.Table):
+class PlaylistMovie(db.Model):
     __tablename__ = 'playlist_movie',
     db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.playlist_id'), primary_key=True),
     db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True),
@@ -80,7 +80,7 @@ class Playlist(db.Model):
     playlist_name = db.Column(db.String, nullable = False)
 
     playlist_movie = db.relationship('Movie', secondary=playlist_movie, backref='playlist_movie')
-    
+
 
     def __repr__(self):
         return f'Playlist({self.playlist_id}, {self.playlist_name})'
