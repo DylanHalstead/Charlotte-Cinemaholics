@@ -45,8 +45,8 @@ class PlaylistMovie(db.Model):
     db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.playlist_id'), primary_key=True),
     db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True),
     db.Column('movie_rank', db.Integer, nullable = False)
-    playlist = db.relationship('Playlist', back_populates='playlist_id')
-    movies = db.relationship('Movie', back_populates='movie_id')
+    movie = db.relationship('Movie', back_populates='movie_playlist')
+    playlist =  db.relationship('Playlist', back_populates='playlist_movie ')
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -64,12 +64,12 @@ class User(db.Model):
         return f'User({self.user_id}, {self.username}, {self.email}, {self.pfp}, {self.about})'
 
 
-class User_Playlist(db.Model):
+class UserPlaylist(db.Model):
     __tablename__ = 'users_playlist'
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
     playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.playlist_id'),primary_key=True)
 
-    playlist_name = db.relationship('Playlist', back_populates='playlist_id')
+    playlist_movie = db.relationship('PlaylistMovie', back_populates='playlist')
 
     def __repr__(self):
         return f'User_Playlist({self.user_id}, {self.playlist_id})'
