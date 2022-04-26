@@ -40,12 +40,13 @@ class UserRating(db.Model):
     user = db.relationship('User', back_populates='movie_rating')
     movie = db.relationship('Movie', back_populates='user_rating')
 
-playlist_movie = db.Table(
-    'playlist_movie',
+class playlist_movie(db.Table):
+    __tablename__ = 'playlist_movie',
     db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.playlist_id'), primary_key=True),
     db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True),
     db.Column('movie_rank', db.Integer, nullable = False)
-)
+    playlist = db.relationship('PlaylistID', back_populates='playlist_id')
+    movies = db.relationship('MovieID', back_populates='movie_id')
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -68,6 +69,8 @@ class User_Playlist(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
     playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.playlist_id'),primary_key=True)
 
+    playlist_name = db.relationship('PlayID', back_populates='playlist_id')
+
     def __repr__(self):
         return f'User_Playlist({self.user_id}, {self.playlist_id})'
 
@@ -77,6 +80,7 @@ class Playlist(db.Model):
     playlist_name = db.Column(db.String, nullable = False)
 
     playlist_movie = db.relationship('Movie', secondary=playlist_movie, backref='playlist_movie')
+    
 
     def __repr__(self):
         return f'Playlist({self.playlist_id}, {self.playlist_name})'
@@ -87,6 +91,7 @@ class Movie(db.Model):
     poster_url = db.Column(db.String, nullable=True)
 
     user_rating = db.relationship("UserRating", back_populates="movie")
+    movies = db.relationship('MovieID', back_populates='movies')
 
     def __repr__(self):
         return f'Movie({self.movie_id}, {self.poster_url})'
