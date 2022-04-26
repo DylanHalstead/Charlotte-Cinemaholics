@@ -8,14 +8,6 @@
 
 {% endblock %}
 
-{% if scroll %} 
-<script>
-    //this doesn't even work yet
-    document.getElementById('{{ scroll }}').scrollIntoView();
-    // or
-    document.location.hash = '#' + '{{ scroll }}';
-</script>
-{% endif %}
 
 {% block body %}
 <!-- main post -->
