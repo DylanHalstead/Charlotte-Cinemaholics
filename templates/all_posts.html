@@ -7,8 +7,6 @@ CineForms
 {% block body %}
 
 <h4 class="whitetext">Recent posts</h4>
-&nbsp;
-&nbsp;
 <a class="btn btn-primary" href="/posts/new" role="button">Create New Post</a>
 
 {% for post in posts %}
@@ -19,7 +17,7 @@ CineForms
   {% for user in users %}
       {% if user.user_id == post.user_id %}
         <div class="card-body">
-          <p class="card-text"><img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} {{post.post_time}}</p>
+          <p class="card-text"><img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp-allposts rounded" alt="">Posted by {{user.username}} {{post.post_time}}</p>
         </div>
       {% endif %}
   {% endfor %}

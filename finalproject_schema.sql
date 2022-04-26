@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS posts (
     title      VARCHAR(255)  NOT NULL,
     body       TEXT(65535)   NOT NULL,
     post_time  VARCHAR(255)  NOT NULL,
-    likes      INT           NOT NULL,
     PRIMARY KEY (post_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
@@ -29,7 +28,6 @@ CREATE TABLE IF NOT EXISTS replies (
     user_id    INT            NOT NULL,
     body       TEXT(65535)    NOT NULL,
     post_time  VARCHAR(255)   NOT NULL,
-    likes      INT            NOT NULL,
     PRIMARY KEY (reply_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (post_id) REFERENCES posts(post_id)
@@ -85,5 +83,22 @@ CREATE TABLE IF NOT EXISTS edits (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (post_id) REFERENCES posts(post_id),
     FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
-    
+);
+
+CREATE TABLE IF NOT EXISTS post_like (
+    like_id    INT AUTO_INCREMENT,
+    user_id       INT NOT NULL,
+    post_id     INT NOT NULL,
+    PRIMARY KEY (like_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (post_id) REFERENCES posts(post_id)
+);
+
+CREATE TABLE IF NOT EXISTS reply_like (
+    like_id    INT AUTO_INCREMENT,
+    user_id       INT NOT NULL,
+    reply_id     INT NOT NULL,
+    PRIMARY KEY (like_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
 );
