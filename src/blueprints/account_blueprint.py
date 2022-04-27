@@ -7,23 +7,6 @@ from src.blueprints.posts_blueprint import getTime
 #from app import user
 
 router = Blueprint('account_router', __name__)
-@router.post('/<movie_id>/watchlist')
-def watchlisting(movie_id):
-    
-    # watchlistedMovie = Movie.query.filter_by(movie_id = movie_id).first()
-    # watchlister = User.query.filter_by(user_id = session['user']['user_id']).first()
-
-    # usersWatchlist = UserPlaylist.query.filter_by(watchlist=True).first()
-    # # Need to make sure when user is created that a default playlist is made where watchlist is true
-
-    # watchlist = Playlist.query.filter_by(playlist_id = usersWatchlist.playlist_id).first()
-
-    # watchlistMovie = PlaylistMovie(movie_rank=len(PlaylistMovie.query.filter_by(playlist=watchlist).all())).first()
-    # watchlistMovie.movie = watchlistedMovie
-    # watchlistMovie.playlist = watchlist
-    
-
-
 
 @router.get('/username')
 def account():
