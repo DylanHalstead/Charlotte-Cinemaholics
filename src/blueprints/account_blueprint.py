@@ -1,22 +1,35 @@
 from flask import Blueprint, abort, redirect, render_template, request, redirect
-from src.models import db, User, Playlist, User_Playlist, Post
+from sqlalchemy import true
+from src.models import Movie, PlaylistMovie, UserPlaylist, db, User, Playlist, User_Playlist, Post
 from datetime import datetime
 from app import session
 from src.blueprints.posts_blueprint import getTime
 #from app import user
 
 router = Blueprint('account_router', __name__)
+@router.post('/<movie_id>/watchlist')
+def watchlisting(movie_id):
+    
+    # watchlistedMovie = Movie.query.filter_by(movie_id = movie_id).first()
+    # watchlister = User.query.filter_by(user_id = session['user']['user_id']).first()
+
+    # usersWatchlist = UserPlaylist.query.filter_by(watchlist=True).first()
+    # # Need to make sure when user is created that a default playlist is made where watchlist is true
+
+    # watchlist = Playlist.query.filter_by(playlist_id = usersWatchlist.playlist_id).first()
+
+    # watchlistMovie = PlaylistMovie(movie_rank=len(PlaylistMovie.query.filter_by(playlist=watchlist).all())).first()
+    # watchlistMovie.movie = watchlistedMovie
+    # watchlistMovie.playlist = watchlist
+    
+
+
 
 @router.get('/username')
 def account():
     sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
     if 'user' not in session:
         abort('/login')
-
-    user_playlist_name = 'Watchlist'
-    #user_playlist = User_Playlist.query.filter_by(user_id = User_Playlist.user_id).all()
-    #playlist = Playlist.query.filter_by(user_playlist = User_Playlist.playlist_id).first()
-    #movies = playlist
     return render_template('account.html', sessionUser=sessionUser, movies=movies)
 
 @router.get('/username/posts')
