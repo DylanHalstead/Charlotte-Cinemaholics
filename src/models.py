@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
+from src.time_cleaner import getTime
 db = SQLAlchemy()
 
 class Post(db.Model):
@@ -10,6 +10,24 @@ class Post(db.Model):
     body = db.Column(db.String, nullable=False)
     post_time = db.Column(db.String, nullable=False)
     likes = db.relationship('PostLike', backref='posts', lazy='dynamic')
+
+    def getUser(self):
+        return User.query.get(self.user_id)
+
+    def get_edit(self):
+        descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(post_id=self.post_id, reply_id = None)
+        return descending.first()
+
+    def getLastReply(self):
+        query = Reply.query.order_by(Reply.reply_id.desc()).filter_by(post_id=self.post_id).first()
+        return query
+
+    def getReplyCount(self):
+        return Reply.query.filter(Reply.post_id == self.post_id).count()
+
+    def readable_time(self):
+        return getTime(self.post_time)
+
     def __repr__(self):
         return f'Post({self.post_id}, {self.title}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
 
@@ -22,6 +40,17 @@ class Reply(db.Model):
     post_time = db.Column(db.String, nullable=False)
     likes = db.relationship('ReplyLike', backref='replies', lazy='dynamic')
     
+    def getUser(self):
+        return User.query.get(self.user_id)
+
+    def get_edit(self):
+        descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(reply_id = self.reply_id)
+        print(descending.first())
+        return descending.first()
+
+    def readable_time(self):
+        return getTime(self.post_time)
+
     def __repr__(self):
         return f'Reply({self.reply_id}, {self.post_id}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
 
@@ -165,6 +194,12 @@ class Edits(db.Model):
     reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id', ondelete='CASCADE'), nullable = True)
     reason = db.Column(db.String, nullable=True)
     time = db.Column(db.String, nullable=False)
+
+    def readable_time(self):
+        return getTime(self.time)
+
+    def getUser(self):
+        return User.query.get(self.user_id)
 
     def __repr__(self):
         return f'Edits({self.post_id}, {self.user_id}, {self.post_id}, {self.reply_id}, {self.reason}, {self.time})'
