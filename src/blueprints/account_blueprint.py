@@ -2,7 +2,7 @@ from flask import Blueprint, abort, redirect, render_template, request, redirect
 from src.models import db, User, Playlist, User_Playlist, Post
 from datetime import datetime
 from app import session
-from src.blueprints.posts_blueprint import getTime
+from src.time_cleaner import getTime
 #from app import user
 
 router = Blueprint('account_router', __name__)
