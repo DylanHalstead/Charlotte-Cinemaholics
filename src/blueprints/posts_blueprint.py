@@ -21,7 +21,6 @@ def all_posts():
         for row in query_posts:
             p = row._mapping.get("Post")
             all_posts.append(p)
-
     else: #default to latest
         all_posts = Post.query.order_by(Post.post_id.desc()).all()
     
