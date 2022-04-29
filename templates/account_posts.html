@@ -11,7 +11,7 @@
       <h5><a href="/posts/{{post.post_id}}" style = "text-decoration: none;">{{post.title}}</a></h5>
   </div>
         <div class="card-body">
-          <p class="card-text"><img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">Posted by {{user.username}} {{post.post_time}}</p>
+          <p class="card-text"><img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp-allposts rounded" alt="">Posted by {{user.username}} {{post.readable_time()}}</p>
         </div>
 </div>
   {% endfor %}

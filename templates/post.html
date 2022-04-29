@@ -14,7 +14,7 @@
 <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;" id="post-{{post.post_id}}"> 
     <div class="card-header whitetext"> 
       <div class="row">
-        <div class="col-sm-10"><span class = "post_title">{{post.title}}</span> posted {{post.post_time}}</div>
+        <div class="col-sm-10"><span class = "post_title">{{post.title}}</span> posted {{post.readable_time()}}</div>
         <div class="col-sm-2 right-text">
             {% if 'user' in session %}
               {% if session['user'].get('user_id') == user.user_id %}
@@ -42,15 +42,13 @@
         </div>
         <div class="col-sm-10">
           <p class="card-text whitetext">{{post.body}}</p>
-          {% for u in users %}
-          {% if u.user_id == post_e.user_id %}
-          {% if post_e.reason != '' %}
-          <footer class="blockquote-footer">Last edited by {{u.username}} {{post_e.time}} for {{post_e.reason}}</footer>
+          {% if post.get_edit() != None %}
+          {% if post.get_edit().reason != '' %}
+          <footer class="blockquote-footer">Last edited by {{post.get_edit().getUser().username}} {{post.get_edit().readable_time()}} for {{post.get_edit().reason}}</footer>
           {% else %}
-          <footer class="blockquote-footer">Last edited by {{u.username}} {{post_e.time}}</footer>
+          <footer class="blockquote-footer">Last edited by {{post.get_edit().getUser().username}} {{post.get_edit().readable_time()}}</footer>
           {% endif %}
           {% endif %}
-          {% endfor %}
         </div>
       </div> 
     </div>
@@ -82,16 +80,14 @@
   </div>
 
 {% for reply in replies %}
-  {% for user in users %}
   <!-- comment -->
-  {% if user.user_id == reply.user_id %}
   <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;" id="reply-{{reply.reply_id}}"> 
     <div class="card-header whitetext"> 
       <div class="row">
-        <div class="col-sm-10"><span class = "post_title">RE: {{post.title}}</span> posted {{post.post_time}}</div>
+        <div class="col-sm-10"><span class = "post_title">RE: {{post.title}}</span> posted {{reply.readable_time()}}</div>
         <div class="col-sm-2 right-text">
             {% if 'user' in session %}
-              {% if session['user'].get('user_id') == user.user_id %}
+              {% if session['user'].get('user_id') == reply.getUser().user_id %}
               <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" class="link-light">Edit</a>
               {% elif session_user.isAdmin() %}
               <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" class="link-light">Edit</a>
@@ -104,35 +100,25 @@
     <div class="card-body">
       <div class="row">
         <div class="col-sm-2 userinfo">
-          {% if user.isAdmin() %}
+          {% if reply.getUser().isAdmin() %}
           <h6 class = "admin-text">Forum Moderator</h6>
           {% endif %}
-          <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">
+          <img src="../static/pfp/{{reply.getUser().pfp}}" class="img-fluid pfp rounded" alt="">
           <br>
-          <h5>{{user.username}}</h5>
-          Reputation: {{user.get_reputation()}}
+          <h5>{{reply.getUser().username}}</h5>
+          Reputation: {{reply.getUser().get_reputation()}}
           <br>
-          Posts: {{user.get_posts_and_reply_count()}}
+          Posts: {{reply.getUser().get_posts_and_reply_count()}}
         </div>
         <div class="col-sm-8">
           <p class="card-text whitetext">{{reply.body}}</p>
-          {% for e in reply_e %}
-          {% if e.reply_id == reply.reply_id %} 
-            {% if user.user_id == e.user_id  %}
-              {% if e.reason != '' %}
-              <footer class="blockquote-footer">Last edited by {{user.username}} {{e.time}} for {{e.reason}}</footer>
+            {% if reply.get_edit() != None %}
+              {% if reply.get_edit().reason != '' %}
+              <footer class="blockquote-footer">Last edited by {{reply.get_edit().getUser().username}} {{reply.get_edit().readable_time()}} for {{reply.get_edit().reason}}</footer>
               {% else %}
-              <footer class="blockquote-footer">Last edited by {{user.username}} {{e.time}}</footer>
-              {% endif %}
-            {% else %}
-              {% if e.reason != '' %}
-              <footer class="blockquote-footer">Last edited by staff {{e.time}} for {{e.reason}}</footer>
-              {% else %}
-              <footer class="blockquote-footer">Last edited by staff {{e.time}}</footer>
-              {% endif %}
+              <footer class="blockquote-footer">Last edited by {{reply.get_edit().getUser().username}} {{reply.get_edit().readable_time()}}</footer>
             {% endif %}
-          {% endif %}
-          {% endfor %}
+            {% endif %}
         </div>
       </div> 
       <div class="row">
@@ -166,8 +152,6 @@
       </div> 
     </div>
   </div>
-    {% endif %}
-  {% endfor %}
 {% endfor %}
 
 <!-- reply form -->

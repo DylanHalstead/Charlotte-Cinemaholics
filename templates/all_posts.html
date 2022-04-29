@@ -8,19 +8,32 @@ CineForms
 
 <h4 class="whitetext">Recent posts</h4>
 <a class="btn btn-primary" href="/posts/new" role="button">Create New Post</a>
-
+<form action="/posts/" method="GET">
+  <button type="submit" name="sort" value="latest" class="btn">Latest</button>
+  <button type="submit" name="sort" value="oldest" class="btn">Oldest</button>
+  <button type="submit" name="sort" value="liked" class="btn">Liked</button>
+</form>
 {% for post in posts %}
 <div class="card text-white bg-dark mb-3" style="max-width: 100%;">
   <div class="card-header">
       <h5><a href="/posts/{{post.post_id}}" style = "text-decoration: none;">{{post.title}}</a></h5>
   </div>
-  {% for user in users %}
-      {% if user.user_id == post.user_id %}
         <div class="card-body">
-          <p class="card-text"><img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp-allposts rounded" alt="">Posted by {{user.username}} {{post.post_time}}</p>
+          <div class="row">
+            <div class="col-sm-7">
+              <p class="card-text"><img src="../static/pfp/{{post.getUser().pfp}}" class="img-fluid pfp-allposts rounded" alt="">Posted by {{post.getUser().username}} {{post.readable_time()}}</p>
+            </div>
+            <div class="col-sm-1">
+              <p class = "card-text">{{post.likes.count()}} likes</p>
+              <p class = "card-text">{{post.getReplyCount()}} replies</p>
+            </div>
+            <div class="col-sm-1"></div>
+              <div class="col-sm-3">
+                <p class="card-text">Last reply</p>
+                <p class="card-text"> <img src="../static/pfp/{{post.getLastReply().getUser().pfp}}" class="img pfp-allposts-reply rounded" alt=""> {{post.getLastReply().getUser().username}} {{post.getLastReply().readable_time()}}</p>
+              </div>
+          </div>
         </div>
-      {% endif %}
-  {% endfor %}
 </div>
   {% endfor %}
 
