@@ -45,7 +45,6 @@ class Reply(db.Model):
 
     def get_edit(self):
         descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(reply_id = self.reply_id)
-        print(descending.first())
         return descending.first()
 
     def readable_time(self):
@@ -94,13 +93,11 @@ class User(db.Model):
 
     def like_post(self, post):
         if not self.has_liked_post(post):
-            print(self.username + " liked " + str(post.post_id))
             like = PostLike(user_id=self.user_id, post_id=post.post_id)
             db.session.add(like)
 
     def unlike_post(self, post):
         if self.has_liked_post(post):
-            print(self.username + " unliked " + str(post.post_id))
             PostLike.query.filter_by(
                 user_id=self.user_id,
                 post_id=post.post_id).delete()
@@ -117,7 +114,6 @@ class User(db.Model):
 
     def unlike_reply(self, reply):
         if self.has_liked_reply(reply):
-            print(self.username + " unliked " + str(reply.reply_id))
             ReplyLike.query.filter_by(
                 user_id=self.user_id,
                 reply_id=reply.reply_id).delete()
