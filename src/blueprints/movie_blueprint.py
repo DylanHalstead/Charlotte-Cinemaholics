@@ -52,6 +52,7 @@ def parseMovieDict(movieDict):
             db.session.commit()
         else:
             movie['cover url'] = Movie.query.filter_by(movie_id=movie.movieID).first().poster_url
+
 @router.get('/<movie_id>')
 def movie_page(movie_id):
     single_movie = imdbpy.get_movie(movie_id)
@@ -127,3 +128,4 @@ def watchlisting(movie_id):
     
     movie.watchlistMovie.append(user)
     db.session.commit()
+    return redirect(f'/movies/{movie_id}')

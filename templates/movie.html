@@ -8,7 +8,7 @@
 <table id="single-movie-table">
     <tr>
         <td class="center">
-            <form action="/{{ single_movie['movie_id'] }}/watchlist" method="POST">
+            <form action="/movies/{{ single_movie.movieID }}/watchlist" method="POST">
                 <button type="submit" name="watchlist">Watchlist</button>
             </form>
             <img id="movie-poster" src="{{ single_movie['cover url'] }}" alt="{{ single_movie[title] }}.jpg">

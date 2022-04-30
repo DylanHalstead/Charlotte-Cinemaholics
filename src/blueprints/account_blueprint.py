@@ -1,6 +1,6 @@
 from flask import Blueprint, abort, redirect, render_template, request, redirect
 from sqlalchemy import true
-from src.models import Movie, PlaylistMovie, UserPlaylist, db, User, Playlist, User_Playlist, Post
+from src.models import Movie, db, User, Post
 from datetime import datetime
 from app import session
 from src.blueprints.posts_blueprint import getTime
@@ -8,12 +8,14 @@ from src.blueprints.posts_blueprint import getTime
 
 router = Blueprint('account_router', __name__)
 
+
 @router.get('/username')
 def account():
     sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
     if 'user' not in session:
         abort('/login')
-    return render_template('account.html', sessionUser=sessionUser, movies=movies)
+    userWatch = grab_watchlist()
+    return render_template('account.html', sessionUser=sessionUser, movies=userWatch)
 
 @router.get('/username/posts')
 def account_posts():
@@ -53,8 +55,17 @@ def edit_account():
         return redirect('/username')
     return redirect('/')
 
-def createDummyUser(): #dummy users to test post functionality, when logging in gets implemented this will be removed
-    if User.query.first() == None:
-        user = User(username = "unccstudent", email = "aa", passkey = "sjs", pfp = "pfp1.png", about = " dsh")
-        db.session.add(user)
-        db.session.commit()
+def grab_watchlist():
+    signedInUser = User.query.filter_by(user_id = session['user']['user_id'] ).first()
+    signedInUser.userWatchlist
+    
+    for watch in signedInUser.userWatchlist:
+        theWatching = dict({watch})
+    d = {}
+    for row in signedInUser.userWatchlist:
+        value = row
+        try:
+            d[signedInUser].append(value)
+        except KeyError:
+            d[signedInUser] = [value]
+    return d

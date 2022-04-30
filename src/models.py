@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import true
 
 db = SQLAlchemy()
 
@@ -49,10 +50,10 @@ class User(db.Model):
     def __repr__(self):
         return f'User({self.user_id}, {self.username}, {self.email}, {self.pfp}, {self.about})'
 
-Watchlist = db.Table(
+watchlist = db.Table(
     'watchlist',
-    db.Column('movie_id', db.String, db.ForeignKey('Movie.movie_id')),
-    db.Column('user_id', db.String, db.ForeignKey('User.user_id'))
+    db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
 )
 
 class Movie(db.Model):
@@ -61,7 +62,7 @@ class Movie(db.Model):
     poster_url = db.Column(db.String, nullable=True)
 
     user_rating = db.relationship("UserRating", back_populates="movie")
-    watchlistMovie = db.relationship('User', secondary=Watchlist)
+    watchlistMovie = db.relationship('User', secondary=watchlist, backref='userWatchlist')
 
     def __repr__(self):
         return f'Movie({self.movie_id}, {self.poster_url})'
