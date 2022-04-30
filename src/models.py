@@ -94,7 +94,6 @@ class User(db.Model):
                 reply_id=reply.reply_id).delete()
 
     def has_liked_reply(self, reply):
-        
         return ReplyLike.query.filter(
             ReplyLike.user_id == self.user_id,
             ReplyLike.reply_id == reply.reply_id).count() > 0
@@ -118,9 +117,17 @@ class User(db.Model):
             reputation += r.likes.count()
         return reputation
 
+    def isAdmin(self):
+        return Admin.query.filter(Admin.user_id == self.user_id).count() > 0
+
     def __repr__(self):
         return f'User({self.user_id}, {self.username}, {self.email}, {self.pfp}, {self.about})'
 
+class Admin(db.Model):
+    __tablename__ = 'admins'
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
+    def __repr__(self):
+        return f'User_Playlist({self.user_id})'
 
 class User_Playlist(db.Model):
     __tablename__ = 'users_playlist'

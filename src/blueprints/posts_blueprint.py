@@ -101,16 +101,15 @@ def create_reply(post_id):
 
     return redirect(f'/posts/{post_id}')
 
-#TODO add edit post page
 @router.get('/<post_id>/edit')
 def get_edit_post_form(post_id): 
     #TODO add check if user is a moderator as well
     post_to_edit = Post.query.get_or_404(post_id)
     if 'user' in session:
         user_id = session['user'].get('user_id')
-        if post_to_edit.user_id == user_id:
+        user = User.query.get(user_id)
+        if post_to_edit.user_id == user_id or user.isAdmin():
             return render_template('edit_post.html', post=post_to_edit)
-            
     return redirect(f'/posts/{post_id}')
 
 @router.post('/<post_id>/edit')
@@ -139,7 +138,8 @@ def get_edit_reply_form(post_id, reply_id):
     
     if 'user' in session:
         user_id = session['user'].get('user_id')
-        if reply.user_id == user_id:
+        usr = User.query.get(user_id)
+        if reply.user_id == user_id or usr.isAdmin():
             return render_template('edit_reply.html', reply = reply)
             
     return redirect(f'/posts/{reply.post_id}')
@@ -165,7 +165,8 @@ def delete_post(post_id):
     post_to_delete = Post.query.get_or_404(post_id)
     if 'user' in session:
         user_id = session['user'].get('user_id')
-        if post_to_delete.user_id == user_id:
+        user = User.query.get(user_id)
+        if post_to_delete.user_id == user_id or user.isAdmin():
             replies = Reply.query.filter_by(post_id=post_id)
             edits = Edits.query.filter_by(post_id=post_id)
             for reply in replies:
@@ -182,11 +183,13 @@ def delete_post(post_id):
 def delete_reply(post_id, reply_id):
     post_to_delete = Reply.query.get_or_404(reply_id)
     if 'user' in session:
+        p_id = post_to_delete.post_id
         user_id = session['user'].get('user_id')
-        if post_to_delete.user_id == user_id:
+        user = User.query.get(user_id)
+        if post_to_delete.user_id == user_id or user.isAdmin():
             edits = Edits.query.filter_by(reply_id=reply_id)
             for edit in edits:
-                edit.post_id = None
+                edit.reply_id = None
             ReplyLike.query.filter_by(reply_id=reply_id).delete()
 
                 

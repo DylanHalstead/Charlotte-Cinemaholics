@@ -102,3 +102,9 @@ CREATE TABLE IF NOT EXISTS reply_like (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
 );
+
+CREATE TABLE IF NOT EXISTS admins (
+    user_id       INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+	PRIMARY KEY (user_id)
+);
