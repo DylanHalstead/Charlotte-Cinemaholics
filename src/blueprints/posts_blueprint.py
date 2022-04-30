@@ -24,7 +24,7 @@ def all_posts():
     else: #default to latest
         all_posts = Post.query.order_by(Post.post_id.desc()).all()
     
-    return render_template('all_posts.html', posts=all_posts)
+    return render_template('all_posts.html', posts=all_posts, sort = sort)
 
 @router.get('/<post_id>')
 def get_post(post_id):

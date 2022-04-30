@@ -5,18 +5,33 @@ CineForms
 {% endblock %}
 
 {% block body %}
+  {% if sort == "oldest"%}
+    <h4 class="whitetext">Old posts</h4>
+  {% elif sort == "liked" %}
+    <h4 class="whitetext">Top posts</h4>
+  {% else %}
+    <h4 class="whitetext">Recent posts</h4>
+  {% endif %}
 
-<h4 class="whitetext">Recent posts</h4>
-<a class="btn btn-primary" href="/posts/new" role="button">Create New Post</a>
-<form action="/posts/" method="GET">
-  <button type="submit" name="sort" value="latest" class="btn">Latest</button>
-  <button type="submit" name="sort" value="oldest" class="btn">Oldest</button>
-  <button type="submit" name="sort" value="liked" class="btn">Liked</button>
-</form>
+<div class="row">
+  <div class="col-sm-6">
+    <a class="btn btn-light" href="/posts/new" role="button">Create New Post</a>
+  </div>
+    
+  <div class="col-sm-6 right-text"> 
+    <form action="/posts/" method="GET">
+      <button type="submit" name="sort" value="latest" class="btn">Latest</button>
+      <button type="submit" name="sort" value="oldest" class="btn">Oldest</button>
+      <button type="submit" name="sort" value="liked" class="btn">Liked</button>
+    </form>
+  </div>
+</div>
+
+
 {% for post in posts %}
-<div class="card text-white bg-dark mb-3" style="max-width: 100%;">
+<div class="card text-white post-card mb-3" style="max-width: 100%;">
   <div class="card-header">
-      <h5><a href="/posts/{{post.post_id}}" style = "text-decoration: none;">{{post.title}}</a></h5>
+      <h5><a href="/posts/{{post.post_id}}" class="link-light link-white">{{post.title}}</a></h5>
   </div>
         <div class="card-body">
           <div class="row">
@@ -29,8 +44,14 @@ CineForms
             </div>
             <div class="col-sm-1"></div>
               <div class="col-sm-3">
+                
+                {%if post.getLastReply() != None %}
                 <p class="card-text">Last reply</p>
                 <p class="card-text"> <img src="../static/pfp/{{post.getLastReply().getUser().pfp}}" class="img pfp-allposts-reply rounded" alt=""> {{post.getLastReply().getUser().username}} {{post.getLastReply().readable_time()}}</p>
+                {% else %}
+                <p class="card-text">Last reply</p>
+                <p class="card-text"> <img src="../static/pfp/{{post.getUser().pfp}}" class="img pfp-allposts-reply rounded" alt=""> {{post.getUser().username}} {{post.readable_time()}}</p>
+                {% endif %}
               </div>
           </div>
         </div>

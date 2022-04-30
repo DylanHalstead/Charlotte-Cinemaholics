@@ -11,16 +11,16 @@
 
 {% block body %}
 <!-- main post -->
-<div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;" id="post-{{post.post_id}}"> 
+<div class="card text-white post-card mb-3"  style = "margin-top: 1%;" id="post-{{post.post_id}}"> 
     <div class="card-header whitetext"> 
       <div class="row">
         <div class="col-sm-10"><span class = "post_title">{{post.title}}</span> posted {{post.readable_time()}}</div>
         <div class="col-sm-2 right-text">
             {% if 'user' in session %}
               {% if session['user'].get('user_id') == user.user_id %}
-              <a href="/posts/{{post.post_id}}/edit" class="link-light">Edit</a>
+              <a href="/posts/{{post.post_id}}/edit" class="link-white">Edit</a>
               {% elif session_user.isAdmin() %}
-              <a href="/posts/{{post.post_id}}/edit" class="link-light">Edit</a>
+              <a href="/posts/{{post.post_id}}/edit" class="link-white">Edit</a>
               {% endif %}
             {% endif %}
         </div>
@@ -81,16 +81,16 @@
 
 {% for reply in replies %}
   <!-- comment -->
-  <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;" id="reply-{{reply.reply_id}}"> 
+  <div class="card text-white post-card mb-3"  style = "margin-top: 1%;" id="reply-{{reply.reply_id}}"> 
     <div class="card-header whitetext"> 
       <div class="row">
         <div class="col-sm-10"><span class = "post_title">RE: {{post.title}}</span> posted {{reply.readable_time()}}</div>
         <div class="col-sm-2 right-text">
             {% if 'user' in session %}
               {% if session['user'].get('user_id') == reply.getUser().user_id %}
-              <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" class="link-light">Edit</a>
+              <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" class="link-white">Edit</a>
               {% elif session_user.isAdmin() %}
-              <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" class="link-light">Edit</a>
+              <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/edit" class="link-white">Edit</a>
               {% endif %}
             {% endif %}
         </div>
@@ -155,7 +155,7 @@
 {% endfor %}
 
 <!-- reply form -->
-<div class="card text-white bg-dark mb-3">
+<div class="card text-white post-card mb-3">
   <div class="card-header">Reply</div>
   <div class="card-body">
       <form action="/posts/{{post.post_id}}" method="post">
