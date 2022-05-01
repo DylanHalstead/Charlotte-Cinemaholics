@@ -2,29 +2,47 @@ from flask import Blueprint, abort, redirect, render_template, request, session,
 from datetime import datetime, timedelta
 
 import sqlalchemy
-from src.models import Edits, Post, Reply, User, db, PostLike, ReplyLike
-import math
+from src.models import Edits, Post, Reply, User, db, PostLike, ReplyLike, Reply_Quote
 from sqlalchemy import func
 
 router = Blueprint('posts_router', __name__, url_prefix='/posts')
 
 @router.get('/')
 def all_posts():
+    searched = request.args.get('search')
     sort = request.args.get("sort")
-    if sort == "oldest":
-        all_posts = Post.query.order_by(Post.post_id).all()
-    elif sort == "latest":
-        all_posts = Post.query.order_by(Post.post_id.desc()).all()
-    elif sort == "liked":
-        query_posts = db.session.query(Post, func.count(PostLike.user_id).label('total')).join(PostLike).group_by(Post).order_by(sqlalchemy.sql.text('total DESC'))
-        all_posts = []
-        for row in query_posts:
-            p = row._mapping.get("Post")
-            all_posts.append(p)
-    else: #default to latest
-        all_posts = Post.query.order_by(Post.post_id.desc()).all()
+    if searched != None or searched != "":
+        all_posts = Post.query.filter(Post.title.contains(searched))
+        if sort == "oldest":
+            all_posts = all_posts.order_by(Post.post_id).all()
+        elif sort == "latest":
+            all_posts =all_posts.order_by(Post.post_id.desc()).all()
+            
+        elif sort == "liked":
+            query_posts = db.session.query(Post, func.count(PostLike.user_id).label('total')).join(PostLike).group_by(Post).order_by(sqlalchemy.sql.text('total DESC'))
+            all_posts = []
+            for row in query_posts:
+                p = row._mapping.get("Post")
+                if searched in p.title:
+                    all_posts.append(p)
+        else: #default to latest
+            all_posts =all_posts.order_by(Post.post_id.desc()).all()
+            return render_template('all_posts.html', posts=all_posts, searched = searched)
+    else:
+        if sort == "oldest":
+            all_posts = Post.query.order_by(Post.post_id).all()
+        elif sort == "latest":
+            all_posts = Post.query.order_by(Post.post_id.desc()).all()
+        elif sort == "liked":
+            query_posts = db.session.query(Post, func.count(PostLike.user_id).label('total')).join(PostLike).group_by(Post).order_by(sqlalchemy.sql.text('total DESC'))
+            all_posts = []
+            for row in query_posts:
+                p = row._mapping.get("Post")
+                all_posts.append(p)
+        else: #default to latest
+            all_posts = Post.query.order_by(Post.post_id.desc()).all()
     
-    return render_template('all_posts.html', posts=all_posts, sort = sort)
+    return render_template('all_posts.html', posts=all_posts, sort = sort, searched = searched)
 
 @router.get('/<post_id>')
 def get_post(post_id):
@@ -61,6 +79,33 @@ def create_post():
     db.session.commit()
 
     return redirect(f'/posts/{new_post.post_id}')
+
+@router.get('/<int:post_id>/reply/<int:reply_id>/quote')
+def get_create_reply_form(post_id, reply_id): 
+    reply = Reply.query.get_or_404(reply_id)
+    
+    if 'user' in session:
+        return render_template('create_reply.html', reply = reply)
+            
+    return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
+
+@router.post('/<int:post_id>/reply/<int:reply_id>/quote')
+def create_quote_reply(post_id, reply_id): 
+    if 'user' in session:
+        user_id = session['user'].get('user_id')
+        body = request.form.get('body', '')
+        time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        
+        if body == '':
+            abort(400)
+
+        reply = Reply(post_id = post_id, user_id=user_id, body=body, post_time = time)
+        db.session.add(reply)
+        db.session.commit()
+        quote = Reply_Quote(reply_id = reply.reply_id, parent_id = reply_id)
+        db.session.add(quote)
+        db.session.commit()
+    return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
 @router.post('/<post_id>')
 def create_reply(post_id):
@@ -203,17 +248,11 @@ def like_action_reply(post_id,reply_id, action):
             db.session.commit()
         return redirect(request.referrer)
 
-
-def createDummyUsers(): #dummy users to test post functionality
-    if User.query.first() == None:
-        user = User(username = "unccstudent", email = "aa", passkey = "sjs", pfp = "pfp1.png", about = "")
-        user2 = User(username = "austin", email = "p", passkey = "sds", pfp = "pfp5.png", about = "")
-        user3 = User(username = "mitchel", email = "d", passkey = "d", pfp = "pfp3.png", about = "")
-        db.session.add(user)
-        db.session.add(user2)
-        db.session.add(user3)
-        db.session.commit()
-
+@router.post('/search')
+def search_movie():
+    searched = request.form.get('search')
+    posts = Post.query.filter(Post.title.contains(searched) or Post.body.contains(searched))
+    return render_template('post_search.html', searched=searched, posts = posts)
 
 # ⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝ 
 #⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇ 

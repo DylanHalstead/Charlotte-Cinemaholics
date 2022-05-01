@@ -27,6 +27,7 @@ class Post(db.Model):
 
     def readable_time(self):
         return getTime(self.post_time)
+            
 
     def __repr__(self):
         return f'Post({self.post_id}, {self.title}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
@@ -49,6 +50,15 @@ class Reply(db.Model):
 
     def readable_time(self):
         return getTime(self.post_time)
+    
+    def get_quoted_post(self):
+        qoute = Reply_Quote.query.get(self.reply_id)
+
+        if qoute != None:
+            if qoute.parent_id == 0:
+                return Post.query.get(self.post_id)
+            else:
+                return Reply.query.get(qoute.parent_id)
 
     def __repr__(self):
         return f'Reply({self.reply_id}, {self.post_id}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
@@ -212,3 +222,8 @@ class ReplyLike(db.Model):
     like_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id', ondelete='CASCADE'))
+
+class Reply_Quote(db.Model):
+    __tablename__ = 'reply_quotes'
+    reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id', ondelete='CASCADE'), primary_key=True)
+    parent_id = db.Column(db.Integer, nullable = False)
