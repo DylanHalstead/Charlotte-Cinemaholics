@@ -63,7 +63,7 @@ class UserRating(db.Model):
     __tablename__ = 'user_ratings'
     user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
     movie_id = db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True)
-    movie_rating = db.Column('user_rating', db.Float, nullable = False)
+    movie_rating = db.Column('user_rating', db.Float, nullable=False)
     user = db.relationship('User', back_populates='movie_rating')
     movie = db.relationship('Movie', back_populates='user_rating')
 
@@ -175,12 +175,32 @@ class Playlist(db.Model):
 class Movie(db.Model):
     __tablename__ = 'movie'
     movie_id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    director = db.Column(db.String, nullable=False)
+    about = db.Column(db.String, nullable=True)
     poster_url = db.Column(db.String, nullable=True)
+    imdb_rating = db.Column(db.Float, nullable=False)
+    imdb_votes = db.Column(db.Integer, nullable=False)
+    uncc_rating = db.Column(db.Float, nullable=False)
+    uncc_votes = db.Column(db.Integer, nullable=False)
 
     user_rating = db.relationship("UserRating", back_populates="movie")
 
     def __repr__(self):
-        return f'Movie({self.movie_id}, {self.poster_url})'
+        return f'Movie({self.movie_id}, {self.title}, {self.director}, {self.poster_url}, {self.imdb_rating}, {self.imdb_votes}, {self.uncc_rating}, {self.uncc_votes})'
+
+    def to_dict(self):
+        return {
+            'movie_id': self.movie_id,
+            'title': self.title,
+            'director': self.director,
+            'about': self.about,
+            'poster_url': self.poster_url,
+            'imdb_rating': self.imdb_rating,
+            'imdb_votes': self.imdb_votes,
+            'uncc_rating': self.uncc_rating,
+            'uncc_votes': self.uncc_votes,
+        }
 
 class Edits(db.Model):
     __tablename__ = 'edits'
