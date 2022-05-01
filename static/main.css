@@ -23,6 +23,17 @@ p {
     color: white;
 }
 
+.link-white:hover{
+    color: grey;
+}
+.link-white{
+    color: white;
+}
+
+.post-card{
+    background-color: #2e2e2e;
+}
+
 .footer {
     background-color: #2e2e2e;
     position: relative;
@@ -203,8 +214,12 @@ label {
 
 /* */
 .pfp-allposts{
-    width: 2.5%;
+    width: 5%;
     margin-right: 1%;
+}
+
+.pfp-allposts-reply{
+    width: 10%;
 }
 
 .pfp{
@@ -252,7 +267,6 @@ label {
     padding-left: 0;
     text-align: center;
     margin: 0%;
-    background-color: #32383e;
 }
 
 .right-text{
