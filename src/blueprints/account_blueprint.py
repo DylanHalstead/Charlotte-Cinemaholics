@@ -14,8 +14,9 @@ def account():
     sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
     if 'user' not in session:
         abort('/login')
-    userWatch = grab_watchlist()
-    return render_template('account.html', sessionUser=sessionUser, movies=userWatch)
+    #userWatch = grab_watchlist()
+    #need to grab the watchlisted movies id's then in render_template make movies=that variable
+    return render_template('account.html', sessionUser=sessionUser)
 
 @router.get('/username/posts')
 def account_posts():
@@ -55,17 +56,3 @@ def edit_account():
         return redirect('/username')
     return redirect('/')
 
-def grab_watchlist():
-    signedInUser = User.query.filter_by(user_id = session['user']['user_id'] ).first()
-    signedInUser.userWatchlist
-    
-    for watch in signedInUser.userWatchlist:
-        theWatching = dict({watch})
-    d = {}
-    for row in signedInUser.userWatchlist:
-        value = row
-        try:
-            d[signedInUser].append(value)
-        except KeyError:
-            d[signedInUser] = [value]
-    return d
