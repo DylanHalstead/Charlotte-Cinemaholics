@@ -46,7 +46,6 @@ def addMovie(movie):
             director = ascii(movie['director'][0]['name'])
         else:
             director = 'Not Known'
-        
 
         if 'rating' in movie:
             imdb_rating = movie['rating']

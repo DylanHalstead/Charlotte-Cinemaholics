@@ -1,55 +1,43 @@
-from flask import Blueprint, abort, redirect, render_template, request, session
+from flask import Blueprint, abort, redirect, render_template, request, session, url_for
 from datetime import datetime, timedelta
-from src.models import Edits, Post, Reply, User, db
+
+import sqlalchemy
+from src.models import Edits, Post, Reply, User, db, PostLike, ReplyLike
 import math
+from sqlalchemy import func
 
 router = Blueprint('posts_router', __name__, url_prefix='/posts')
 
 @router.get('/')
 def all_posts():
-    all_posts = Post.query.order_by(Post.post_id.desc()).all()
-    for post in all_posts:
-        old_time = post.post_time
-        post.post_time = getTime(old_time)
-        
-    users = User.query.all()
-
-    return render_template('all_posts.html', posts=all_posts, users = users)
+    sort = request.args.get("sort")
+    if sort == "oldest":
+        all_posts = Post.query.order_by(Post.post_id).all()
+    elif sort == "latest":
+        all_posts = Post.query.order_by(Post.post_id.desc()).all()
+    elif sort == "liked":
+        query_posts = db.session.query(Post, func.count(PostLike.user_id).label('total')).join(PostLike).group_by(Post).order_by(sqlalchemy.sql.text('total DESC'))
+        all_posts = []
+        for row in query_posts:
+            p = row._mapping.get("Post")
+            all_posts.append(p)
+    else: #default to latest
+        all_posts = Post.query.order_by(Post.post_id.desc()).all()
+    
+    return render_template('all_posts.html', posts=all_posts, sort = sort)
 
 @router.get('/<post_id>')
 def get_post(post_id):
     post = Post.query.get_or_404(post_id)
-    old_time = post.post_time
-    post.post_time = getTime(old_time)
-
     replies = Reply.query.filter_by(post_id=post_id)
-    edits = Edits.query.filter_by(post_id=post_id)
-
-    reply_edits = []
-    for reply in replies:
-        old_time = reply.post_time
-        reply.post_time = getTime(old_time)
-
-        temp = []
-        for edit in edits:
-            if edit.reply_id != None and reply.reply_id == edit.reply_id:
-                old_time = edit.time
-                edit.time = getTime(old_time)
-                temp.append(edit)
-        if len(temp) != 0:
-            reply_edits.append(temp[len(temp)-1]) 
-    
-        
-    descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(post_id=post_id, reply_id = None)
-
-    post_edit = descending.first()
-    if post_edit != None:
-        old_time = post_edit.time
-        post_edit.time = getTime(old_time)
-
     users = User.query.all()
-    user = User.query.filter_by(user_id=post.user_id).first()
-    return render_template('post.html', post = post, replies = replies, user = user, users = users, post_e = post_edit, reply_e = reply_edits)
+    user = User.query.get(post.user_id)
+    s_u = None
+    if 'user' in session:
+        user_id = session['user'].get('user_id')
+        s_u = User.query.get(user_id)
+
+    return render_template('post.html', post = post, replies = replies, user = user, users = users, session_user = s_u)
 
 
 @router.get('/new')
@@ -62,18 +50,13 @@ def get_new_post_form():
 @router.post('/')
 def create_post():
     title = request.form.get('title', '')
-    print(title)
-    #user = TODO get current user
-
     user_id = session['user'].get('user_id')
     body = request.form.get('body', '')
     time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-    likes = 0
-
+    
     if title == '' or body == '':
         abort(400)
-
-    new_post = Post(title=title, user_id=user_id, body=body, post_time = time, likes = likes)
+    new_post = Post(title=title, user_id=user_id, body=body, post_time = time)
     db.session.add(new_post)
     db.session.commit()
 
@@ -87,26 +70,24 @@ def create_reply(post_id):
         body = request.form.get('body', '')
         time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         
-        likes = 0
         if body == '':
             abort(400)
 
-        reply = Reply(post_id = post_id, user_id=user_id, body=body, post_time = time, likes = likes)
+        reply = Reply(post_id = post_id, user_id=user_id, body=body, post_time = time)
         db.session.add(reply)
         db.session.commit()
 
-    return redirect(f'/posts/{post_id}')
+    return redirect(f'/posts/{post_id}#reply-{reply.reply_id}')
 
-#TODO add edit post page
 @router.get('/<post_id>/edit')
 def get_edit_post_form(post_id): 
     #TODO add check if user is a moderator as well
     post_to_edit = Post.query.get_or_404(post_id)
     if 'user' in session:
         user_id = session['user'].get('user_id')
-        if post_to_edit.user_id == user_id:
+        user = User.query.get(user_id)
+        if post_to_edit.user_id == user_id or user.isAdmin():
             return render_template('edit_post.html', post=post_to_edit)
-            
     return redirect(f'/posts/{post_id}')
 
 @router.post('/<post_id>/edit')
@@ -130,15 +111,15 @@ def update_post(post_id):
 
 @router.get('/<int:post_id>/reply/<int:reply_id>/edit')
 def get_edit_reply_form(post_id, reply_id): 
-    #TODO add check if user is a moderator as well
     reply = Reply.query.get_or_404(reply_id)
     
     if 'user' in session:
         user_id = session['user'].get('user_id')
-        if reply.user_id == user_id:
+        usr = User.query.get(user_id)
+        if reply.user_id == user_id or usr.isAdmin():
             return render_template('edit_reply.html', reply = reply)
             
-    return redirect(f'/posts/{reply.post_id}')
+    return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
 @router.post('/<int:post_id>/reply/<int:reply_id>/edit')
 def edit_reply(post_id, reply_id): 
@@ -154,18 +135,22 @@ def edit_reply(post_id, reply_id):
     reply.body = body
     db.session.add(edit)
     db.session.commit()
-    return redirect(f'/posts/{reply.post_id}')
+    return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
-
-
-
-#TODO add delete post page
 @router.post('/<post_id>/delete')
 def delete_post(post_id):
     post_to_delete = Post.query.get_or_404(post_id)
     if 'user' in session:
         user_id = session['user'].get('user_id')
-        if post_to_delete.user_id == user_id:
+        user = User.query.get(user_id)
+        if post_to_delete.user_id == user_id or user.isAdmin():
+            replies = Reply.query.filter_by(post_id=post_id)
+            edits = Edits.query.filter_by(post_id=post_id)
+            for reply in replies:
+                reply.post_id = None
+            for edit in edits:
+                edit.post_id = None
+            PostLike.query.filter_by(post_id=post_id).delete()
             db.session.delete(post_to_delete)
             db.session.commit()
             return redirect('/posts/')
@@ -175,44 +160,48 @@ def delete_post(post_id):
 def delete_reply(post_id, reply_id):
     post_to_delete = Reply.query.get_or_404(reply_id)
     if 'user' in session:
+        p_id = post_to_delete.post_id
         user_id = session['user'].get('user_id')
-        if post_to_delete.user_id == user_id:
+        user = User.query.get(user_id)
+        if post_to_delete.user_id == user_id or user.isAdmin():
+            edits = Edits.query.filter_by(reply_id=reply_id)
+            for edit in edits:
+                edit.reply_id = None
+            ReplyLike.query.filter_by(reply_id=reply_id).delete()
+
+                
             db.session.delete(post_to_delete)
             db.session.commit()
             return redirect('/posts/')
     return redirect('/posts/{post_id}')
 
-def getTime(time_str):
-    datetime_object = datetime.strptime(time_str, '%Y-%m-%d %H:%M:%S')
-    now = datetime.now()
-    time = now - datetime_object
-    print(time.days)
-    if time.days > 365:
-        years = math.floor(time.days/365)
-        if years == 1:
-            return str(years) + " year ago"
-        return str(years) + " years ago"
-    elif time.days > 30:
-        months = math.floor(time.days/30)
-        if months == 1:
-            return str(months) + " month ago"
-        return str(months) + " months ago"
-    elif time.days > 7:
-        weeks = math.floor(time.days/7)
-        if weeks == 1:
-            return str(weeks) + " week ago"
-        return str(weeks) + " weeks ago"
-    elif time.days < 1: 
-        hour = int(time.seconds / 3600)
-        if hour < 1:
-            minute = int(time.seconds / 60)
-            if minute < 1:
-                return "just now"
-            if minute == 1:
-                return str(minute) + " ago"
-            return str(minute) + "s ago"
-    else: 
-        return str(time.days) + " days ago"
+@router.route('/like/<int:post_id>/<action>')
+def like_action(post_id, action):
+    post = Post.query.filter_by(post_id=post_id).first_or_404()
+    if 'user' in session:
+        user_id = session['user'].get('user_id')
+        current_user = User.query.get(user_id)
+        if action == 'like':
+            current_user.like_post(post)
+            db.session.commit()
+        if action == 'unlike':
+            current_user.unlike_post(post)
+            db.session.commit()
+        return redirect(request.referrer)
+
+@router.route('/like/<int:post_id>/<int:reply_id>/<action>')
+def like_action_reply(post_id,reply_id, action):
+    reply = Reply.query.filter_by(reply_id=reply_id).first_or_404()
+    if 'user' in session:
+        user_id = session['user'].get('user_id')
+        current_user = User.query.get(user_id)
+        if action == 'like':
+            current_user.like_reply(reply)
+            db.session.commit()
+        if action == 'unlike':
+            current_user.unlike_reply(reply)
+            db.session.commit()
+        return redirect(request.referrer)
 
 
 def createDummyUsers(): #dummy users to test post functionality
@@ -224,3 +213,20 @@ def createDummyUsers(): #dummy users to test post functionality
         db.session.add(user2)
         db.session.add(user3)
         db.session.commit()
+
+
+# ⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝ 
+#⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇ 
+#⠀⠀⢀⢀⢄⢬⢪⡪⡎⣆⡈⠚⠜⠕⠇⠗⠝⢕⢯⢫⣞⣯⣿⣻⡽⣏⢗⣗⠏⠀ 
+#⠀⠪⡪⡪⣪⢪⢺⢸⢢⢓⢆⢤⢀⠀⠀⠀⠀⠈⢊⢞⡾⣿⡯⣏⢮⠷⠁⠀⠀
+#⠀⠀⠀⠈⠊⠆⡃⠕⢕⢇⢇⢇⢇⢇⢏⢎⢎⢆⢄⠀⢑⣽⣿⢝⠲⠉⠀⠀⠀⠀
+#⠀⠀⠀⠀⠀⡿⠂⠠⠀⡇⢇⠕⢈⣀⠀⠁⠡⠣⡣⡫⣂⣿⠯⢪⠰⠂⠀⠀⠀⠀
+#⠀⠀⠀⠀⡦⡙⡂⢀⢤⢣⠣⡈⣾⡃⠠⠄⠀⡄⢱⣌⣶⢏⢊⠂⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⠀⢝⡲⣜⡮⡏⢎⢌⢂⠙⠢⠐⢀⢘⢵⣽⣿⡿⠁⠁⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⠀⠨⣺⡺⡕⡕⡱⡑⡆⡕⡅⡕⡜⡼⢽⡻⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⠀⣼⣳⣫⣾⣵⣗⡵⡱⡡⢣⢑⢕⢜⢕⡝⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⣴⣿⣾⣿⣿⣿⡿⡽⡑⢌⠪⡢⡣⣣⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⡟⡾⣿⢿⢿⢵⣽⣾⣼⣘⢸⢸⣞⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+#⠀⠀⠀⠀⠁⠇⠡⠩⡫⢿⣝⡻⡮⣒⢽⠋
+
+#          No Posts?
