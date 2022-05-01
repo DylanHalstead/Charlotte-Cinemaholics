@@ -11,7 +11,7 @@ router = Blueprint('posts_router', __name__, url_prefix='/posts')
 def all_posts():
     searched = request.args.get('search')
     sort = request.args.get("sort")
-    if searched != None or searched != "":
+    if searched != None:
         all_posts = Post.query.filter(Post.title.contains(searched))
         if sort == "oldest":
             all_posts = all_posts.order_by(Post.post_id).all()
@@ -77,6 +77,9 @@ def create_post():
     new_post = Post(title=title, user_id=user_id, body=body, post_time = time)
     db.session.add(new_post)
     db.session.commit()
+    #current_user = User.query.get(user_id)
+    #current_user.like_post(new_post)
+    #db.session.commit()
 
     return redirect(f'/posts/{new_post.post_id}')
 
@@ -105,6 +108,10 @@ def create_quote_reply(post_id, reply_id):
         quote = Reply_Quote(reply_id = reply.reply_id, parent_id = reply_id)
         db.session.add(quote)
         db.session.commit()
+
+        #current_user = User.query.get(user_id)
+        #current_user.like_reply(reply)
+        #db.session.commit()
     return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
 @router.post('/<post_id>')
@@ -121,6 +128,10 @@ def create_reply(post_id):
         reply = Reply(post_id = post_id, user_id=user_id, body=body, post_time = time)
         db.session.add(reply)
         db.session.commit()
+
+        #current_user = User.query.get(user_id)
+        #current_user.like_reply(reply)
+        #db.session.commit()
 
     return redirect(f'/posts/{post_id}#reply-{reply.reply_id}')
 

@@ -65,7 +65,11 @@
         </div>
         <div class="col-sm-1 right-text">
           {% if session_user != None %}
-            {% if session_user.has_liked_post(post) %}
+            {% if session_user.user_id == post.user_id%}
+              <a class="btn btn-outline-secondary btn-sm like-button" href="#" role="button" aria-disabled="true">
+                <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
+              </a>
+            {% elif session_user.has_liked_post(post) %}
               <a class="btn btn-outline-secondary btn-sm like-button" href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='unlike') }}" role="button">
                 <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
               </a>
@@ -162,7 +166,11 @@
         <div class="col-sm-1 right-text">
           
           {% if session_user != None %}
-            {% if session_user.has_liked_reply(reply) %}
+            {% if session_user.user_id == reply.user_id%}
+              <a class="btn btn-outline-secondary btn-sm like-button" href="#" role="button" aria-disabled="true">
+                <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
+              </a>
+            {% elif session_user.has_liked_reply(reply) %}
               <a class="btn btn-outline-secondary btn-sm like-button" href="{{ url_for('posts_router.like_action_reply', post_id=post.post_id,reply_id=reply.reply_id, action='unlike') }}" role="button">
                 <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
               </a>
