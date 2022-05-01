@@ -120,7 +120,7 @@
           {% if reply.get_quoted_post() != None %}
             <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
               <div class="card-header whitetext"> 
-                Quoting post by {{reply.get_quoted_post().getUser().username}} made {{reply.get_quoted_post().readable_time()}} 
+                <a href="/posts/{{post.post_id}}#reply-{{reply.get_quoted_post().reply_id}}" class="link-white">Quoting post by {{reply.get_quoted_post().getUser().username}} made {{reply.get_quoted_post().readable_time()}} </a>
               </div>
               <div class="card-body">
                 <div class="row">
