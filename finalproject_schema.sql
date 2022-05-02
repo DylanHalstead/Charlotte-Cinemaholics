@@ -69,12 +69,13 @@ CREATE TABLE IF NOT EXISTS edits (
 );
 
 CREATE TABLE IF NOT EXISTS watchlist (
-    user_id    INT,
-    movie_id       INT,
+    user_id        INT,
+    movie_id       VARCHAR(255),
     PRIMARY KEY (user_id, movie_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
 );
+
 CREATE TABLE IF NOT EXISTS post_like (
     like_id    INT AUTO_INCREMENT,
     user_id       INT NOT NULL,

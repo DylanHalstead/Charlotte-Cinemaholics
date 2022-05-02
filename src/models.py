@@ -56,7 +56,7 @@ class Reply(db.Model):
 class UserRating(db.Model):
     __tablename__ = 'user_ratings'
     user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
-    movie_id = db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True)
+    movie_id = db.Column('movie_id', db.String, db.ForeignKey('movie.movie_id'), primary_key=True)
     movie_rating = db.Column('user_rating', db.Float, nullable=False)
     user = db.relationship('User', back_populates='movie_rating')
     movie = db.relationship('Movie', back_populates='user_rating')
@@ -136,7 +136,7 @@ class User(db.Model):
 
 watchlist = db.Table(
     'watchlist',
-    db.Column('movie_id', db.Integer, db.ForeignKey('movie.movie_id'), primary_key=True),
+    db.Column('movie_id', db.String, db.ForeignKey('movie.movie_id'), primary_key=True),
     db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
 )
 class Admin(db.Model):
@@ -147,7 +147,7 @@ class Admin(db.Model):
 
 class Movie(db.Model):
     __tablename__ = 'movie'
-    movie_id = db.Column(db.Integer, primary_key=True)
+    movie_id = db.Column(db.String, primary_key=True)
     title = db.Column(db.String, nullable=False)
     director = db.Column(db.String, nullable=False)
     about = db.Column(db.String, nullable=True)
@@ -158,7 +158,7 @@ class Movie(db.Model):
     uncc_votes = db.Column(db.Integer, nullable=False)
 
     user_rating = db.relationship("UserRating", back_populates="movie")
-    watchlistMovie = db.relationship('User', secondary=watchlist, backref='userWatchlist')
+    userWatchlist = db.relationship('User', secondary=watchlist, backref='watchlistMovie')
 
     def __repr__(self):
         return f'Movie({self.movie_id}, {self.title}, {self.director}, {self.poster_url}, {self.imdb_rating}, {self.imdb_votes}, {self.uncc_rating}, {self.uncc_votes})'

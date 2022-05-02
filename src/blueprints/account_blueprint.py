@@ -1,11 +1,6 @@
 from flask import Blueprint, abort, redirect, render_template, request, redirect
-<<<<<<< HEAD
-from sqlalchemy import true
 from src.models import Movie, db, User, Post
 from datetime import datetime
-=======
-from src.models import db, User, Playlist, User_Playlist, Post
->>>>>>> main
 from app import session
 #from app import user
 
