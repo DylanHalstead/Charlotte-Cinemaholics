@@ -116,4 +116,12 @@ CREATE TABLE IF NOT EXISTS admins (
 	PRIMARY KEY (user_id)
 );
 
+
+CREATE TABLE IF NOT EXISTS reply_quotes (
+    reply_id    	INT NOT NULL,
+    parent_id     	INT NOT NULL,
+    PRIMARY KEY (reply_id),
+    FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
+);
+
 select * from movie
