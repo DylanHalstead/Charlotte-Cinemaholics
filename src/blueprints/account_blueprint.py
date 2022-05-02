@@ -1,9 +1,12 @@
 from flask import Blueprint, abort, redirect, render_template, request, redirect
+<<<<<<< HEAD
 from sqlalchemy import true
 from src.models import Movie, db, User, Post
 from datetime import datetime
+=======
+from src.models import db, User, Playlist, User_Playlist, Post
+>>>>>>> main
 from app import session
-from src.blueprints.posts_blueprint import getTime
 #from app import user
 
 router = Blueprint('account_router', __name__)
@@ -26,9 +29,6 @@ def account_posts():
     else:
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         posts = Post.query.filter_by(user_id=sessionUser.user_id)
-        for post in posts:
-            tmp = post.post_time
-            post.post_time = getTime(tmp)
         return render_template('account_posts.html', user=sessionUser, posts = posts)
 
 @router.get('/username/edit')
