@@ -1,4 +1,5 @@
 import os
+from re import L
 from flask import Flask, render_template, request, redirect, url_for, session, abort
 from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
@@ -39,6 +40,10 @@ def index():
         if not isinstance(popular_films[movie], dict):
             addMovie(popular_films[movie])
             popular_films[movie] = Movie.query.filter_by(movie_id=popular_films[movie].movieID).first().to_dict()
+    if('user' in session):
+        pass
+    else:
+        pass
     return render_template('index.html', top_films=top_films, popular_films=popular_films)
 
 app.register_blueprint(posts_router)

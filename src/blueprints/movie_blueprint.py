@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, render_template, request, session
+from flask import Blueprint, abort, redirect, render_template, request, session, url_for
 from src.models import db, Movie, User, UserRating
 from datetime import datetime
 import requests
@@ -26,8 +26,9 @@ def scrape_poster(imdb_id):
 
     # Grab JSON data
     json_dict = json.loads( str( soup.findAll('script', {'type':'application/ld+json'})[0].text ))
+    if 'image' not in json_dict:
+        return '/static/unknown-film.jpg'
     imdb_img_url = json_dict['image']
-    
     return imdb_img_url
 
 # Take a movie from cinemagoer and import it into db 
@@ -37,10 +38,13 @@ def addMovie(movie):
         movie = imdbpy.get_movie(movie.movieID)
         poster_url = scrape_poster(f'tt{movie.movieID}')
         # Grab longer, user review if it exists
-        if len(movie['plot']) > 1:
-            about = movie['plot'][1][:movie['plot'][1].find('::')]
+        if 'plot' in movie:
+            if len(movie['plot']) > 1:
+                about = movie['plot'][1][:movie['plot'][1].find('::')]
+            else:
+                about = movie['plot'][0]
         else:
-            about = movie['plot'][0]
+            about = 'none'
         
         if 'director' in movie:
             director = ascii(movie['director'][0]['name'])
@@ -80,15 +84,15 @@ def grabUNCCRatings(movieRatings):
 def all_movies():
     # Grab all films
     for movie in range(len(top_films)):
-        if not isinstance(movie, dict):
+        if not isinstance(top_films[movie], dict):
             addMovie(top_films[movie])
             top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie].movieID).first().to_dict()
     for movie in range(len(popular_films)):
-        if not isinstance(movie, dict):
+        if not isinstance(top_films[movie], dict):
             addMovie(popular_films[movie])
             popular_films[movie] = Movie.query.filter_by(movie_id=popular_films[movie].movieID).first().to_dict()
     for movie in range(len(worst_films)):
-        if not isinstance(movie, dict):
+        if not isinstance(top_films[movie], dict):
             addMovie(worst_films[movie])
             worst_films[movie] = Movie.query.filter_by(movie_id=worst_films[movie].movieID).first().to_dict()
     print(top_films[0]['poster_url'])
@@ -121,11 +125,13 @@ def post_rating(movie_id):
     db.session.commit()
     return redirect(f'/movies/{movie_id}')
 
-@router.post('/search')
+@router.post('/search/')
 def search_movie():
     searched = request.form.get('search')
     movies = imdbpy.search_movie(searched)
-    for movie in movies:
-        addMovie(movie)
-        movie = Movie.query.filter_by(movie_id=movie.movieID).first().to_dict()
+    for movie in range(len(movies)):
+        if not isinstance(movies[movie], dict):
+            print(type(movies[movie]))
+            addMovie(movies[movie])
+            movies[movie] = Movie.query.filter_by(movie_id=movies[movie].movieID).first().to_dict()
     return render_template('search.html', searched=searched, movies = movies)

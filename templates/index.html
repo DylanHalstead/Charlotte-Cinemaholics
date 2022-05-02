@@ -5,6 +5,7 @@
 {% block body %}
 <h1 id="index-intro">Welcome to Charlotte Cinemaholics</h1>
 <table class="movie-table mb-3">
+    {% if 'user' in session %}
     <tr>
         <td colspan="5"><a href="#" class="movie-row-link"><h2 class="movie-row-title">Your Watchlist</h2></a></td>
     </tr>
@@ -39,6 +40,7 @@
         </td>
         {% endfor %}
     </tr>
+    {% endif %}
 
     <tr>
         <td colspan="5"><a href="#" class="movie-row-link"><h2 class="movie-row-title">Highest Rated</h2></a></td>
@@ -48,7 +50,7 @@
         <td>
             <a href="/movies/{{ top_films[b]['movie_id'] }}" class="movie-sm-link">
                 <div class="movie-sm">
-                    <img class="movie-poster-sm" src="{{ top_films[b]['poster_url'] }}" alt="{{top_films[b]['title']}}.jpg" width="150px">
+                    <img class="movie-poster-sm" src="{{ top_films[b]['poster_url'] }}" alt="{{top_films[b]['title']}}.jpg">
                     <div class="movie-card-sm">
                         <p class="movie-title-sm">{{ top_films[b]['title'] }}</p>
                         <table class="movie-card-content-sm">
@@ -82,7 +84,7 @@
         <td>
             <a href="/movies/{{ popular_films[c]['movie_id'] }}" class="movie-sm-link">
                 <div class="movie-sm-last">
-                    <img class="movie-poster-sm" src="{{ popular_films[c]['poster_url'] }}" alt="{{popular_films[c]['title']}}.jpg" width="150px">
+                    <img class="movie-poster-sm" src="{{ popular_films[c]['poster_url'] }}" alt="{{popular_films[c]['title']}}.jpg">
                     <div class="movie-card-sm">
                         <p class="movie-title-sm">{{ popular_films[c]['title'] }}</p>
                         <table class="movie-card-content-sm">

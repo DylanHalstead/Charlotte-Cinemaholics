@@ -25,7 +25,7 @@ Top Rated
         <td>
             <a href="/movies/{{ top_films[x*5 + y]['movie_id'] }}" class="movie-sm-link">
                 <div class="movie-sm">
-                    <img class="movie-poster-sm" src="{{ top_films[x*5 + y]['poster_url'] }}" alt="{{top_films[x*5 + y]['title']}}.jpg" width="150px">
+                    <img class="movie-poster-sm" src="{{ top_films[x*5 + y]['poster_url'] }}" alt="{{ top_films[x*5 + y]['title'] }}.jpg">
                     <div class="movie-card-sm">
                         <p class="movie-title-sm">{{ top_films[x*5 + y]['title'] }}</p>
                         <table class="movie-card-content-sm">

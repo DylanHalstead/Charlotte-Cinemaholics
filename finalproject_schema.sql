@@ -115,3 +115,5 @@ CREATE TABLE IF NOT EXISTS admins (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
 	PRIMARY KEY (user_id)
 );
+
+select * from movie
