@@ -1,25 +1,17 @@
 {% extends '_layout.html' %}
 
 {% block title %}
-{{ single_movie.title }}
+{{ single_movie['title'] }}
 {% endblock %}
 
 {% block body %}
 <table id="single-movie-table">
     <tr>
-        <td class="center"><img id="movie-poster" src="{{ single_movie['cover url'] }}" alt="{{ single_movie[title] }}.jpg"></td>
+        <td class="center"><img id="movie-poster" src="{{ single_movie['poster_url'] }}" alt="{{ single_movie['title'] }}.jpg"></td>
         <td class="pl-5 center">
             <h1 class="mb-3" id="movie-title">{{ single_movie['title'] }}</h1>
-            <h2 class="mb-5" id="movie-director">Directed by:
-            {% for i in range(single_movie['directors']|length) %}
-                {% if i+1 == single_movie['directors']|length %}
-                {{ single_movie['directors'][i]['name'] }}
-                {% else %}
-                {{ single_movie['directors'][i]['name'] }},
-                {% endif %}
-            {% endfor %}
-            </h2>
-            <p id="movie-description">{{ review }}</p>
+            <h2 class="mb-5" id="movie-director">Directed by:{{ single_movie['director'] }}</h2>
+            <p id="movie-description">{{ single_movie['about'] }}</p>
         </td>
     </tr>
     <tr class="movie-info-lg">
@@ -28,7 +20,7 @@
                 <tr>
                     <td rowspan="2" class="pt-2">
                         {% if 'user' in session %}
-                        <form action="/movies/{{ single_movie.movieID }}" method="POST" class="mr-3">
+                        <form action="/movies/{{ single_movie['movie_id'] }}" method="POST" class="mr-3">
                         {% else %}
                         <form action="/login" method="GET" class="mr-3">
                         {% endif %}
@@ -47,10 +39,10 @@
                         </svg>
                     </td>
                     <td>
-                        {% if uncc_rating_info['votes'] != 1 %}
-                        <p id="uncc-review-lg">{{ uncc_rating_info['rating'] }}, {{ uncc_rating_info['votes'] }} votes</p>
+                        {% if single_movie['uncc_votes'] != 1 %}
+                        <p id="uncc-review-lg">{{ single_movie['uncc_rating'] }}, {{ single_movie['uncc_votes'] }} votes</p>
                         {% else %}
-                        <p id="uncc-review-lg">{{ uncc_rating_info['rating'] }}, {{ uncc_rating_info['votes'] }} vote</p>
+                        <p id="uncc-review-lg">{{ single_movie['uncc_rating'] }}, {{ single_movie['uncc_votes'] }} vote</p>
                         {% endif %}
                     </td>
                 </tr>
@@ -61,10 +53,10 @@
                         </svg>
                     </td>
                     <td>
-                        {% if single_movie['votes'] != 1 %}
-                        <p id="imdb-review-lg">{{ single_movie['rating'] }}, {{ single_movie['votes'] }} votes</p>
+                        {% if single_movie['imdb_votes'] != 1 %}
+                        <p id="imdb-review-lg">{{ single_movie['imdb_rating'] }}, {{ single_movie['imdb_votes'] }} votes</p>
                         {% else %}
-                        <p id="imdb-review-lg">{{ single_movie['rating'] }}, {{ single_movie['votes'] }} vote</p>
+                        <p id="imdb-review-lg">{{ single_movie['imdb_rating'] }}, {{ single_movie['imdb_votes'] }} vote</p>
                         {% endif %}
                     </td>
                 </tr>

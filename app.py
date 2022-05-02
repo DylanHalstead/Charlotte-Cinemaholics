@@ -1,10 +1,11 @@
 import os
+from re import L
 from flask import Flask, render_template, request, redirect, url_for, session, abort
 from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
-from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, popular_films, worst_films, parseMovieDict
+from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, popular_films, worst_films, addMovie
 from src.blueprints.account_blueprint import router as account_router
-from src.models import db, User
+from src.models import db, User, Movie
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
@@ -31,8 +32,18 @@ db = SQLAlchemy(app)
 
 @app.get('/')
 def index():
-    parseMovieDict(top_films)
-    parseMovieDict(popular_films)
+    for movie in range(5):
+        if not isinstance(top_films[movie], dict):
+            addMovie(top_films[movie])
+            top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie].movieID).first().to_dict()
+    for movie in range(5):
+        if not isinstance(popular_films[movie], dict):
+            addMovie(popular_films[movie])
+            popular_films[movie] = Movie.query.filter_by(movie_id=popular_films[movie].movieID).first().to_dict()
+    if('user' in session):
+        pass
+    else:
+        pass
     return render_template('index.html', top_films=top_films, popular_films=popular_films)
 
 app.register_blueprint(posts_router)

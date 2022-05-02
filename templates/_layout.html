@@ -9,14 +9,14 @@
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
   <title>{% block title %}Cinemaholics{% endblock %}</title>
-  <link rel="icon" type="image/x-icon" href="../static/logos/cinemaholics-logo-notext-white.png">
+  <link rel="icon" type="image/x-icon" href="/static/logos/cinemaholics-logo-notext-white.png">
 </head>
 
 <body class="body">
   <!-- Navbar Alignment: https://stackoverflow.com/questions/19733447/bootstrap-navbar-with-left-center-or-right-aligned-items -->
   <nav class="navbar navbar-expand-md navbar-dark mb-5">
     <a class="navbar-brand" href="#">
-      <img src="../static/logos/cinemaholics-logo-notext-white.png" width="50" height="50" alt="">
+      <img src="/static/logos/cinemaholics-logo-notext-white.png" width="50" height="50" alt="">
     </a>
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
       <ul class="navbar-nav mr-auto">
@@ -40,7 +40,7 @@
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
       <ul class="navbar-nav ml-auto">
         {% if 'user' in session %}
-        <li><img src="../static/pfp/{{session['user']['pfp']}}" alt="Default PFP" class="nav-pfp" width="30px"></li>
+        <li><img src="/static/pfp/{{session['user']['pfp']}}" alt="/static/pfp/{{session['user']['pfp']}}" class="nav-pfp" width="30px"></li>
         <li class="nav-item dropdown">
         
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
