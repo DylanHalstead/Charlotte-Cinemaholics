@@ -158,7 +158,7 @@ class Movie(db.Model):
     uncc_votes = db.Column(db.Integer, nullable=False)
 
     user_rating = db.relationship("UserRating", back_populates="movie")
-    userWatchlist = db.relationship('User', secondary=watchlist, backref='watchlistMovie')
+    userWatchlist = db.relationship('User', secondary=watchlist, backref='watchlistMovies')
 
     def __repr__(self):
         return f'Movie({self.movie_id}, {self.title}, {self.director}, {self.poster_url}, {self.imdb_rating}, {self.imdb_votes}, {self.uncc_rating}, {self.uncc_votes})'

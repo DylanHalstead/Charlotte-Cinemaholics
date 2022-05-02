@@ -14,7 +14,9 @@ def account():
         abort('/login')
     #userWatch = grab_watchlist()
     #need to grab the watchlisted movies id's then in render_template make movies=that variable
-    return render_template('account.html', sessionUser=sessionUser)
+    userWatchlisted = sessionUser.watchlistMovies
+    print(userWatchlisted)
+    return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted)
 
 @router.get('/username/posts')
 def account_posts():
