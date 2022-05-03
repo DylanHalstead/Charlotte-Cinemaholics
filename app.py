@@ -41,10 +41,12 @@ def index():
             addMovie(popular_films[movie])
             popular_films[movie] = Movie.query.filter_by(movie_id=popular_films[movie].movieID).first().to_dict()
     if('user' in session):
-        pass
+        sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
+        userWatchlisted = sessionUser.watchlistMovies
     else:
-        pass
-    return render_template('index.html', top_films=top_films, popular_films=popular_films)
+        userWatchlisted = 0
+    
+    return render_template('index.html', top_films=top_films, popular_films=popular_films, movies=userWatchlisted)
 
 app.register_blueprint(posts_router)
 app.register_blueprint(movie_router)

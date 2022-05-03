@@ -11,7 +11,7 @@
             <form action="/movies/{{ single_movie['movie_id'] }}/watchlist" method="POST">
                 <button type="submit" name="watchlist">Watchlist</button>
             </form>
-            <td class="center"><img id="movie-poster" src="{{ single_movie['poster_url'] }}" alt="{{ single_movie['title'] }}.jpg"></td>
+            <img id="movie-poster" src="{{ single_movie['poster_url'] }}" alt="{{ single_movie['title'] }}.jpg">
         </td>
         <td class="pl-5 center">
             <h1 class="mb-3" id="movie-title">{{ single_movie['title'] }}</h1>
