@@ -144,3 +144,12 @@ def logout():
 @app.get('/fail')
 def fail():
     return render_template('fail.html')
+
+@app.get('/filter/watchlist')
+def filter_watchlist():
+    if 'user' in session:
+        sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
+        userWatchlisted = sessionUser.watchlistMovies
+    else:
+        abort(400)
+    return render_template('watchlist.html', movies = userWatchlisted, user = sessionUser)
