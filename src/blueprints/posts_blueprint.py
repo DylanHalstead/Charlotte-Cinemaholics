@@ -200,13 +200,16 @@ def delete_post(post_id):
         user_id = session['user'].get('user_id')
         user = User.query.get(user_id)
         if post_to_delete.user_id == user_id or user.isAdmin():
-            replies = Reply.query.filter_by(post_id=post_id)
-            edits = Edits.query.filter_by(post_id=post_id)
-            for reply in replies:
-                reply.post_id = None
-            for edit in edits:
-                edit.post_id = None
             PostLike.query.filter_by(post_id=post_id).delete()
+            Edits.query.filter_by(post_id=post_id).delete()
+
+            replies = Reply.query.filter_by(post_id=post_id)
+            for reply in replies:
+                Edits.query.filter_by(reply_id=reply.reply_id).delete()
+                ReplyLike.query.filter_by(reply_id=reply.reply_id).delete()
+                Reply_Quote.query.filter_by(reply_id=reply.reply_id).delete()
+
+            Reply.query.filter_by(post_id=post_id).delete()
             
             db.session.delete(post_to_delete)
             db.session.commit()
