@@ -117,7 +117,21 @@
           Posts: {{reply.getUser().get_posts_and_reply_count()}}
         </div>
         <div class="col-sm-8">
-          {% if reply.get_quoted_post() != None %}
+          {% if reply.get_quoted_post() == -1 %}
+            <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-8">
+                    <p class="card-text whitetext">Quoted reply was deleted</p>
+                  </div>
+                </div> 
+                <div class="row">
+                  <div class="col-sm-2 userinfo"></div>
+                  <div class="col-sm-10"></div>
+                </div>   
+              </div>
+            </div>
+          {% elif reply.get_quoted_post() != None %}
             <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
               <div class="card-header whitetext"> 
                 <a href="/posts/{{post.post_id}}#reply-{{reply.get_quoted_post().reply_id}}" class="link-white">Quoting post by {{reply.get_quoted_post().getUser().username}} made {{reply.get_quoted_post().readable_time()}} </a>

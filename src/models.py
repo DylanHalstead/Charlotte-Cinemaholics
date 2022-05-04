@@ -32,6 +32,7 @@ class Post(db.Model):
     def __repr__(self):
         return f'Post({self.post_id}, {self.title}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
 
+
 class Reply(db.Model):
     __tablename__ = 'replies'
     reply_id = db.Column(db.Integer, primary_key=True)
@@ -53,10 +54,11 @@ class Reply(db.Model):
     
     def get_quoted_post(self):
         qoute = Reply_Quote.query.get(self.reply_id)
-
         if qoute != None:
             if qoute.parent_id == 0:
                 return Post.query.get(self.post_id)
+            elif qoute.parent_id == -1: 
+                return -1 #this is a sin
             else:
                 return Reply.query.get(qoute.parent_id)
 

@@ -207,6 +207,7 @@ def delete_post(post_id):
             for edit in edits:
                 edit.post_id = None
             PostLike.query.filter_by(post_id=post_id).delete()
+            
             db.session.delete(post_to_delete)
             db.session.commit()
             return redirect('/posts/')
@@ -224,12 +225,15 @@ def delete_reply(post_id, reply_id):
             for edit in edits:
                 edit.reply_id = None
             ReplyLike.query.filter_by(reply_id=reply_id).delete()
-
-                
+            Reply_Quote.query.filter_by(reply_id=reply_id).delete()
+            quoted = Reply_Quote.query.filter_by(parent_id=reply_id)
+            for q in quoted:
+                q.parent_id = -1
+                db.session.add(q)
             db.session.delete(post_to_delete)
             db.session.commit()
-            return redirect('/posts/')
-    return redirect('/posts/{post_id}')
+            return redirect(f'/posts/{post_id}')
+    return redirect(f'/posts/{post_id}')
 
 @router.route('/like/<int:post_id>/<action>')
 def like_action(post_id, action):
