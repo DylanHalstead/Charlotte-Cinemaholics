@@ -1,0 +1,39 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+
+<div class="card text-white post-card mb-3 card1">
+  <div class="card-header">Create Reply</div>
+  <div class="card-body">
+    <h5>Quoting post</h5>
+    <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
+      <div class="card-header whitetext"> 
+        Reply by {{reply.getUser().username}} posted {{reply.readable_time()}} 
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-8">
+            <p class="card-text whitetext">{{reply.body}}</p>
+          </div>
+        </div> 
+        <div class="row">
+          <div class="col-sm-2 userinfo"></div>
+          <div class="col-sm-10"></div>
+        </div>   
+      </div>
+    </div>
+
+
+      <form action="/posts/{{reply.post_id}}/reply/{{reply.reply_id}}/quote" method="post">
+        <div class="form-group">
+          <textarea class="form-control" name="body" id="body" rows="10"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        
+      </form>
+
+      <a href="/posts/{{reply.post_id}}" class="btn btn-danger mt-3 active" role="button" aria-pressed="true">Cancel</a>
+  </div>
+</div>
+
+{% endblock %}

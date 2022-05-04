@@ -42,6 +42,7 @@
         </div>
         <div class="col-sm-10">
           <p class="card-text whitetext">{{post.body}}</p>
+
           {% if post.get_edit() != None %}
           {% if post.get_edit().reason != '' %}
           <footer class="blockquote-footer">Last edited by {{post.get_edit().getUser().username}} {{post.get_edit().readable_time()}} for {{post.get_edit().reason}}</footer>
@@ -60,10 +61,15 @@
         <div class="col-sm-8">
           
         </div>
-        <div class="col-sm-2 right-text">
-          
+        <div class="col-sm-1 right-text">
+        </div>
+        <div class="col-sm-1 right-text">
           {% if session_user != None %}
-            {% if session_user.has_liked_post(post) %}
+            {% if session_user.user_id == post.user_id%}
+              <a class="btn btn-outline-secondary btn-sm like-button" href="#" role="button" aria-disabled="true">
+                <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
+              </a>
+            {% elif session_user.has_liked_post(post) %}
               <a class="btn btn-outline-secondary btn-sm like-button" href="{{ url_for('posts_router.like_action', post_id=post.post_id, action='unlike') }}" role="button">
                 <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
               </a>
@@ -111,6 +117,24 @@
           Posts: {{reply.getUser().get_posts_and_reply_count()}}
         </div>
         <div class="col-sm-8">
+          {% if reply.get_quoted_post() != None %}
+            <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
+              <div class="card-header whitetext"> 
+                <a href="/posts/{{post.post_id}}#reply-{{reply.get_quoted_post().reply_id}}" class="link-white">Quoting post by {{reply.get_quoted_post().getUser().username}} made {{reply.get_quoted_post().readable_time()}} </a>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-8">
+                    <p class="card-text whitetext">{{reply.get_quoted_post().body}}</p>
+                  </div>
+                </div> 
+                <div class="row">
+                  <div class="col-sm-2 userinfo"></div>
+                  <div class="col-sm-10"></div>
+                </div>   
+              </div>
+            </div>
+          {% endif %}
           <p class="card-text whitetext">{{reply.body}}</p>
             {% if reply.get_edit() != None %}
               {% if reply.get_edit().reason != '' %}
@@ -134,10 +158,19 @@
         <div class="col-sm-8">
           
         </div>
-        <div class="col-sm-2 right-text">
+        <div class="col-sm-1 right-text">
+          {% if 'user' in session %}
+            <a href="/posts/{{post.post_id}}/reply/{{reply.reply_id}}/quote" class="link-white">Quote</a>
+          {% endif %}
+        </div>
+        <div class="col-sm-1 right-text">
           
           {% if session_user != None %}
-            {% if session_user.has_liked_reply(reply) %}
+            {% if session_user.user_id == reply.user_id%}
+              <a class="btn btn-outline-secondary btn-sm like-button" href="#" role="button" aria-disabled="true">
+                <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
+              </a>
+            {% elif session_user.has_liked_reply(reply) %}
               <a class="btn btn-outline-secondary btn-sm like-button" href="{{ url_for('posts_router.like_action_reply', post_id=post.post_id,reply_id=reply.reply_id, action='unlike') }}" role="button">
                 <img src="../static/like-icon.png" class="img-fluid like-image" alt="Unlike">
               </a>
@@ -155,7 +188,7 @@
 {% endfor %}
 
 <!-- reply form -->
-<div class="card text-white post-card mb-3">
+<div class="card text-white post-card mb-3" id = "reply-form">
   <div class="card-header">Reply</div>
   <div class="card-body">
       <form action="/posts/{{post.post_id}}" method="post">

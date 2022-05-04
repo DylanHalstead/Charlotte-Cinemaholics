@@ -5,7 +5,9 @@ CineForms
 {% endblock %}
 
 {% block body %}
-  {% if sort == "oldest"%}
+  {% if searched != None and searched != "" %}
+    <h4 class="whitetext">Search for "{{searched}}" </h4>
+  {% elif sort == "oldest"%}
     <h4 class="whitetext">Old posts</h4>
   {% elif sort == "liked" %}
     <h4 class="whitetext">Top posts</h4>
@@ -14,19 +16,39 @@ CineForms
   {% endif %}
 
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-sm-4">
     <a class="btn btn-light" href="/posts/new" role="button">Create New Post</a>
   </div>
-    
-  <div class="col-sm-6 right-text"> 
-    <form action="/posts/" method="GET">
-      <button type="submit" name="sort" value="latest" class="btn">Latest</button>
-      <button type="submit" name="sort" value="oldest" class="btn">Oldest</button>
-      <button type="submit" name="sort" value="liked" class="btn">Liked</button>
-    </form>
+
+  <div class="col-sm-8"> 
+    <div class = "float-right">
+      <form action="/posts/" method="GET" class="form-inline">
+        <div class="form-group">
+            {% if searched != None %}
+            <input class="form-control mr-sm-2 " name='search' type="text" id="search" value="{{searched}}" placeholder="Search Posts" aria-label="Search">
+            {% else %}
+            <input class="form-control mr-sm-2 " name='search' type="text" id="search" placeholder="Search Posts" aria-label="Search">
+            {% endif %}
+            
+            <select name = "sort" id="sort" class="form-control form-select">
+              <option selected>Sort</option>
+              <option value = "latest">Latest</option>
+              <option value = "oldest">Oldest</option>
+              <option value = "liked">Liked</option>
+            </select>
+  
+            <button type="submit" class="btn-outline btn">Search</button>
+          </div>
+      </form>
+    </div>
   </div>
 </div>
 
+{%if posts|length == 0 and (searched != None or searched == "")%}
+  <p class="whitetext" style = "text-align:center;">No posts found containing "{{searched}}" in their title, please modify search parameters</p>
+{%elif posts|length == 0 and (searched == None or searched != "")%}
+  <p class="whitetext" style = "text-align:center;">No post have been made yet</p>
+{% endif %}
 
 {% for post in posts %}
 <div class="card text-white post-card mb-3" style="max-width: 100%;">
