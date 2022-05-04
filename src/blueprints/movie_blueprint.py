@@ -135,3 +135,12 @@ def search_movie():
             addMovie(movies[movie])
             movies[movie] = Movie.query.filter_by(movie_id=movies[movie].movieID).first().to_dict()
     return render_template('search.html', searched=searched, movies = movies)
+
+@router.post('/<movie_id>/watchlist')
+def watchlisting(movie_id):
+    user = User.query.filter_by(user_id = session['user']['user_id']).first()
+    movie = Movie.query.filter_by(movie_id = movie_id).first()
+    
+    movie.userWatchlist.append(user)
+    db.session.commit()
+    return redirect(f'/movies/{movie_id}')

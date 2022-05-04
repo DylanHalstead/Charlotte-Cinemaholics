@@ -1,24 +1,17 @@
 {% extends '_layout.html' %}
 
-{% block title %}{{sessionUser.username}} | Account Page{% endblock %}
+{% block title %}{{user.username}}'s Watchlist | Cinemaholics{% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <img src=../static/pfp/{{sessionUser.pfp}} alt="Account_Pfp.png" width="90%" class="pfp-large mb-5">
-            <h2 class="whitetext mb-3">About Me</h2>
-            <p class="account-description">
-                {{sessionUser.about}}
-            </p>
-        </div>
-        <div class="col">
-            <h1 class="username-large mb-3">{{sessionUser.username}}</h1>
-            <h3 class="whitetext mb-3">Watchlist</h3>
-            <table>
-            {% if movies|length >= 3 %}
+<table class="movie-table mb-3">
+    {% if 'user' in session %}
+    <tr>
+        <td colspan="5"><a href="/filter/watchlist" class="movie-row-link"><h2 class="movie-row-title">Your Watchlist</h2></a></td>
+    </tr>
+    <tr>
+        <div class="container">
             <tr>
-            {% for b in range(3) %}
+            {% for b in range(movies|length) %}
                 <td>
                     <a href="/movies/{{ movies[b]['movie_id'] }}" class="movie-sm-link">
                         <div class="movie-sm">
@@ -50,12 +43,15 @@
                         </div>
                     </a>
                 </td>
-                {% endfor %}
+            {% if b%5 == 4 %}
             </tr>
+            <tr>
             {% endif %}
-            
-            
-            {% if movies|length <3 %}\
+            {% endfor %}
+            </tr>
+        </div>
+        <div class="containter">
+            {% if movies|length %5 == 0 %}\
             <tr>
                 {% for b in range(movies|length) %}
                 <td>
@@ -92,12 +88,13 @@
                 {% endfor %}
             </tr>
             {% endif %}
-            
+        </div>
+        <div class="container">
             {% if movies|length == 0 %}
                 <h4 class="whitetext mb-3">You have no movies watchlisted!</h4>
             {% endif %}
-            </table>
         </div>
-    </div>
-</div>
+    </tr>
+    {% endif %}
+
 {% endblock %}
