@@ -10,8 +10,6 @@
     </tr>
     <tr>
         <div class="container">
-            
-            
             <tr>
             {% for b in range(movies|length) %}
                 <td>
@@ -45,11 +43,8 @@
                         </div>
                     </a>
                 </td>
-            
-            
             {% if b%5 == 4 %}
             </tr>
-            
             <tr>
             {% endif %}
             {% endfor %}
@@ -94,7 +89,6 @@
             </tr>
             {% endif %}
         </div>
-        
         <div class="container">
             {% if movies|length == 0 %}
                 <h4 class="whitetext mb-3">You have no movies watchlisted!</h4>
