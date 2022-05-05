@@ -65,24 +65,10 @@ def addMovie(movie):
         db.session.add(movie)
         db.session.commit()
 
-# Grabs votes and review average from list of ratings for specific movie
-def grabUNCCRatings(movieRatings):
-    total_ratings = 0
-    rating_sum = 0
-    for rating in movieRatings:
-        total_ratings += 1
-        rating_sum += rating.movie_rating
-    rating_average = rating_sum/total_ratings
-    rating_info = {
-        'votes': total_ratings,
-        'average': rating_average
-    }
-    return rating_info
-
 # Routers
 @router.get('/')
 def all_movies():
-    return render_template('all_movies.html', top_films=top_films)
+    return render_template('all_movies.html')
 
 @router.get('/<movie_id>')
 def movie_page(movie_id):
@@ -105,9 +91,6 @@ def post_rating(movie_id):
     new_review.movie = movie
     movie.user_rating.append(new_review)
     db.session.add(new_review)
-    uncc_info = grabUNCCRatings(UserRating.query.filter_by(movie_id=movie_id).all())
-    movie.uncc_rating = uncc_info['average']
-    movie.uncc_votes = uncc_info['votes']
     db.session.commit()
     return redirect(f'/movies/{movie_id}')
 
@@ -159,3 +142,12 @@ def get_trending_movies():
         else:
             trending[movie] = Movie.query.filter_by(movie_id=trending[movie]['movie_id']).first().to_dict()
     return jsonify(trending)
+
+def grabUserRatings():
+    if 'user' in session:
+        ratedFilms = []
+        user = User.query.filter_by(user_id=session['user']['user_id']).first()
+        for rating in user.movie_rating:
+            ratedFilms.append(Movie.query.filter_by(movie_id=rating.movie_id).first().movie_id)
+            print(ratedFilms)
+        return ratedFilms

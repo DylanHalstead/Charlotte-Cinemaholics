@@ -3,7 +3,7 @@ from re import L
 from flask import Flask, render_template, request, redirect, url_for, session, abort
 from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
-from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, trending, worst_films, addMovie
+from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, trending, worst_films, addMovie, grabUserRatings
 from src.blueprints.account_blueprint import router as account_router
 from src.models import db, User, Movie
 from flask_bcrypt import Bcrypt
@@ -43,10 +43,12 @@ def index():
     if('user' in session):
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         userWatchlisted = sessionUser.watchlistMovies
+        ratedMovies = grabUserRatings()
     else:
+        ratedMovies = []
         userWatchlisted = 0
     
-    return render_template('index.html', top_films=top_films, popular_films=trending, movies=userWatchlisted)
+    return render_template('index.html', top_films=top_films, popular_films=trending, movies=userWatchlisted, ratedMovies=ratedMovies)
 
 app.register_blueprint(posts_router)
 app.register_blueprint(movie_router)

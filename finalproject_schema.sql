@@ -41,8 +41,6 @@ CREATE TABLE IF NOT EXISTS movie (
     poster_url   VARCHAR(255)  NULL,
     imdb_rating  FLOAT         NOT NULL,
     imdb_votes   INT           NOT NULL,
-    uncc_rating  FLOAT         NOT NULL,
-    uncc_votes   INT           NOT NULL,
     PRIMARY KEY (movie_id)
 );
 

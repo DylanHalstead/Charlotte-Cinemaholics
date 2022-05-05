@@ -164,8 +164,6 @@ class Movie(db.Model):
     poster_url = db.Column(db.String, nullable=True)
     imdb_rating = db.Column(db.Float, nullable=False)
     imdb_votes = db.Column(db.Integer, nullable=False)
-    uncc_rating = db.Column(db.Float, nullable=False)
-    uncc_votes = db.Column(db.Integer, nullable=False)
 
     user_rating = db.relationship("UserRating", back_populates="movie")
     userWatchlist = db.relationship('User', secondary=watchlist, backref='watchlistMovies')
@@ -173,7 +171,24 @@ class Movie(db.Model):
     def __repr__(self):
         return f'Movie({self.movie_id}, {self.title}, {self.director}, {self.poster_url}, {self.imdb_rating}, {self.imdb_votes}, {self.uncc_rating}, {self.uncc_votes})'
 
+    # Grabs votes and review average from list of ratings for specific movie
+    def grabUNCCRatings(self):
+        total_ratings = 0
+        rating_sum = 0
+        rating_average = 0
+        if len(UserRating.query.filter_by(movie_id=self.movie_id).all()) > 0:
+            for rating in UserRating.query.filter_by(movie_id=self.movie_id).all():
+                total_ratings += 1
+                rating_sum += rating.movie_rating
+            rating_average = rating_sum/total_ratings
+        rating_info = {
+            'votes': total_ratings,
+            'average': rating_average
+        }
+        return rating_info
+
     def to_dict(self):
+        unccInfo = self.grabUNCCRatings()
         return {
             'movie_id': self.movie_id,
             'title': self.title,
@@ -182,10 +197,10 @@ class Movie(db.Model):
             'poster_url': self.poster_url,
             'imdb_rating': self.imdb_rating,
             'imdb_votes': self.imdb_votes,
-            'uncc_rating': self.uncc_rating,
-            'uncc_votes': self.uncc_votes,
+            'uncc_rating': unccInfo['average'],
+            'uncc_votes': unccInfo['votes'],
         }
-
+    
 class Edits(db.Model):
     __tablename__ = 'edits'
     edit_id = db.Column(db.Integer, primary_key=True)
