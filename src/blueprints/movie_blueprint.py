@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, render_template, request, session, url_for
+from flask import Blueprint, abort, jsonify, redirect, render_template, request, session, url_for
 from src.models import db, Movie, User, UserRating
 from datetime import datetime
 import requests
@@ -12,7 +12,7 @@ router = Blueprint('movie_router', __name__, url_prefix='/movies')
 # Pre-Load imdb & movie lists
 imdbpy = Cinemagoer()
 top_films = imdbpy.get_top250_movies()
-popular_films = imdbpy.get_popular100_movies()
+trending = imdbpy.get_popular100_movies()
 worst_films = imdbpy.get_bottom100_movies()
 
 # Function scrapes IMDb using IMDb ID 'tt0107290' to find movie's poser.
@@ -80,23 +80,9 @@ def grabUNCCRatings(movieRatings):
     return rating_info
 
 # Routers
-@router.get('/top-films')
+@router.get('/')
 def all_movies():
-    # Grab all films
-    for movie in range(len(top_films)):
-        if not isinstance(top_films[movie], dict):
-            addMovie(top_films[movie])
-            top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie].movieID).first().to_dict()
-    for movie in range(len(popular_films)):
-        if not isinstance(top_films[movie], dict):
-            addMovie(popular_films[movie])
-            popular_films[movie] = Movie.query.filter_by(movie_id=popular_films[movie].movieID).first().to_dict()
-    for movie in range(len(worst_films)):
-        if not isinstance(top_films[movie], dict):
-            addMovie(worst_films[movie])
-            worst_films[movie] = Movie.query.filter_by(movie_id=worst_films[movie].movieID).first().to_dict()
-    print(top_films[0]['poster_url'])
-    return render_template('top_250.html', top_films=top_films)
+    return render_template('all_movies.html', top_films=top_films)
 
 @router.get('/<movie_id>')
 def movie_page(movie_id):
@@ -130,8 +116,6 @@ def search_movie():
     searched = request.form.get('search')
     movies = imdbpy.search_movie(searched)
     for movie in range(len(movies)):
-        if not isinstance(movies[movie], dict):
-            print(type(movies[movie]))
             addMovie(movies[movie])
             movies[movie] = Movie.query.filter_by(movie_id=movies[movie].movieID).first().to_dict()
     return render_template('search.html', searched=searched, movies = movies)
@@ -144,3 +128,34 @@ def watchlisting(movie_id):
     movie.userWatchlist.append(user)
     db.session.commit()
     return redirect(f'/movies/{movie_id}')
+
+# JSON
+@router.get('/top-250')
+def get_top_movies():
+    for movie in range(len(top_films)):
+        if not isinstance(top_films[movie], dict):
+            addMovie(top_films[movie])
+            top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie].movieID).first().to_dict()
+        else:
+            top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie]['movie_id']).first().to_dict()
+    return jsonify(top_films)
+
+@router.get('/bottom-100')
+def get_worst_movies():
+    for movie in range(len(worst_films)):
+        if not isinstance(worst_films[movie], dict):
+            addMovie(worst_films[movie])
+            worst_films[movie] = Movie.query.filter_by(movie_id=worst_films[movie].movieID).first().to_dict()
+        else:
+            worst_films[movie] = Movie.query.filter_by(movie_id=worst_films[movie]['movie_id']).first().to_dict()
+    return jsonify(worst_films)
+
+@router.get('/trending')
+def get_trending_movies():
+    for movie in range(len(trending)):
+        if not isinstance(trending[movie], dict):
+            addMovie(trending[movie])
+            trending[movie] = Movie.query.filter_by(movie_id=trending[movie].movieID).first().to_dict()
+        else:
+            trending[movie] = Movie.query.filter_by(movie_id=trending[movie]['movie_id']).first().to_dict()
+    return jsonify(trending)

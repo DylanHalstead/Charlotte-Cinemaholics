@@ -3,7 +3,7 @@ from re import L
 from flask import Flask, render_template, request, redirect, url_for, session, abort
 from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
-from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, popular_films, worst_films, addMovie
+from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, trending, worst_films, addMovie
 from src.blueprints.account_blueprint import router as account_router
 from src.models import db, User, Movie
 from flask_bcrypt import Bcrypt
@@ -37,16 +37,16 @@ def index():
             addMovie(top_films[movie])
             top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie].movieID).first().to_dict()
     for movie in range(5):
-        if not isinstance(popular_films[movie], dict):
-            addMovie(popular_films[movie])
-            popular_films[movie] = Movie.query.filter_by(movie_id=popular_films[movie].movieID).first().to_dict()
+        if not isinstance(trending[movie], dict):
+            addMovie(trending[movie])
+            trending[movie] = Movie.query.filter_by(movie_id=trending[movie].movieID).first().to_dict()
     if('user' in session):
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         userWatchlisted = sessionUser.watchlistMovies
     else:
         userWatchlisted = 0
     
-    return render_template('index.html', top_films=top_films, popular_films=popular_films, movies=userWatchlisted)
+    return render_template('index.html', top_films=top_films, popular_films=trending, movies=userWatchlisted)
 
 app.register_blueprint(posts_router)
 app.register_blueprint(movie_router)
