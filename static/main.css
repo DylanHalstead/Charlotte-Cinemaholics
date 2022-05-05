@@ -283,18 +283,33 @@ label {
 }
 
 /* All Movies */
-.pagination > li > a
-{
-    background-color: #2E2E2E;
-    color: white;
-    transition: .25s ease;
+.custom-pagination {
+    display: flex;
+    justify-content: center;
 }
 
-.pagination > li > a:focus,
-.pagination > li > a:hover,
-.pagination > li > span:focus,
-.pagination > li > span:hover
+.custom-pagination  > span{
+    background-color: #2E2E2E;
+    border: 1px white solid;
+    color: white;
+    transition: .25s ease;
+    float: left;
+    padding: .5em .75em;
+    text-decoration: none;
+}
+
+.custom-pagination > #page-previous{
+    border-radius: .25em 0 0 .25em;
+}
+
+.custom-pagination > #page-next{
+    border-radius: 0 .25em .25em 0;
+}
+
+.custom-pagination > span:focus,
+.custom-pagination > span:hover
 {
+    cursor: pointer; 
     color: #B3A369;
     background-color: #121212;
     border-color: #ddd;

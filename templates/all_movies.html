@@ -64,34 +64,42 @@ Top Rated
         });
 
         // Grab user's page
-        $(".page-btn").addEventListener("click", async (evt) => {
+        // Tried wrapping this all into one function but I could not get it to work. Should be possible but not sure why it doesn't work :/
+        $("#page-previous").addEventListener("click", async (evt) => {
             console.log(evt.target.id);
-            if(evt.target.id == 'page-previous'){
-                if(pageNum > 0){
-                    pageNum -= 1;
-                    await updateMovies(filteredMovies, pageNum);
-                }
-            }
-            if(evt.target.id == 'page-one'){
-                pageNum = 1;
+            if(pageNum > 1){
+                pageNum -= 1;
                 await updateMovies(filteredMovies, pageNum);
             }
-            if(evt.target.id == 'page-two'){
-                pageNum = 2;
-                await updateMovies(filteredMovies, pageNum);
-            }
-            if(evt.target.id == 'page-three'){
-                pageNum = 3;
-                await updateMovies(filteredMovies, pageNum);
-            }
-            if(evt.target.id == 'page-next'){
-                if(pageNum < filteredMovies.length/25){
-                    pageNum += 1;
-                    await updateMovies(filteredMovies, pageNum);
-                }
-            }
-            evt.preventDefault();
         });
+
+        $("#page-one").addEventListener("click", async (evt) => {
+            console.log(evt.target.id);
+            pageNum = 1;
+            await updateMovies(filteredMovies, pageNum);
+        });
+        
+        $("#page-two").addEventListener("click", async (evt) => {
+            console.log(evt.target.id);
+            pageNum = 2;
+            await updateMovies(filteredMovies, pageNum);
+        });
+
+
+        $("#page-three").addEventListener("click", async (evt) => {
+            console.log(evt.target.id);
+            pageNum = 3;
+            await updateMovies(filteredMovies, pageNum);
+        });
+
+        $("#page-next").addEventListener("click", async (evt) => {
+            console.log(evt.target.id);
+            if(pageNum < filteredMovies.length/25){
+                pageNum += 1;
+                await updateMovies(filteredMovies, pageNum);
+            }
+        });
+        
 
         // Function used to update movie filter and page
         function updateMovies(movieArray, pageNum){
@@ -145,23 +153,14 @@ Top Rated
             }
             $(".movie-table").innerHTML += `<tr>
                 <td colspan="5">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item">
-                            <a id="page-previous page-btn" class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                        </li>
-                        <li class="page-item page-btn"><a id="page-one" class="page-link page-btn" href="#">1</a></li>
-                        <li class="page-item"><a id="page-two" class="page-link page-btn" href="#">2</a></li>
-                        <li class="page-item"><a id="page-three" class="page-link page-btn" href="#">3</a></li>
-                        <li class="page-item">
-                            <a id="page-next" class="page-link page-btn" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                                <span class="sr-only">Next</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <!-- https://www.w3schools.com/css/tryit.asp?filename=trycss_ex_pagination -->
+                    <div class="custom-pagination">
+                        <span id="page-previous" class="page-btn">&laquo;</span>
+                        <span id="page-one" class="page-btn">1</span>
+                        <span id="page-two" class="page-btn">2</span>
+                        <span id="page-three" class="page-btn">3</span>
+                        <span id="page-next" class="page-btn">&raquo;</span>
+                    </div>
                 </td>
             </tr>`;
         }
