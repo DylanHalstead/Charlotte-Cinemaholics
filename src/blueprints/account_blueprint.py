@@ -1,5 +1,5 @@
 from flask import Blueprint, abort, redirect, render_template, request, redirect
-from src.models import Movie, db, User, Post
+from src.models import Movie, UserRating, db, User, Post
 from datetime import datetime
 from app import session
 #from app import user
@@ -12,11 +12,15 @@ def account():
     sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
     if 'user' not in session:
         abort('/login')
-    #userWatch = grab_watchlist()
-    #need to grab the watchlisted movies id's then in render_template make movies=that variable
     userWatchlisted = sessionUser.watchlistMovies
-    print(userWatchlisted)
-    return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted)
+    user = User.query.filter_by(user_id = session['user']['user_id']).first()
+    ratedMovies = []
+    for userRating in user.movie_rating:
+        ratedMov = userRating.movie.to_dict()
+        print(userRating)
+        ratedMovies.append(ratedMov)
+    db.session.commit()
+    return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, rated = ratedMovies)
 
 @router.get('/username/posts')
 def account_posts():
