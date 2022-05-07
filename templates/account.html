@@ -14,7 +14,7 @@
         </div>
         <div class="col">
             <h1 class="username-large mb-3">{{sessionUser.username}}</h1>
-            <h3 class="whitetext mb-3">Watchlist</h3>
+            <a href="/filter/watchlist" class="movie-row-link"><h2 class="movie-row-title">Your Watchlist</h2></a>
             <table>
             {% if movies|length >= 3 %}
             <tr>
@@ -100,7 +100,7 @@
         
             
             <table>
-                <h3 class="whitetext mb-3">Rated Movies</h3>
+                <a href="/filter/rated" class="movie-row-link"><h2 class="movie-row-title">Your Rated Movies</h2></a>
             {% if rated|length >= 3 %}
             <tr>
             {% for b in range(3) %}
