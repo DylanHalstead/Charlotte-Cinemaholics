@@ -1,0 +1,10 @@
+{% extends '_layout.html' %}
+
+{% block title %}Error: 401{% endblock %}
+
+{% block body %}
+<h1 class="error-header">401</h1>
+<p class="error-body">Unauthorized! It looks like you're trying to do something you're not allowed to do. Login and try again?</p>
+<p><a class="error-link" href="/report">Report a Problem?</a></p>
+<p><a class="error-link" href="/">Go Home?</a></p>
+{% endblock %}

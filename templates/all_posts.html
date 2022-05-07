@@ -79,5 +79,13 @@ CineForms
         </div>
 </div>
   {% endfor %}
-
+{% if posts|length <= 1 %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.footer').style.position = 'fixed'
+  document.querySelector('.footer').style.bottom = '0'
+  document.querySelector('.footer').style.width = '100%'
+  });
+</script>
+{% endif %}
 {% endblock %}

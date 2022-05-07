@@ -86,10 +86,8 @@ def create_post():
 @router.get('/<int:post_id>/reply/<int:reply_id>/quote')
 def get_create_reply_form(post_id, reply_id): 
     reply = Reply.query.get_or_404(reply_id)
-    
     if 'user' in session:
         return render_template('create_reply.html', reply = reply)
-            
     return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
 @router.post('/<int:post_id>/reply/<int:reply_id>/quote')

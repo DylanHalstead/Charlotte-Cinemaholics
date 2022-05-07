@@ -1,9 +1,8 @@
 import os
-from re import L
 from flask import Flask, render_template, request, redirect, url_for, session, abort
 from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
-from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, popular_films, worst_films, addMovie
+from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, trending, worst_films, addMovie, getRatedIDs
 from src.blueprints.account_blueprint import router as account_router
 from src.models import db, User, Movie
 from flask_bcrypt import Bcrypt
@@ -37,16 +36,18 @@ def index():
             addMovie(top_films[movie])
             top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie].movieID).first().to_dict()
     for movie in range(5):
-        if not isinstance(popular_films[movie], dict):
-            addMovie(popular_films[movie])
-            popular_films[movie] = Movie.query.filter_by(movie_id=popular_films[movie].movieID).first().to_dict()
-    if('user' in session):
+        if not isinstance(trending[movie], dict):
+            addMovie(trending[movie])
+            trending[movie] = Movie.query.filter_by(movie_id=trending[movie].movieID).first().to_dict()
+    if 'user' in session:
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         userWatchlisted = sessionUser.watchlistMovies
+        ratedMovies = getRatedIDs()
     else:
+        ratedMovies = []
         userWatchlisted = 0
     
-    return render_template('index.html', top_films=top_films, popular_films=popular_films, movies=userWatchlisted)
+    return render_template('index.html', top_films=top_films, popular_films=trending, movies=userWatchlisted, ratedMovies=ratedMovies)
 
 app.register_blueprint(posts_router)
 app.register_blueprint(movie_router)
@@ -69,7 +70,7 @@ def edit_account():
 @app.get('/login')
 def get_login():
     if 'user' in session:
-        return render_template('/')
+        return redirect('/')
     return render_template('login.html')
 
 @app.post('/login')
@@ -78,17 +79,15 @@ def login():
     password = request.form.get('password', '')
 
     if email == '' or password == '':
-        abort(400)
+        abort(401)
 
     existing_user = User.query.filter_by(email=email).first()
 
     if not existing_user or existing_user.user_id == 0:
-        print('Not in db')
-        return redirect('/fail')
+        abort(401)
 
     if not bcrypt.check_password_hash(existing_user.passkey, password):
-        print('password incorrect')
-        return redirect('/fail')
+        abort(401)
 
     session['user'] = {
         'email': existing_user.email,
@@ -113,10 +112,15 @@ def register():
     password = request.form.get('password', '')
 
     # Make sure to add backend so user follows requirements creating an account
-    if email == '' or username == '' or password == '':
+    if email == '' or '@uncc.edu' not in email or username == '' or password == '':
         abort(400)
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    if User.query.filter_by(username = username).count() > 0:
+        return render_template('register.html', error = f'{username} is not available')
+    if User.query.filter_by(email = email).count() > 0:
+        return render_template('register.html', error = f'{email} has already been used')
 
     new_user = User(email=email, username=username, passkey=hashed_password, pfp=userPfp)
     db.session.add(new_user)
@@ -130,15 +134,14 @@ def register():
         'pfp': new_user.pfp
     }
 
+
     return redirect('/')
 
 @app.get('/logout')
 def logout():
     if 'user' not in session:
         abort(401)
-
     del session['user']
-
     return redirect('/')
 
 @app.get('/fail')
@@ -151,7 +154,7 @@ def filter_watchlist():
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         userWatchlisted = sessionUser.watchlistMovies
     else:
-        abort(400)
+        abort(401)
     return render_template('watchlist.html', movies = userWatchlisted, user = sessionUser)
 
 @app.get('/filter/rated')
@@ -166,3 +169,24 @@ def filter_ratings():
     else:
         abort(400)
     return render_template('rated_movies.html', movies = ratedMovies, user = user)
+    
+# Server Errors
+# Server cant return response bc an issue with user browser
+@app.errorhandler(400)
+def bad_request(e):
+    return render_template('400.html'), 400
+
+# Unauthorized; Used when you try to log in and the server can't identify you
+@app.errorhandler(401)
+def unauthorized_credientials(e):
+    return render_template('401.html'), 401
+
+# Forbidden; When a user tries to see something they are not allowed to see
+@app.errorhandler(403)
+def forbidden_request(e):
+    return render_template('403.html'), 403
+
+# Not Found
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404

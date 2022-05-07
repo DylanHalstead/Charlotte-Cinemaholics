@@ -34,6 +34,9 @@
             </tr>
             <tr>
                 <div class="form-group">
+                    {% if error != None%}
+                        <h4 class="mb-3 font-weight-normal" style = "color:red">{{error}}</h4>
+                    {% endif %}
                     <label for="exampleFormControlInput1">Username</label>
                     <input type="username" name="username" class="form-control" id="exampleFormControlInput1" placeholder="ILoveJava95">
                 </div>

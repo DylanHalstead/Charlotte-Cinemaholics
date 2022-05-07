@@ -283,18 +283,33 @@ label {
 }
 
 /* All Movies */
-.pagination > li > a
-{
-    background-color: #2E2E2E;
-    color: white;
-    transition: .25s ease;
+.custom-pagination {
+    display: flex;
+    justify-content: center;
 }
 
-.pagination > li > a:focus,
-.pagination > li > a:hover,
-.pagination > li > span:focus,
-.pagination > li > span:hover
+.custom-pagination  > button{
+    background-color: #2E2E2E;
+    border: 1px white solid;
+    color: white;
+    transition: .25s ease;
+    float: left;
+    padding: .5em .75em;
+    text-decoration: none;
+}
+
+.custom-pagination > #page-previous{
+    border-radius: .25em 0 0 .25em;
+}
+
+.custom-pagination > #page-next{
+    border-radius: 0 .25em .25em 0;
+}
+
+.custom-pagination > button:focus,
+.custom-pagination > button:hover
 {
+    cursor: pointer; 
     color: #B3A369;
     background-color: #121212;
     border-color: #ddd;
@@ -384,6 +399,7 @@ input[type=number] {
 
 .movie-info-lg {
     background-color: #2e2e2e;
+    width: 100%;
 }
 
 #imdb-review-lg {
@@ -403,4 +419,22 @@ input[type=number] {
     margin-right: .1em;
     height: .9em;
     width: .9em;
+}
+
+/* Error Pages */
+.error-header{
+    color: white;
+    font-size: 72pt;
+}
+
+.error-body{
+
+}
+
+.error-link{
+    color: #00703C;
+}
+
+.error-link:hover{
+    color: #00703C;
 }

@@ -1,0 +1,18 @@
+{% extends '_layout.html' %}
+
+{% block title %}Error: 400{% endblock %}
+
+{% block body %}
+<h1 class="error-header">400</h1>
+<p class="error-body">Bad request! There might be an issue with your browser, reload and try again.</p>
+<p><a class="error-link" href="/report">Report a Problem?</a></p>
+<p><a class="error-link" href="/">Go Home?</a></p>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('.footer').style.position = 'fixed'
+        document.querySelector('.footer').style.bottom = '0'
+        document.querySelector('.footer').style.width = '100%'
+    });
+</script>
+{% endblock %}

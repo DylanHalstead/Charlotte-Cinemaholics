@@ -32,6 +32,19 @@ def account_posts():
         posts = Post.query.filter_by(user_id=sessionUser.user_id)
         return render_template('account_posts.html', user=sessionUser, posts = posts)
 
+@router.get('/<username>')
+def account_page(username):
+    sessionUser = User.query.filter_by(username = username).first()
+    userWatchlisted = sessionUser.watchlistMovies
+    posts = Post.query.filter_by(user_id=sessionUser.user_id).limit(2).all()
+    return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, posts = posts)
+
+@router.get('/<username>/posts')
+def account_posts_user(username):
+    sessionUser = User.query.filter_by(username = username).first()
+    posts = Post.query.filter_by(user_id=sessionUser.user_id)
+    return render_template('account_posts.html', user=sessionUser, posts = posts)
+
 @router.get('/username/edit')
 def get_edit_account():
     return render_template("edit_account.html")
@@ -43,10 +56,17 @@ def edit_account():
         username = request.form.get('username')
         aboutMe = request.form.get('about')
         user = User.query.filter_by(email = session['user']['email']).first()
+        if User.query.filter_by(username = username).count() > 0:
+            return render_template('edit_account.html', error = f'{username} is not available')
+        
         print(user.pfp)
-        user.username = username
-        user.pfp = profilePhoto
-        user.about = aboutMe
+        if username != '':
+            user.username = username
+        if profilePhoto != '':
+            user.pfp = profilePhoto
+        if aboutMe != '':
+            user.about = aboutMe
+            
         session['user'] = {
             'email': user.email,
             'username': user.username,
