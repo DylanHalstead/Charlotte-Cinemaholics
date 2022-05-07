@@ -1,0 +1,18 @@
+{% extends '_layout.html' %}
+
+{% block title %}Error: 404{% endblock %}
+
+{% block body %}
+<h1 class="error-header">404</h1>
+<p class="error-body">Sorry, we couldn't find the page you were looking for...</p>
+<p><a class="error-link" href="/report">Report a Problem?</a></p>
+<p><a class="error-link" href="/">Go Home?</a></p>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('.footer').style.position = 'fixed'
+        document.querySelector('.footer').style.bottom = '0'
+        document.querySelector('.footer').style.width = '100%'
+    });
+</script>
+{% endblock %}

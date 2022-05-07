@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, redirect, render_template, request, session, url_for
+from flask import Blueprint, abort, jsonify, redirect, render_template, request, session, url_for
 from src.models import db, Movie, User, UserRating
 from datetime import datetime
 import requests
@@ -12,7 +12,7 @@ router = Blueprint('movie_router', __name__, url_prefix='/movies')
 # Pre-Load imdb & movie lists
 imdbpy = Cinemagoer()
 top_films = imdbpy.get_top250_movies()
-popular_films = imdbpy.get_popular100_movies()
+trending = imdbpy.get_popular100_movies()
 worst_films = imdbpy.get_bottom100_movies()
 
 # Function scrapes IMDb using IMDb ID 'tt0107290' to find movie's poser.
@@ -44,10 +44,10 @@ def addMovie(movie):
             else:
                 about = movie['plot'][0]
         else:
-            about = 'none'
+            about = ''
         
         if 'director' in movie:
-            director = ascii(movie['director'][0]['name'])
+            director = movie['director'][0]['name']
         else:
             director = 'Not Known'
 
@@ -60,43 +60,14 @@ def addMovie(movie):
         else:
             imdb_votes = 0
 
-        movie = Movie(movie_id=movie.movieID, title=movie['title'], director=director, about=about, poster_url=poster_url, imdb_rating=imdb_rating, imdb_votes=imdb_votes, uncc_rating=0, uncc_votes=0)
-        print(movie)
+        movie = Movie(movie_id=movie.movieID, title=movie['title'], director=director, about=about, poster_url=poster_url, imdb_rating=imdb_rating, imdb_votes=imdb_votes)
         db.session.add(movie)
         db.session.commit()
 
-# Grabs votes and review average from list of ratings for specific movie
-def grabUNCCRatings(movieRatings):
-    total_ratings = 0
-    rating_sum = 0
-    for rating in movieRatings:
-        total_ratings += 1
-        rating_sum += rating.movie_rating
-    rating_average = rating_sum/total_ratings
-    rating_info = {
-        'votes': total_ratings,
-        'average': rating_average
-    }
-    return rating_info
-
 # Routers
-@router.get('/top-films')
+@router.get('/')
 def all_movies():
-    # Grab all films
-    for movie in range(len(top_films)):
-        if not isinstance(top_films[movie], dict):
-            addMovie(top_films[movie])
-            top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie].movieID).first().to_dict()
-    for movie in range(len(popular_films)):
-        if not isinstance(top_films[movie], dict):
-            addMovie(popular_films[movie])
-            popular_films[movie] = Movie.query.filter_by(movie_id=popular_films[movie].movieID).first().to_dict()
-    for movie in range(len(worst_films)):
-        if not isinstance(top_films[movie], dict):
-            addMovie(worst_films[movie])
-            worst_films[movie] = Movie.query.filter_by(movie_id=worst_films[movie].movieID).first().to_dict()
-    print(top_films[0]['poster_url'])
-    return render_template('top_250.html', top_films=top_films)
+    return render_template('all_movies.html')
 
 @router.get('/<movie_id>')
 def movie_page(movie_id):
@@ -107,40 +78,77 @@ def movie_page(movie_id):
 
 @router.post('/<movie_id>')
 def post_rating(movie_id):
-    user_rating = float(request.form.get('rating', -1))
-    if user_rating == -1:
-        abort(400)
+    # Grab and check rating from user
+    if 'user' in session:
+        user_rating = float(request.form.get('rating', -1))
+        if user_rating < 0 or user_rating > 10:
+            abort(400)
 
-    # Add review to user_rating table
-    reviee = User.query.filter_by(user_id=session['user']['user_id']).first()
-    movie = Movie.query.filter_by(movie_id=movie_id).first()
-    new_review = UserRating(movie_rating=user_rating)
-    new_review.user = reviee
-    new_review.movie = movie
-    movie.user_rating.append(new_review)
-    db.session.add(new_review)
-    uncc_info = grabUNCCRatings(UserRating.query.filter_by(movie_id=movie_id).all())
-    movie.uncc_rating = uncc_info['average']
-    movie.uncc_votes = uncc_info['votes']
-    db.session.commit()
-    return redirect(f'/movies/{movie_id}')
+        # Add review to user_rating table
+        reviee = User.query.filter_by(user_id=session['user']['user_id']).first()
+        movie = Movie.query.filter_by(movie_id=movie_id).first()
+        new_review = UserRating(movie_rating=user_rating)
+        new_review.user = reviee
+        new_review.movie = movie
+        movie.user_rating.append(new_review)
+        db.session.add(new_review)
+        db.session.commit()
+        return redirect(f'/movies/{movie_id}')
+    else:
+        return abort(403)
 
-@router.post('/search/')
+@router.post('/search')
 def search_movie():
     searched = request.form.get('search')
     movies = imdbpy.search_movie(searched)
     for movie in range(len(movies)):
-        if not isinstance(movies[movie], dict):
-            print(type(movies[movie]))
             addMovie(movies[movie])
-            movies[movie] = Movie.query.filter_by(movie_id=movies[movie].movieID).first().to_dict()
+            movies[movie] = Movie.query.get_or_404(movies[movie].movieID).to_dict()
     return render_template('search.html', searched=searched, movies = movies)
 
 @router.post('/<movie_id>/watchlist')
 def watchlisting(movie_id):
     user = User.query.filter_by(user_id = session['user']['user_id']).first()
-    movie = Movie.query.filter_by(movie_id = movie_id).first()
-    
+    movie = Movie.query.get_or_404(movie_id)
     movie.userWatchlist.append(user)
     db.session.commit()
     return redirect(f'/movies/{movie_id}')
+
+# JSON
+@router.get('/top-250')
+def get_top_movies():
+    for movie in range(len(top_films)):
+        if not isinstance(top_films[movie], dict):
+            addMovie(top_films[movie])
+            top_films[movie] = Movie.query.get_or_404(top_films[movie].movieID).to_dict()
+        else:
+            top_films[movie] = Movie.query.get_or_404(top_films[movie]['movie_id']).to_dict()
+    return jsonify(top_films)
+
+@router.get('/bottom-100')
+def get_worst_movies():
+    for movie in range(len(worst_films)):
+        if not isinstance(worst_films[movie], dict):
+            addMovie(worst_films[movie])
+            worst_films[movie] = Movie.query.get_or_404(worst_films[movie].movieID).to_dict()
+        else:
+            worst_films[movie] = Movie.query.get_or_404(worst_films[movie]['movie_id']).to_dict()
+    return jsonify(worst_films)
+
+@router.get('/trending')
+def get_trending_movies():
+    for movie in range(len(trending)):
+        if not isinstance(trending[movie], dict):
+            addMovie(trending[movie])
+            trending[movie] = Movie.query.get_or_404(trending[movie].movieID).to_dict()
+        else:
+            trending[movie] = Movie.query.get_or_404(trending[movie]['movie_id']).to_dict()
+    return jsonify(trending)
+
+def getRatedIDs():
+    if 'user' in session:
+        ratedFilms = []
+        user = User.query.get_or_404(session['user']['user_id'])
+        for rating in user.movie_rating:
+            ratedFilms.append(rating.movie_id)
+        return ratedFilms

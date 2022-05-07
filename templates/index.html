@@ -6,94 +6,96 @@
 <h1 id="index-intro">Welcome to Charlotte Cinemaholics</h1>
 <table class="movie-table mb-3">
     {% if 'user' in session %}
-    <tr>
-        <td colspan="5"><a href="/filter/watchlist" class="movie-row-link"><h2 class="movie-row-title">Your Watchlist</h2></a></td>
-    </tr>
-    <tr>
-        <div class="container">
-            {% if movies|length >= 5 %}
-            <tr>
-            {% for b in range(5) %}
-                <td>
-                    <a href="/movies/{{ movies[b]['movie_id'] }}" class="movie-sm-link">
-                        <div class="movie-sm">
-                            <img class="movie-poster-sm" src="{{ movies[b]['poster_url'] }}"
-                                alt="{{movies[b]['title']}}.jpg">
-                            <div class="movie-card-sm">
-                                <p class="movie-title-sm">{{ movies[b]['title'] }}</p>
-                                <table class="movie-card-content-sm">
-                                    <tr class="card-ratings-sm">
-                                        <td>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C"
-                                                class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
-                                            </svg>
-                                            <p class="uncc-rating-sm">{{ movies[b]['uncc_rating'] }}</p>
-                                        </td>
-                                        <td>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#B3A369"
-                                                class="bi bi-star-fill star-imdb-sm" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                            </svg>
-                                            <p class="imdb-rating-sm">{{ movies[b]['imdb_rating'] }}</p>
-                                        </td>
-                                    </tr>
-                                </table>
+        {% if movies|length > 0 %}
+        <tr>
+            <td colspan="5"><a href="/filter/watchlist" class="movie-row-link"><h2 class="movie-row-title">Your Watchlist</h2></a></td>
+        </tr>
+        {% endif %}
+        <tr>
+            <div class="container">
+                {% if movies|length >= 5 %}
+                <tr>
+                    {% for b in range(5) %}
+                    <td>
+                        <a href="/movies/{{ movies[b]['movie_id'] }}" class="movie-sm-link">
+                            <div class="movie-sm">
+                                <img class="movie-poster-sm" src="{{ movies[b]['poster_url'] }}"
+                                    alt="{{movies[b]['title']}}.jpg">
+                                <div class="movie-card-sm">
+                                    <p class="movie-title-sm">{{ movies[b]['title'] }}</p>
+                                    <table class="movie-card-content-sm">
+                                        <tr class="card-ratings-sm">
+                                            <td>
+                                                {% if 'user' in session and movies[b]['movie_id'] in ratedMovies %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C" class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                </svg>
+                                                {% else %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C" class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
+                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                                                </svg>
+                                                {% endif %}
+                                                <p class="uncc-rating-sm">{{ movies[b]['uncc_rating'] }}</p>
+                                            </td>
+                                            <td>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#B3A369"
+                                                    class="bi bi-star-fill star-imdb-sm" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                                                </svg>
+                                                <p class="imdb-rating-sm">{{ movies[b]['imdb_rating'] }}</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </td>
-                {% endfor %}
-            </tr>
-            {% endif %}
-        </div>
-        <div class="containter">
-            {% if movies|length <5 %}\
-            <tr>
-                {% for b in range(movies|length) %}
-                <td>
-                    <a href="/movies/{{ movies[b]['movie_id'] }}" class="movie-sm-link">
-                        <div class="movie-sm">
-                            <img class="movie-poster-sm" src="{{ movies[b]['poster_url'] }}"
-                                alt="{{movies[b]['title']}}.jpg">
-                            <div class="movie-card-sm">
-                                <p class="movie-title-sm">{{ movies[b]['title'] }}</p>
-                                <table class="movie-card-content-sm">
-                                    <tr class="card-ratings-sm">
-                                        <td>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C"
-                                                class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
-                                            </svg>
-                                            <p class="uncc-rating-sm">{{ movies[b]['uncc_rating'] }}</p>
-                                        </td>
-                                        <td>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#B3A369"
-                                                class="bi bi-star-fill star-imdb-sm" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-                                            </svg>
-                                            <p class="imdb-rating-sm">{{ movies[b]['imdb_rating'] }}</p>
-                                        </td>
-                                    </tr>
-                                </table>
+                        </a>
+                    </td>
+                    {% endfor %}
+                </tr>
+            {% else %}
+                <tr>
+                    {% for b in range(movies|length) %}
+                    <td>
+                        <a href="/movies/{{ movies[b]['movie_id'] }}" class="movie-sm-link">
+                            <div class="movie-sm">
+                                <img class="movie-poster-sm" src="{{ movies[b]['poster_url'] }}"
+                                    alt="{{movies[b]['title']}}.jpg">
+                                <div class="movie-card-sm">
+                                    <p class="movie-title-sm">{{ movies[b]['title'] }}</p>
+                                    <table class="movie-card-content-sm">
+                                        <tr class="card-ratings-sm">
+                                            <td>
+                                                {% if 'user' in session and movies[b]['movie_id'] in ratedMovies %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C" class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                </svg>
+                                                {% else %}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C" class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
+                                                    <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                                                </svg>
+                                                {% endif %}
+                                                <p class="uncc-rating-sm">{{ movies[b]['uncc_rating'] }}</p>
+                                            </td>
+                                            <td>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#B3A369"
+                                                    class="bi bi-star-fill star-imdb-sm" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                                                </svg>
+                                                <p class="imdb-rating-sm">{{ movies[b]['imdb_rating'] }}</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                    </a>
-                </td>
-                {% endfor %}
-            </tr>
+                        </a>
+                    </td>
+                    {% endfor %}
+                </tr>
             {% endif %}
-        </div>
-        <div class="container">
-            {% if movies|length == 0 %}
-                <h4 class="whitetext mb-3">You have no movies watchlisted!</h4>
-            {% endif %}
-        </div>
-    </tr>
+            </div>
+        </tr>
     {% endif %}
 
     <tr>
@@ -110,9 +112,15 @@
                         <table class="movie-card-content-sm">
                             <tr class="card-ratings-sm">
                                 <td>
+                                    {% if 'user' in session and top_films[b]['movie_id'] in ratedMovies %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C" class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                    </svg>
+                                    {% else %}
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C" class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
                                         <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
                                     </svg>
+                                    {% endif %}
                                     <p class="uncc-rating-sm">{{ top_films[b]['uncc_rating'] }}</p>
                                 </td>
                                 <td>
@@ -144,9 +152,15 @@
                         <table class="movie-card-content-sm">
                             <tr class="card-ratings-sm">
                                 <td>
+                                    {% if 'user' in session and popular_films[c]['movie_id'] in ratedMovies %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C" class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
+                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                    </svg>
+                                    {% else %}
                                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#00703C" class="bi bi-star star-uncc-sm" viewBox="0 0 16 16">
                                         <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
                                     </svg>
+                                    {% endif %}
                                     <p class="uncc-rating-sm">{{ popular_films[c]['uncc_rating'] }}</p>
                                 </td>
                                 <td>

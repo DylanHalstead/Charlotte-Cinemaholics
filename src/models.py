@@ -2,68 +2,11 @@ from flask_sqlalchemy import SQLAlchemy
 from src.time_cleaner import getTime
 db = SQLAlchemy()
 
-class Post(db.Model):
-    __tablename__ = 'posts'
-    post_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    title = db.Column(db.String, nullable=False)
-    body = db.Column(db.String, nullable=False)
-    post_time = db.Column(db.String, nullable=False)
-    likes = db.relationship('PostLike', backref='posts', lazy='dynamic')
-
-    def getUser(self):
-        return User.query.get(self.user_id)
-
-    def get_edit(self):
-        descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(post_id=self.post_id, reply_id = None)
-        return descending.first()
-
-    def getLastReply(self):
-        query = Reply.query.order_by(Reply.reply_id.desc()).filter_by(post_id=self.post_id).first()
-        return query
-
-    def getReplyCount(self):
-        return Reply.query.filter(Reply.post_id == self.post_id).count()
-
-    def readable_time(self):
-        return getTime(self.post_time)
-            
-
-    def __repr__(self):
-        return f'Post({self.post_id}, {self.title}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
-
-
-class Reply(db.Model):
-    __tablename__ = 'replies'
-    reply_id = db.Column(db.Integer, primary_key=True)
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id')) 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    body = db.Column(db.String, nullable=False)
-    post_time = db.Column(db.String, nullable=False)
-    likes = db.relationship('ReplyLike', backref='replies', lazy='dynamic')
-    
-    def getUser(self):
-        return User.query.get(self.user_id)
-
-    def get_edit(self):
-        descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(reply_id = self.reply_id)
-        return descending.first()
-
-    def readable_time(self):
-        return getTime(self.post_time)
-    
-    def get_quoted_post(self):
-        qoute = Reply_Quote.query.get(self.reply_id)
-        if qoute != None:
-            if qoute.parent_id == 0:
-                return Post.query.get(self.post_id)
-            elif qoute.parent_id == -1: 
-                return -1 #this is a sin
-            else:
-                return Reply.query.get(qoute.parent_id)
-
-    def __repr__(self):
-        return f'Reply({self.reply_id}, {self.post_id}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
+watchlist = db.Table(
+    'watchlist',
+    db.Column('movie_id', db.String, db.ForeignKey('movie.movie_id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
+)
 
 class UserRating(db.Model):
     __tablename__ = 'user_ratings'
@@ -72,6 +15,52 @@ class UserRating(db.Model):
     movie_rating = db.Column('user_rating', db.Float, nullable=False)
     user = db.relationship('User', back_populates='movie_rating')
     movie = db.relationship('Movie', back_populates='user_rating')
+
+class Movie(db.Model):
+    __tablename__ = 'movie'
+    movie_id = db.Column(db.String, primary_key=True)
+    title = db.Column(db.String, nullable=False)
+    director = db.Column(db.String, nullable=False)
+    about = db.Column(db.String, nullable=True)
+    poster_url = db.Column(db.String, nullable=True)
+    imdb_rating = db.Column(db.Float, nullable=False)
+    imdb_votes = db.Column(db.Integer, nullable=False)
+
+    user_rating = db.relationship("UserRating", back_populates="movie")
+    userWatchlist = db.relationship('User', secondary=watchlist, backref='watchlistMovies')
+
+    def __repr__(self):
+        return f'Movie({self.movie_id}, {self.title}, {self.director}, {self.poster_url}, {self.imdb_rating}, {self.imdb_votes})'
+
+    # Grabs votes and review average from list of ratings for specific movie
+    def grabUNCCRatings(self):
+        total_ratings = 0
+        rating_sum = 0
+        rating_average = 0
+        if len(UserRating.query.filter_by(movie_id=self.movie_id).all()) > 0:
+            for rating in UserRating.query.filter_by(movie_id=self.movie_id).all():
+                total_ratings += 1
+                rating_sum += rating.movie_rating
+            rating_average = rating_sum/total_ratings
+        rating_info = {
+            'votes': total_ratings,
+            'average': rating_average
+        }
+        return rating_info
+
+    def to_dict(self):
+        unccInfo = self.grabUNCCRatings()
+        return {
+            'movie_id': self.movie_id,
+            'title': self.title,
+            'director': self.director,
+            'about': self.about,
+            'poster_url': self.poster_url,
+            'imdb_rating': self.imdb_rating,
+            'imdb_votes': self.imdb_votes,
+            'uncc_rating': unccInfo['average'],
+            'uncc_votes': unccInfo['votes'],
+        }
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -146,47 +135,89 @@ class User(db.Model):
     def __repr__(self):
         return f'User({self.user_id}, {self.username}, {self.email}, {self.pfp}, {self.about})'
 
-watchlist = db.Table(
-    'watchlist',
-    db.Column('movie_id', db.String, db.ForeignKey('movie.movie_id'), primary_key=True),
-    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
-)
 class Admin(db.Model):
     __tablename__ = 'admins'
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
     def __repr__(self):
         return f'User_Playlist({self.user_id})'
 
-class Movie(db.Model):
-    __tablename__ = 'movie'
-    movie_id = db.Column(db.String, primary_key=True)
+class Post(db.Model):
+    __tablename__ = 'posts'
+    post_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     title = db.Column(db.String, nullable=False)
-    director = db.Column(db.String, nullable=False)
-    about = db.Column(db.String, nullable=True)
-    poster_url = db.Column(db.String, nullable=True)
-    imdb_rating = db.Column(db.Float, nullable=False)
-    imdb_votes = db.Column(db.Integer, nullable=False)
-    uncc_rating = db.Column(db.Float, nullable=False)
-    uncc_votes = db.Column(db.Integer, nullable=False)
+    body = db.Column(db.String, nullable=False)
+    post_time = db.Column(db.String, nullable=False)
+    likes = db.relationship('PostLike', backref='posts', lazy='dynamic')
 
-    user_rating = db.relationship("UserRating", back_populates="movie")
-    userWatchlist = db.relationship('User', secondary=watchlist, backref='watchlistMovies')
+    def getUser(self):
+        return User.query.get(self.user_id)
+
+    def get_edit(self):
+        descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(post_id=self.post_id, reply_id = None)
+        return descending.first()
+
+    def getLastReply(self):
+        query = Reply.query.order_by(Reply.reply_id.desc()).filter_by(post_id=self.post_id).first()
+        return query
+
+    def getReplyCount(self):
+        return Reply.query.filter(Reply.post_id == self.post_id).count()
+
+    def readable_time(self):
+        return getTime(self.post_time)
+            
 
     def __repr__(self):
-        return f'Movie({self.movie_id}, {self.title}, {self.director}, {self.poster_url}, {self.imdb_rating}, {self.imdb_votes}, {self.uncc_rating}, {self.uncc_votes})'
+        return f'Post({self.post_id}, {self.title}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
 
-    def to_dict(self):
-        return {
-            'movie_id': self.movie_id,
-            'title': self.title,
-            'director': self.director,
-            'about': self.about,
-            'poster_url': self.poster_url,
-            'imdb_rating': self.imdb_rating,
-            'imdb_votes': self.imdb_votes,
-            'uncc_rating': self.uncc_rating,
-            'uncc_votes': self.uncc_votes,
-        }
+class PostLike(db.Model):
+    __tablename__ = 'post_like'
+    like_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id', ondelete='CASCADE'))
+
+class Reply(db.Model):
+    __tablename__ = 'replies'
+    reply_id = db.Column(db.Integer, primary_key=True)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id')) 
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    body = db.Column(db.String, nullable=False)
+    post_time = db.Column(db.String, nullable=False)
+    likes = db.relationship('ReplyLike', backref='replies', lazy='dynamic')
+    
+    def getUser(self):
+        return User.query.get(self.user_id)
+
+    def get_edit(self):
+        descending = Edits.query.order_by(Edits.edit_id.desc()).filter_by(reply_id = self.reply_id)
+        return descending.first()
+
+    def readable_time(self):
+        return getTime(self.post_time)
+    
+    def get_quoted_post(self):
+        qoute = Reply_Quote.query.get(self.reply_id)
+
+        if qoute != None:
+            if qoute.parent_id == 0:
+                return Post.query.get(self.post_id)
+            else:
+                return Reply.query.get(qoute.parent_id)
+
+    def __repr__(self):
+        return f'Reply({self.reply_id}, {self.post_id}, {self.user_id}, {self.body}, {self.post_time}, {self.likes})'
+
+class ReplyLike(db.Model):
+    __tablename__ = 'reply_like'
+    like_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id', ondelete='CASCADE'))
+
+class Reply_Quote(db.Model):
+    __tablename__ = 'reply_quotes'
+    reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id', ondelete='CASCADE'), primary_key=True)
+    parent_id = db.Column(db.Integer, nullable = False)
 
 class Edits(db.Model):
     __tablename__ = 'edits'
@@ -205,21 +236,3 @@ class Edits(db.Model):
 
     def __repr__(self):
         return f'Edits({self.post_id}, {self.user_id}, {self.post_id}, {self.reply_id}, {self.reason}, {self.time})'
-
-    
-class PostLike(db.Model):
-    __tablename__ = 'post_like'
-    like_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id', ondelete='CASCADE'))
-
-class ReplyLike(db.Model):
-    __tablename__ = 'reply_like'
-    like_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id', ondelete='CASCADE'))
-
-class Reply_Quote(db.Model):
-    __tablename__ = 'reply_quotes'
-    reply_id = db.Column(db.Integer, db.ForeignKey('replies.reply_id', ondelete='CASCADE'), primary_key=True)
-    parent_id = db.Column(db.Integer, nullable = False)

@@ -12,16 +12,7 @@
                 <button type="submit" name="watchlist">Watchlist</button>
             </form>
             <img id="movie-poster" src="{{ single_movie['poster_url'] }}" alt="{{ single_movie['title'] }}.jpg">
-        </td>
-        <td class="pl-5 center">
-            <h1 class="mb-3" id="movie-title">{{ single_movie['title'] }}</h1>
-            <h2 class="mb-5" id="movie-director">Directed by: {{ single_movie['director'] }}</h2>
-            <p id="movie-description">{{ single_movie['about'] }}</p>
-        </td>
-    </tr>
-    <tr class="movie-info-lg">
-        <td class="pt-1">
-            <table>
+            <table class="movie-info-lg">
                 <tr>
                     <td rowspan="2" class="pt-2">
                         {% if 'user' in session %}
@@ -66,6 +57,11 @@
                     </td>
                 </tr>
             </table>
+        </td>
+        <td class="pl-5 center">
+            <h1 class="mb-3" id="movie-title">{{ single_movie['title'] }}</h1>
+            <h2 class="mb-5" id="movie-director">Directed by: {{ single_movie['director'] }}</h2>
+            <p id="movie-description">{{ single_movie['about'] }}</p>
         </td>
     </tr>
 </table>
