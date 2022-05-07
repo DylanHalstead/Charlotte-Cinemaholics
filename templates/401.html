@@ -1,9 +1,13 @@
 {% extends '_layout.html' %}
-{% block title %}Sign In{% endblock %}
+
+{% block title %}Error: 401{% endblock %}
 
 {% block body %}
 <div class="text-center">
     <img class="login-logo" src="/static/logos/cinemaholics-logo-white.png" alt="Cinemaholics-logo.png">
+</div>
+<div class="alert alert-warning">
+    <strong>Login to continue</strong>
 </div>
 <form class="form-signin" action="/login" method="post">
     <h3 class="mb-3 font-weight-normal whitetext">Please Sign In</h1>

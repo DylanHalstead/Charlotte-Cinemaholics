@@ -42,6 +42,7 @@ Top Rated
         let filteredMovies = await filteredMoviesRes.json();
         let pageNum = 1;
         await updateMovies(filteredMovies, pageNum);
+    
 
         // Grab user's filter
         $(".filter-btn").addEventListener("click", async (evt) => {
@@ -65,7 +66,7 @@ Top Rated
 
         // Grab user's page
         // Tried wrapping this all into one function but I could not get it to work. Should be possible but not sure why it doesn't work :/
-        $("#page-previous").addEventListener("click", async (evt) => {
+        $("#page-previous").addEventListener("click", async evt => {
             console.log(evt.target.id);
             if(pageNum > 1){
                 pageNum -= 1;
@@ -74,14 +75,14 @@ Top Rated
             evt.preventDefault();
         });
 
-        $("#page-one").addEventListener("click", async (evt) => {
+        $("#page-one").addEventListener("click", async evt => {
             console.log(evt.target.id);
             pageNum = 1;
             await updateMovies(filteredMovies, pageNum);
             evt.preventDefault()
         });
         
-        $("#page-two").addEventListener("click", async (evt) => {
+        $("#page-two").addEventListener("click", async evt => {
             console.log(evt.target.id);
             pageNum = 2;
             await updateMovies(filteredMovies, pageNum);
@@ -89,14 +90,14 @@ Top Rated
         });
 
 
-        $("#page-three").addEventListener("click", async (evt) => {
+        $("#page-three").addEventListener("click", async evt => {
             console.log(evt.target.id);
             pageNum = 3;
             await updateMovies(filteredMovies, pageNum);
             evt.preventDefault();
         });
 
-        $("#page-next").addEventListener("click", async (evt) => {
+        $("#page-next").addEventListener("click", async evt => {
             console.log(evt.target.id);
             if(pageNum < filteredMovies.length/25){
                 pageNum += 1;
@@ -160,11 +161,11 @@ Top Rated
             <td colspan="5">
                 <!-- https://www.w3schools.com/css/tryit.asp?filename=trycss_ex_pagination -->
                 <div class="custom-pagination">
-                    <span id="page-previous" class="page-btn">&laquo;</span>
-                    <span id="page-one" class="page-btn">1</span>
-                    <span id="page-two" class="page-btn">2</span>
-                    <span id="page-three" class="page-btn">3</span>
-                    <span id="page-next" class="page-btn">&raquo;</span>
+                    <button id="page-previous" class="page-btn">&laquo;</button>
+                    <button id="page-one" class="page-btn">1</button>
+                    <button id="page-two" class="page-btn">2</button>
+                    <button id="page-three" class="page-btn">3</button>
+                    <button id="page-next" class="page-btn">&raquo;</button>
                 </div>
             </td>
         </tr>`;

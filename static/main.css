@@ -288,7 +288,7 @@ label {
     justify-content: center;
 }
 
-.custom-pagination  > span{
+.custom-pagination  > button{
     background-color: #2E2E2E;
     border: 1px white solid;
     color: white;
@@ -306,8 +306,8 @@ label {
     border-radius: 0 .25em .25em 0;
 }
 
-.custom-pagination > span:focus,
-.custom-pagination > span:hover
+.custom-pagination > button:focus,
+.custom-pagination > button:hover
 {
     cursor: pointer; 
     color: #B3A369;
@@ -399,6 +399,7 @@ input[type=number] {
 
 .movie-info-lg {
     background-color: #2e2e2e;
+    width: 100%;
 }
 
 #imdb-review-lg {
@@ -418,4 +419,22 @@ input[type=number] {
     margin-right: .1em;
     height: .9em;
     width: .9em;
+}
+
+/* Error Pages */
+.error-header{
+    color: white;
+    font-size: 72pt;
+}
+
+.error-body{
+
+}
+
+.error-link{
+    color: #00703C;
+}
+
+.error-link:hover{
+    color: #00703C;
 }
