@@ -6,7 +6,10 @@
     <img class="login-logo" src="../static/logos/cinemaholics-logo-white.png" alt="Cinemaholics-logo.png">
 </div>
 <form class="form-signin" action="/register" method="post">
-    <h3 class="mb-3 font-weight-normal whitetext">Create An Account</h1>
+    <h3 class="mb-3 font-weight-normal whitetext">Create An Account</h3>
+    {% if error != None%}
+        <h4 class="mb-3 font-weight-normal" style = "color:red">{{error}}</h4>
+    {% endif %}
     <label for="email">Email address (uncc.edu)</label>
     <input type="email" name="email" id="email" class="form-control mb-5" placeholder="norm@uncc.edu" pattern="[A-Za-z0-9._]+@uncc.edu$" required autofocus autocomplete="off">
     <label for="username">Username (Max 15 Characters)</label>

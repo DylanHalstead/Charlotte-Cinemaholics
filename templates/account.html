@@ -7,13 +7,13 @@
     <div class="row">
         <div class="col">
             <img src=../static/pfp/{{sessionUser.pfp}} alt="Account_Pfp.png" width="90%" class="pfp-large mb-5">
-            <h2 class="whitetext mb-3">About Me</h2>
+            <h2 class="whitetext mb-3">About</h2>
             <p class="account-description">
                 {{sessionUser.about}}
             </p>
         </div>
         <div class="col">
-            <h1 class="username-large mb-3">{{sessionUser.username}}</h1>
+            <h1 class="username-large mb-3">{{sessionUser.username}}'s account</h1>
             <h3 class="whitetext mb-3">Watchlist</h3>
             <table>
             {% if movies|length >= 3 %}
@@ -94,10 +94,26 @@
             {% endif %}
             
             {% if movies|length == 0 %}
-                <h4 class="whitetext mb-3">You have no movies watchlisted!</h4>
+                <h4 class="whitetext mb-3">No movies watchlisted!</h4>
             {% endif %}
             </table>
         </div>
     </div>
+    
+<h2 class="whitetext mb-3">Recent posts</h2>
+{% for post in posts %}
+
+<div class="card text-white post-card mb-3" style="max-width: 100%;">
+  <div class="card-header">
+      <h5><a href="/posts/{{post.post_id}}" class = "link-white">{{post.title}}</a></h5>
+  </div>
+        <div class="card-body">
+          <p class="card-text"><img src="../static/pfp/{{sessionUser.pfp}}" class="img-fluid pfp-allposts rounded" alt="">Posted by {{sessionUser.username}} {{post.readable_time()}}</p>
+        </div>
 </div>
+{% endfor %}
+<a class="btn btn-light" href="/{{sessionUser.username}}/posts" role="button">See all</a>
+</div>
+
+
 {% endblock %}
