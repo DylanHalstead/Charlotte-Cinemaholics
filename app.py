@@ -117,6 +117,11 @@ def register():
 
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
+    if User.query.filter_by(username = username).count() > 0:
+        return render_template('register.html', error = f'{username} is not available')
+    if User.query.filter_by(email = email).count() > 0:
+        return render_template('register.html', error = f'{email} has already been used')
+
     new_user = User(email=email, username=username, passkey=hashed_password, pfp=userPfp)
     db.session.add(new_user)
     db.session.commit()
@@ -128,6 +133,7 @@ def register():
         'user_id': new_user.user_id,
         'pfp': new_user.pfp
     }
+
 
     return redirect('/')
 

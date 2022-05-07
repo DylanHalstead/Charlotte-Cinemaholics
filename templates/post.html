@@ -35,7 +35,7 @@
           {% endif %}
           <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">
           <br>
-          <h5>{{user.username}}</h5>
+          <h5><a href="/{{post.getUser().username}}" class="link-white">{{post.getUser().username}}</a></h5>
           Reputation: {{user.get_reputation()}}
           <br>
           Posts: {{user.get_posts_and_reply_count()}}
@@ -45,7 +45,7 @@
 
           {% if post.get_edit() != None %}
           {% if post.get_edit().reason != '' %}
-          <footer class="blockquote-footer">Last edited by {{post.get_edit().getUser().username}} {{post.get_edit().readable_time()}} for {{post.get_edit().reason}}</footer>
+          <footer class="blockquote-footer">Last edited by {{post.get_edit().getUser().username}} {{post.get_edit().readable_time()}} for "{{post.get_edit().reason}}"</footer>
           {% else %}
           <footer class="blockquote-footer">Last edited by {{post.get_edit().getUser().username}} {{post.get_edit().readable_time()}}</footer>
           {% endif %}
@@ -111,13 +111,27 @@
           {% endif %}
           <img src="../static/pfp/{{reply.getUser().pfp}}" class="img-fluid pfp rounded" alt="">
           <br>
-          <h5>{{reply.getUser().username}}</h5>
+          <h5><a href="/{{reply.getUser().username}}" class="link-white">{{reply.getUser().username}}</a></h5>
           Reputation: {{reply.getUser().get_reputation()}}
           <br>
           Posts: {{reply.getUser().get_posts_and_reply_count()}}
         </div>
         <div class="col-sm-8">
-          {% if reply.get_quoted_post() != None %}
+          {% if reply.get_quoted_post() == -1 %}
+            <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-8">
+                    <p class="card-text whitetext">Quoted reply was deleted</p>
+                  </div>
+                </div> 
+                <div class="row">
+                  <div class="col-sm-2 userinfo"></div>
+                  <div class="col-sm-10"></div>
+                </div>   
+              </div>
+            </div>
+          {% elif reply.get_quoted_post() != None %}
             <div class="card text-white bg-dark mb-3"  style = "margin-top: 1%;"> 
               <div class="card-header whitetext"> 
                 <a href="/posts/{{post.post_id}}#reply-{{reply.get_quoted_post().reply_id}}" class="link-white">Quoting post by {{reply.get_quoted_post().getUser().username}} made {{reply.get_quoted_post().readable_time()}} </a>
@@ -138,7 +152,7 @@
           <p class="card-text whitetext">{{reply.body}}</p>
             {% if reply.get_edit() != None %}
               {% if reply.get_edit().reason != '' %}
-              <footer class="blockquote-footer">Last edited by {{reply.get_edit().getUser().username}} {{reply.get_edit().readable_time()}} for {{reply.get_edit().reason}}</footer>
+              <footer class="blockquote-footer">Last edited by {{reply.get_edit().getUser().username}} {{reply.get_edit().readable_time()}} for "{{reply.get_edit().reason}}"</footer>
               {% else %}
               <footer class="blockquote-footer">Last edited by {{reply.get_edit().getUser().username}} {{reply.get_edit().readable_time()}}</footer>
             {% endif %}

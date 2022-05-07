@@ -1,5 +1,5 @@
 from flask import Blueprint, abort, redirect, render_template, request, redirect
-from src.models import Movie, db, User, Post
+from src.models import Movie, UserRating, db, User, Post
 from datetime import datetime
 from app import session
 #from app import user
@@ -12,11 +12,15 @@ def account():
     sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
     if 'user' not in session:
         abort('/login')
-    #userWatch = grab_watchlist()
-    #need to grab the watchlisted movies id's then in render_template make movies=that variable
     userWatchlisted = sessionUser.watchlistMovies
-    print(userWatchlisted)
-    return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted)
+    user = User.query.filter_by(user_id = session['user']['user_id']).first()
+    ratedMovies = []
+    for userRating in user.movie_rating:
+        ratedMov = userRating.movie.to_dict()
+        print(userRating)
+        ratedMovies.append(ratedMov)
+    db.session.commit()
+    return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, rated = ratedMovies)
 
 @router.get('/username/posts')
 def account_posts():
@@ -27,6 +31,19 @@ def account_posts():
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         posts = Post.query.filter_by(user_id=sessionUser.user_id)
         return render_template('account_posts.html', user=sessionUser, posts = posts)
+
+@router.get('/<username>')
+def account_page(username):
+    sessionUser = User.query.filter_by(username = username).first()
+    userWatchlisted = sessionUser.watchlistMovies
+    posts = Post.query.filter_by(user_id=sessionUser.user_id).limit(2).all()
+    return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, posts = posts)
+
+@router.get('/<username>/posts')
+def account_posts_user(username):
+    sessionUser = User.query.filter_by(username = username).first()
+    posts = Post.query.filter_by(user_id=sessionUser.user_id)
+    return render_template('account_posts.html', user=sessionUser, posts = posts)
 
 @router.get('/username/edit')
 def get_edit_account():
@@ -39,10 +56,17 @@ def edit_account():
         username = request.form.get('username')
         aboutMe = request.form.get('about')
         user = User.query.filter_by(email = session['user']['email']).first()
+        if User.query.filter_by(username = username).count() > 0:
+            return render_template('edit_account.html', error = f'{username} is not available')
+        
         print(user.pfp)
-        user.username = username
-        user.pfp = profilePhoto
-        user.about = aboutMe
+        if username != '':
+            user.username = username
+        if profilePhoto != '':
+            user.pfp = profilePhoto
+        if aboutMe != '':
+            user.about = aboutMe
+            
         session['user'] = {
             'email': user.email,
             'username': user.username,
