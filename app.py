@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, abort
+from flask import Flask, render_template, request, redirect, url_for, session, abort, send_from_directory
 from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
 from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, trending, worst_films, addMovie, getRatedIDs
@@ -28,7 +28,10 @@ app.secret_key = os.getenv('SECRET_KEY')
 db.init_app(app)
 db = SQLAlchemy(app)
 
-app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='logos/cinemaholics.ico'))
+# app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='logos/cinemaholics.ico'))
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico',mimetype='image/vnd.microsoft.icon')
 
 @app.get('/')
 def index():
