@@ -1,3 +1,4 @@
+from typing import List
 from flask import Blueprint, abort, jsonify, redirect, render_template, request, session, url_for
 from src.models import db, Movie, User, UserRating
 from datetime import datetime
@@ -15,26 +16,27 @@ top_films = imdbpy.get_top250_movies()
 trending = imdbpy.get_popular100_movies()
 worst_films = imdbpy.get_bottom100_movies()
 
-# Function scrapes IMDb using IMDb ID 'tt0107290' to find movie's poser.
+# Scrapes IMDb using IMDb ID, like 'tt0107290', to find movie's poster.
 # Function modified and based on https://github.com/tomkeith/imdb-scraper
-def scrape_poster(imdb_id):
-    # build URL and soup content
+def scrape_poster(imdb_id: str) -> str:
+    # Build URL and soup content
     imdb_base_url = 'https://www.imdb.com/title/'
     imdb_full_url = imdb_base_url + imdb_id
     r = requests.get(imdb_full_url).content
     soup = BeautifulSoup(r, 'html.parser')
 
     # Grab JSON data
-    json_dict = json.loads( str( soup.findAll('script', {'type':'application/ld+json'})[0].text ))
+    json_dict = json.loads(str(soup.findAll('script', {'type':'application/ld+json'})[0].text))
     if 'image' not in json_dict:
         return '/static/unknown-film.jpg'
     imdb_img_url = json_dict['image']
     return imdb_img_url
 
-# Take a movie from cinemagoer and import it into db 
-def addMovie(movie): 
+# Take a movie from cinemagoer/imdbpy and import it into db 
+def addMovie(movie) -> None: 
     # Make sure movie isn't arleady in db
-    if len(Movie.query.filter_by(movie_id=movie.movieID).all()) == 0:
+    doesExist = len(Movie.query.filter_by(movie_id=movie.movieID).all())
+    if doesExist == 0:
         movie = imdbpy.get_movie(movie.movieID)
         poster_url = scrape_poster(f'tt{movie.movieID}')
         # Grab longer, user review if it exists
@@ -73,7 +75,7 @@ def all_movies():
 def movie_page(movie_id):
     single_movie = imdbpy.get_movie(movie_id)
     addMovie(single_movie)
-    single_movie = Movie.query.filter_by(movie_id=movie_id).first().to_dict()
+    single_movie = Movie.query.get_or_404(movie_id=movie_id).to_dict()
     return render_template('movie.html', single_movie=single_movie)
 
 @router.post('/<movie_id>')
@@ -81,12 +83,12 @@ def post_rating(movie_id):
     # Grab and check rating from user
     if 'user' in session:
         user_rating = float(request.form.get('rating', -1))
-        if user_rating < 0 or user_rating > 10:
+        if user_rating < 0 or user_rating > 10 or len(user_rating) > 5:
             abort(400)
 
         # Add review to user_rating table
-        reviee = User.query.filter_by(user_id=session['user']['user_id']).first()
-        movie = Movie.query.filter_by(movie_id=movie_id).first()
+        reviee = User.query.get_or_404(session['user']['user_id'])
+        movie = Movie.query.get_or_404(movie_id)
         new_review = UserRating(movie_rating=user_rating)
         new_review.user = reviee
         new_review.movie = movie
@@ -102,17 +104,19 @@ def search_movie():
     searched = request.form.get('search')
     movies = imdbpy.search_movie(searched)
     for movie in range(len(movies)):
-            addMovie(movies[movie])
-            movies[movie] = Movie.query.get_or_404(movies[movie].movieID).to_dict()
+        addMovie(movies[movie])
+        movies[movie] = Movie.query.get_or_404(movies[movie].movieID).to_dict()
     return render_template('search.html', searched=searched, movies = movies)
 
 @router.post('/<movie_id>/watchlist')
 def watchlisting(movie_id):
-    user = User.query.filter_by(user_id = session['user']['user_id']).first()
-    movie = Movie.query.get_or_404(movie_id)
-    movie.userWatchlist.append(user)
-    db.session.commit()
-    return redirect(f'/movies/{movie_id}')
+    if 'user' in session:
+        user = User.query.get_or_404(session['user']['user_id'])
+        movie = Movie.query.get_or_404(movie_id)
+        movie.userWatchlist.append(user)
+        db.session.commit()
+        return redirect(f'/movies/{movie_id}')
+    return abort(403)
 
 # JSON
 @router.get('/top-250')
@@ -145,10 +149,11 @@ def get_trending_movies():
             trending[movie] = Movie.query.get_or_404(trending[movie]['movie_id']).to_dict()
     return jsonify(trending)
 
-def getRatedIDs():
+# Used for checking if user has rated film, returns the movie ID of user rated films
+def getRatedIDs() -> List[str]:
+    ratedFilms = []
     if 'user' in session:
-        ratedFilms = []
         user = User.query.get_or_404(session['user']['user_id'])
         for rating in user.movie_rating:
             ratedFilms.append(rating.movie_id)
-        return ratedFilms
+    return ratedFilms

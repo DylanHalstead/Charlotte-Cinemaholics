@@ -112,7 +112,7 @@ def create_quote_reply(post_id, reply_id):
         #db.session.commit()
     return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
-@router.post('/<post_id>')
+@router.post('/<int:post_id>')
 def create_reply(post_id):
     #createDummyUsers()
     if 'user' in session:
@@ -133,7 +133,7 @@ def create_reply(post_id):
 
     return redirect(f'/posts/{post_id}#reply-{reply.reply_id}')
 
-@router.get('/<post_id>/edit')
+@router.get('/<int:post_id>/edit')
 def get_edit_post_form(post_id): 
     #TODO add check if user is a moderator as well
     post_to_edit = Post.query.get_or_404(post_id)
@@ -144,7 +144,7 @@ def get_edit_post_form(post_id):
             return render_template('edit_post.html', post=post_to_edit)
     return redirect(f'/posts/{post_id}')
 
-@router.post('/<post_id>/edit')
+@router.post('/<int:post_id>/edit')
 def update_post(post_id): 
     post = Post.query.get_or_404(post_id)
     title = request.form.get('title', '')
@@ -191,7 +191,7 @@ def edit_reply(post_id, reply_id):
     db.session.commit()
     return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
-@router.post('/<post_id>/delete')
+@router.post('/<int:post_id>/delete')
 def delete_post(post_id):
     post_to_delete = Post.query.get_or_404(post_id)
     if 'user' in session:

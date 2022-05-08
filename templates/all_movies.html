@@ -37,74 +37,14 @@ Top Rated
 
 <script>
     let $ = function (selector) { return document.querySelector(selector); };
+    let filteredMoviesRes;
+    let filteredMovies;
+    let pageNum;
     document.addEventListener("DOMContentLoaded", async () => {
-        let filteredMoviesRes = await fetch('/movies/top-250');
-        let filteredMovies = await filteredMoviesRes.json();
-        let pageNum = 1;
+        filteredMoviesRes = await fetch('/movies/top-250');
+        filteredMovies = await filteredMoviesRes.json();
+        pageNum = 1;
         await updateMovies(filteredMovies, pageNum);
-    
-
-        // Grab user's filter
-        $(".filter-btn").addEventListener("click", async (evt) => {
-            if(evt.target.id == 'best'){
-                filteredMoviesRes = await fetch('/movies/top-250');
-                filteredMovies = await filteredMoviesRes.json();
-                await updateMovies(filteredMovies, pageNum);
-            }
-            if(evt.target.id == 'worst'){
-                filteredMoviesRes = await fetch('/movies/bottom-100');
-                filteredMovies = await filteredMoviesRes.json();
-                await updateMovies(filteredMovies, pageNum);
-            }
-            if(evt.target.id == 'trending'){
-                filteredMoviesRes = await fetch('/movies/trending');
-                filteredMovies = await filteredMoviesRes.json();
-                await updateMovies(filteredMovies, pageNum);
-            }
-            evt.preventDefault();
-        });
-
-        // Grab user's page
-        // Tried wrapping this all into one function but I could not get it to work. Should be possible but not sure why it doesn't work :/
-        $("#page-previous").addEventListener("click", async evt => {
-            console.log(evt.target.id);
-            if(pageNum > 1){
-                pageNum -= 1;
-                await updateMovies(filteredMovies, pageNum);
-            }
-            evt.preventDefault();
-        });
-
-        $("#page-one").addEventListener("click", async evt => {
-            console.log(evt.target.id);
-            pageNum = 1;
-            await updateMovies(filteredMovies, pageNum);
-            evt.preventDefault()
-        });
-        
-        $("#page-two").addEventListener("click", async evt => {
-            console.log(evt.target.id);
-            pageNum = 2;
-            await updateMovies(filteredMovies, pageNum);
-            evt.preventDefault();
-        });
-
-
-        $("#page-three").addEventListener("click", async evt => {
-            console.log(evt.target.id);
-            pageNum = 3;
-            await updateMovies(filteredMovies, pageNum);
-            evt.preventDefault();
-        });
-
-        $("#page-next").addEventListener("click", async evt => {
-            console.log(evt.target.id);
-            if(pageNum < filteredMovies.length/25){
-                pageNum += 1;
-                await updateMovies(filteredMovies, pageNum);
-            }
-            evt.preventDefault();
-        });
     });
 
     // Function used to update movie filter and page
@@ -169,6 +109,66 @@ Top Rated
                 </div>
             </td>
         </tr>`;
+        refreshListeners();
+    }
+
+    // Function that holds listeners, makes sure listeners are active when page is reeloaded
+    function refreshListeners(){
+        // Grab user's filter
+        $("#best").addEventListener("click", async evt => {
+            filteredMoviesRes = await fetch('/movies/top-250');
+            filteredMovies = await filteredMoviesRes.json();
+            await updateMovies(filteredMovies, pageNum);
+            evt.preventDefault();
+        });
+        $("#worst").addEventListener("click", async evt => {
+            filteredMoviesRes = await fetch('/movies/bottom-100');
+            filteredMovies = await filteredMoviesRes.json();
+            await updateMovies(filteredMovies, pageNum);
+            evt.preventDefault();
+        });
+        $("#trending").addEventListener("click", async evt => {
+            filteredMoviesRes = await fetch('/movies/trending');
+            filteredMovies = await filteredMoviesRes.json();
+            await updateMovies(filteredMovies, pageNum);
+            evt.preventDefault();
+        });
+
+        // Grab user's page
+        $("#page-previous").addEventListener("click", async evt => {
+            if(pageNum > 1){
+                pageNum -= 1;
+                await updateMovies(filteredMovies, pageNum);
+            }
+            evt.preventDefault();
+        });
+
+        $("#page-one").addEventListener("click", async evt => {
+            pageNum = 1;
+            await updateMovies(filteredMovies, pageNum);
+            evt.preventDefault()
+        });
+        
+        $("#page-two").addEventListener("click", async evt => {
+            pageNum = 2;
+            await updateMovies(filteredMovies, pageNum);
+            evt.preventDefault();
+        });
+
+
+        $("#page-three").addEventListener("click", async evt => {
+            pageNum = 3;
+            await updateMovies(filteredMovies, pageNum);
+            evt.preventDefault();
+        });
+
+        $("#page-next").addEventListener("click", async evt => {
+            if(pageNum < filteredMovies.length/25){
+                pageNum += 1;
+                await updateMovies(filteredMovies, pageNum);
+            }
+            evt.preventDefault();
+        });
     }
 </script>
 {% endblock %}

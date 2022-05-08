@@ -29,11 +29,11 @@ class Movie(db.Model):
     user_rating = db.relationship("UserRating", back_populates="movie")
     userWatchlist = db.relationship('User', secondary=watchlist, backref='watchlistMovies')
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'Movie({self.movie_id}, {self.title}, {self.director}, {self.poster_url}, {self.imdb_rating}, {self.imdb_votes})'
 
     # Grabs votes and review average from list of ratings for specific movie
-    def grabUNCCRatings(self):
+    def grabUNCCRatings(self) -> dict[str: int]:
         total_ratings = 0
         rating_sum = 0
         rating_average = 0
@@ -48,7 +48,7 @@ class Movie(db.Model):
         }
         return rating_info
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         unccInfo = self.grabUNCCRatings()
         return {
             'movie_id': self.movie_id,

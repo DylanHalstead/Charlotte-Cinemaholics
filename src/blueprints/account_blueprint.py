@@ -34,10 +34,13 @@ def account_posts():
 
 @router.get('/<username>')
 def account_page(username):
-    sessionUser = User.query.filter_by(username = username).first()
-    userWatchlisted = sessionUser.watchlistMovies
-    posts = Post.query.filter_by(user_id=sessionUser.user_id).limit(2).all()
-    return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, posts = posts)
+    if 'user' in session:
+        sessionUser = User.query.filter_by(username = username).first()
+        userWatchlisted = sessionUser.watchlistMovies
+        posts = Post.query.filter_by(user_id=sessionUser.user_id).limit(2).all()
+        return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, posts = posts)
+    else:
+        abort(403)
 
 @router.get('/<username>/posts')
 def account_posts_user(username):
