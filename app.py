@@ -28,6 +28,8 @@ app.secret_key = os.getenv('SECRET_KEY')
 db.init_app(app)
 db = SQLAlchemy(app)
 
+app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='logos/cinemaholics.ico'))
+
 @app.get('/')
 def index():
     for movie in range(5):
