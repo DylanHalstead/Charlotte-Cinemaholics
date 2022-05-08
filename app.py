@@ -18,9 +18,10 @@ db_port = os.getenv('DB_PORT', '3306')
 db_name = os.getenv('DB_NAME', 'cinemaholics_db')
 connection_string = f'mysql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
 
+'sqlite:///test.db'
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('CLEARDB_DATABASE_URL', 'sqlite:///test.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 bcrypt = Bcrypt(app)
