@@ -1,24 +1,4 @@
--- DROP DATABASE IF EXISTS cinemaholics_db;
-CREATE DATABASE IF NOT EXISTS cinemaholics_db;
-USE cinemaholics_db;
-
-CREATE TABLE IF NOT EXISTS watchlist (
-    user_id        INT,
-    movie_id       VARCHAR(255),
-    PRIMARY KEY (user_id, movie_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
-);
-
-CREATE TABLE IF NOT EXISTS user_ratings (
-    user_id      INT,
-    movie_id     VARCHAR(255),
-    user_rating  FLOAT          NOT NULL,
-    PRIMARY KEY (user_id, movie_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
-);
-
+-- DROP DATABASE IF EXISTS heroku_069f9c0ece3f6df;
 CREATE TABLE IF NOT EXISTS movie (
 	movie_id     VARCHAR(255),
     title        TEXT(255)  NOT NULL,
@@ -38,6 +18,23 @@ CREATE TABLE IF NOT EXISTS users (
     pfp       VARCHAR(255)  NOT NULL,
     about     TEXT(65535)   NULL,
     PRIMARY KEY (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS watchlist (
+    user_id        INT,
+    movie_id       VARCHAR(255),
+    PRIMARY KEY (user_id, movie_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
+);
+
+CREATE TABLE IF NOT EXISTS user_ratings (
+    user_id      INT,
+    movie_id     VARCHAR(255),
+    user_rating  FLOAT          NOT NULL,
+    PRIMARY KEY (user_id, movie_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
 );
 
 CREATE TABLE IF NOT EXISTS admins (
