@@ -157,6 +157,19 @@ def filter_watchlist():
         abort(401)
     return render_template('watchlist.html', movies = userWatchlisted, user = sessionUser)
 
+@app.get('/filter/rated')
+def filter_ratings():
+    if 'user' in session:
+        user = User.query.filter_by(user_id = session['user']['user_id']).first()
+        ratedMovies = []
+        for userRating in user.movie_rating:
+            ratedMov = userRating.movie.to_dict()
+            ratedMovies.append(ratedMov)
+        db.session.commit()
+    else:
+        abort(400)
+    return render_template('rated_movies.html', movies = ratedMovies, user = user)
+    
 # Server Errors
 # Server cant return response bc an issue with user browser
 @app.errorhandler(400)
