@@ -29,7 +29,7 @@ db.init_app(app)
 db = SQLAlchemy(app)
 
 # app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='logos/cinemaholics.ico'))
-@app.route('/favicon.ico')
+@app.get('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico',mimetype='image/vnd.microsoft.icon')
 
