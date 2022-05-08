@@ -28,11 +28,6 @@ app.secret_key = os.getenv('SECRET_KEY')
 db.init_app(app)
 db = SQLAlchemy(app)
 
-# app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='logos/cinemaholics.ico'))
-@app.get('/favicon.ico')
-def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico',mimetype='image/vnd.microsoft.icon')
-
 @app.get('/')
 def index():
     for movie in range(5):
@@ -56,6 +51,11 @@ def index():
 app.register_blueprint(posts_router)
 app.register_blueprint(movie_router)
 app.register_blueprint(account_router)
+
+# app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='logos/cinemaholics.ico'))
+@app.get('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/png')
 
 
 @app.get('/report')
