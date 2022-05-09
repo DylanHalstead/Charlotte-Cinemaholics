@@ -16,11 +16,12 @@ CREATE TABLE IF NOT EXISTS movie (
 
 CREATE TABLE IF NOT EXISTS users (
     user_id   INT           AUTO_INCREMENT,
-    username  VARCHAR(255)  NOT NULL            UNIQUE,
-    email     VARCHAR(255)  NOT NULL            UNIQUE,
+    username  VARCHAR(255)  NOT NULL,
+    email     VARCHAR(255)  NOT NULL,
     passkey   VARCHAR(255)  NOT NULL,
     pfp       VARCHAR(255)  NOT NULL,
     about     TEXT(65535)   NULL,
+    UNIQUE(username, email),
     PRIMARY KEY (user_id)
 );
 
