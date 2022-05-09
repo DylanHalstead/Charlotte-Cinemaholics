@@ -25,9 +25,9 @@ CineForms
       <form action="/posts/" method="GET" class="form-inline">
         <div class="form-group">
             {% if searched != None %}
-            <input class="form-control mr-sm-2 " name='search' type="text" id="search" value="{{searched}}" placeholder="Search Posts" aria-label="Search">
+            <input class="form-control mr-sm-2 " name='search' type="text" id="search" value="{{searched}}" placeholder="Search Posts" aria-label="Search" autocomplete="off">
             {% else %}
-            <input class="form-control mr-sm-2 " name='search' type="text" id="search" placeholder="Search Posts" aria-label="Search">
+            <input class="form-control mr-sm-2 " name='search' type="text" id="search" placeholder="Search Posts" aria-label="Search" autocomplete="off">
             {% endif %}
             
             <select name = "sort" id="sort" class="form-control form-select">
