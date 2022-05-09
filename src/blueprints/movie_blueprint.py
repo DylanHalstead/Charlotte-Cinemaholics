@@ -1,12 +1,10 @@
 from typing import List
 from flask import Blueprint, abort, jsonify, redirect, render_template, request, session, url_for
 from src.models import db, Movie, User, UserRating
-from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 import json
 from imdb import Cinemagoer
-import unicodedata
 
 router = Blueprint('movie_router', __name__, url_prefix='/movies')
 
@@ -33,9 +31,9 @@ def scrape_poster(imdb_id: str) -> str:
     return imdb_img_url
 
 # Take a movie from cinemagoer/imdbpy and import it into db 
-def addMovie(movie) -> None: 
+def add_movie(movie) -> None: 
     # Make sure movie isn't arleady in db
-    doesExist = len(Movie.query.filter_by(movie_id=movie.movieID).all())
+    doesExist = Movie.query.filter_by(movie_id=movie.movieID).all().count()
     if doesExist == 0:
         movie = imdbpy.get_movie(movie.movieID)
         poster_url = scrape_poster(f'tt{movie.movieID}')
@@ -69,12 +67,13 @@ def addMovie(movie) -> None:
 # Routers
 @router.get('/')
 def all_movies():
-    return render_template('all_movies.html')
+    ratedMovies = get_rated_IDs()
+    return render_template('all_movies.html', ratedMovies=ratedMovies)
 
 @router.get('/<movie_id>')
 def movie_page(movie_id):
     single_movie = imdbpy.get_movie(movie_id)
-    addMovie(single_movie)
+    add_movie(single_movie)
     single_movie = Movie.query.get_or_404(movie_id).to_dict()
     return render_template('movie.html', single_movie=single_movie)
 
@@ -83,7 +82,7 @@ def post_rating(movie_id):
     # Grab and check rating from user
     if 'user' in session:
         user_rating = float(request.form.get('rating', -1))
-        if user_rating < 0 or user_rating > 10 or len(user_rating) > 5:
+        if user_rating < 0 or user_rating > 10:
             abort(400)
 
         # Add review to user_rating table
@@ -104,9 +103,10 @@ def search_movie():
     searched = request.form.get('search')
     movies = imdbpy.search_movie(searched)
     for movie in range(len(movies)):
-        addMovie(movies[movie])
+        add_movie(movies[movie])
         movies[movie] = Movie.query.get_or_404(movies[movie].movieID).to_dict()
-    return render_template('search.html', searched=searched, movies = movies)
+    ratedMovies = get_rated_IDs()
+    return render_template('search.html', searched=searched, movies = movies, ratedMovies=ratedMovies)
 
 @router.post('/<movie_id>/watchlist')
 def watchlisting(movie_id):
@@ -127,7 +127,7 @@ def watchlisting(movie_id):
 def get_top_movies():
     for movie in range(len(top_films)):
         if not isinstance(top_films[movie], dict):
-            addMovie(top_films[movie])
+            add_movie(top_films[movie])
             top_films[movie] = Movie.query.get_or_404(top_films[movie].movieID).to_dict()
         else:
             top_films[movie] = Movie.query.get_or_404(top_films[movie]['movie_id']).to_dict()
@@ -137,7 +137,7 @@ def get_top_movies():
 def get_worst_movies():
     for movie in range(len(worst_films)):
         if not isinstance(worst_films[movie], dict):
-            addMovie(worst_films[movie])
+            add_movie(worst_films[movie])
             worst_films[movie] = Movie.query.get_or_404(worst_films[movie].movieID).to_dict()
         else:
             worst_films[movie] = Movie.query.get_or_404(worst_films[movie]['movie_id']).to_dict()
@@ -147,14 +147,14 @@ def get_worst_movies():
 def get_trending_movies():
     for movie in range(len(trending)):
         if not isinstance(trending[movie], dict):
-            addMovie(trending[movie])
+            add_movie(trending[movie])
             trending[movie] = Movie.query.get_or_404(trending[movie].movieID).to_dict()
         else:
             trending[movie] = Movie.query.get_or_404(trending[movie]['movie_id']).to_dict()
     return jsonify(trending)
 
 # Used for checking if user has rated film, returns the movie ID of user rated films
-def getRatedIDs() -> List[str]:
+def get_rated_IDs() -> List[str]:
     ratedFilms = []
     if 'user' in session:
         user = User.query.get_or_404(session['user']['user_id'])

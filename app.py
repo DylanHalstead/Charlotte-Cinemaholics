@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, abort, send_from_directory
 from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
-from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, trending, worst_films, addMovie, getRatedIDs
+from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, trending, worst_films, add_movie, get_rated_IDs
 from src.blueprints.account_blueprint import router as account_router
 from src.models import db, User, Movie
 from flask_bcrypt import Bcrypt
@@ -31,25 +31,32 @@ db = SQLAlchemy(app)
 
 @app.get('/')
 def index():
+    # Grab first 5 top films
     for movie in range(5):
         if not isinstance(top_films[movie], dict):
             pass
-            addMovie(top_films[movie])
+            add_movie(top_films[movie])
             top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie].movieID).first().to_dict()
+    # Grab first 5 trending films
     for movie in range(5):
         if not isinstance(trending[movie], dict):
             pass
-            addMovie(trending[movie])
+            add_movie(trending[movie])
             trending[movie] = Movie.query.filter_by(movie_id=trending[movie].movieID).first().to_dict()
+    # Grab first 5 watchlisted films if user's signed in
     if 'user' in session:
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         userWatchlisted = sessionUser.watchlistMovies
-        ratedMovies = getRatedIDs()
+        updatedWatchlist = []
+        # Regrab data incase rated
+        for watchlist in range(len(userWatchlisted)):
+            updatedWatchlist.append(userWatchlisted[watchlist].to_dict())
+        ratedMovies = get_rated_IDs()
     else:
         ratedMovies = []
         userWatchlisted = 0
     
-    return render_template('index.html', top_films=top_films, popular_films=trending, movies=userWatchlisted, ratedMovies=ratedMovies)
+    return render_template('index.html', top_films=top_films, popular_films=trending, movies=updatedWatchlist, ratedMovies=ratedMovies)
 
 app.register_blueprint(posts_router)
 app.register_blueprint(movie_router)
@@ -89,7 +96,6 @@ def login():
         abort(401)
 
     existing_user = User.query.filter_by(email=email).first()
-
     if not existing_user or existing_user.user_id == 0:
         abort(401)
 
@@ -118,7 +124,6 @@ def register():
     username = request.form.get('username', '')
     password = request.form.get('password', '')
 
-    # Make sure to add backend so user follows requirements creating an account
     if email == '' or '@uncc.edu' not in email or username == '' or password == '':
         abort(400)
 
