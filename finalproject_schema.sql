@@ -5,7 +5,7 @@ USE cinemaholics_db;
 
 CREATE TABLE IF NOT EXISTS movie (
 	movie_id     VARCHAR(255),
-    title        TEXT(255)  NOT NULL,
+    title        TEXT(255)     NOT NULL,
     director     VARCHAR(255)  NOT NULL,
     about        TEXT(65535)   NULL, 
     poster_url   VARCHAR(255)  NULL,
@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS movie (
 
 CREATE TABLE IF NOT EXISTS users (
     user_id   INT           AUTO_INCREMENT,
-    username  VARCHAR(255)  NOT NULL,
-    email     VARCHAR(255)  NOT NULL,
+    username  VARCHAR(255)  NOT NULL            UNIQUE,
+    email     VARCHAR(255)  NOT NULL            UNIQUE,
     passkey   VARCHAR(255)  NOT NULL,
     pfp       VARCHAR(255)  NOT NULL,
     about     TEXT(65535)   NULL,
@@ -106,5 +106,3 @@ CREATE TABLE IF NOT EXISTS edits (
     FOREIGN KEY (post_id) REFERENCES posts(post_id),
     FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
 );
-
-SELECT * FROM watchlist;
