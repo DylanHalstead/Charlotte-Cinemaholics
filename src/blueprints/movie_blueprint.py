@@ -75,7 +75,7 @@ def all_movies():
 def movie_page(movie_id):
     single_movie = imdbpy.get_movie(movie_id)
     addMovie(single_movie)
-    single_movie = Movie.query.get_or_404(movie_id=movie_id).to_dict()
+    single_movie = Movie.query.get_or_404(movie_id).to_dict()
     return render_template('movie.html', single_movie=single_movie)
 
 @router.post('/<movie_id>')
@@ -113,9 +113,13 @@ def watchlisting(movie_id):
     if 'user' in session:
         user = User.query.get_or_404(session['user']['user_id'])
         movie = Movie.query.get_or_404(movie_id)
-        movie.userWatchlist.append(user)
+        # Check to see if user is adding or removing from his watchlist
+        if(movie not in user.watchlistMovies):
+            user.watchlistMovies.append(movie)
+        else:
+            user.watchlistMovies.remove(movie)
         db.session.commit()
-        return redirect(f'/movies/{movie_id}')
+        return redirect(f'/filter/watchlist')
     return abort(403)
 
 # JSON

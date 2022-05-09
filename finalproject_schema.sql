@@ -1,4 +1,8 @@
+-- DROP DATABASE IF EXISTS cinemaholics_db;
 -- DROP DATABASE IF EXISTS heroku_069f9c0ece3f6df;
+CREATE DATABASE IF NOT EXISTS cinemaholics_db;
+USE cinemaholics_db;
+
 CREATE TABLE IF NOT EXISTS movie (
 	movie_id     VARCHAR(255),
     title        TEXT(255)  NOT NULL,
@@ -102,3 +106,5 @@ CREATE TABLE IF NOT EXISTS edits (
     FOREIGN KEY (post_id) REFERENCES posts(post_id),
     FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
 );
+
+SELECT * FROM watchlist;

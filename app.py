@@ -39,10 +39,12 @@ db = SQLAlchemy(app)
 def index():
     for movie in range(5):
         if not isinstance(top_films[movie], dict):
+            pass
             addMovie(top_films[movie])
             top_films[movie] = Movie.query.filter_by(movie_id=top_films[movie].movieID).first().to_dict()
     for movie in range(5):
         if not isinstance(trending[movie], dict):
+            pass
             addMovie(trending[movie])
             trending[movie] = Movie.query.filter_by(movie_id=trending[movie].movieID).first().to_dict()
     if 'user' in session:

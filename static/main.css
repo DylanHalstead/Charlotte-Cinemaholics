@@ -342,6 +342,7 @@ label {
 #movie-poster {
     height: 30em;
     width: 20em;
+    border-radius: 2.4% 2.4% 0 0;
 }
 
 #movie-title {
@@ -421,14 +422,39 @@ input[type=number] {
     width: .9em;
 }
 
+#watchlist-form{
+    position: absolute;
+    top: 7.65em;
+    left: 5.65em;
+    padding: 0;
+}
+
+#watchlist-btn{
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+#watchlist-btn:focus {
+    outline: none;
+}
+
+.watchlist-md {
+    height: 4em;
+    width: 4em;
+    opacity: 80%;
+}
+
+#banner-path{
+    stroke: white;
+    stroke-width: .03em;
+    stroke-opacity: 80%;
+}
+
 /* Error Pages */
 .error-header{
     color: white;
     font-size: 72pt;
-}
-
-.error-body{
-
 }
 
 .error-link{
