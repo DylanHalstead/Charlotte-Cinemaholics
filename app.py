@@ -11,12 +11,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 load_dotenv()
-db_user = os.getenv('DB_USER', 'root')
-db_pass = os.getenv('DB_PASS', '12345')
-db_host = os.getenv('DB_HOST', 'localhost')
-db_port = os.getenv('DB_PORT', '3306')
-db_name = os.getenv('DB_NAME', 'cinemaholics_db')
-connection_string = f'mysql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
 
 app = Flask(__name__)
 db_user = os.getenv('DB_USER', 'root')
