@@ -107,3 +107,5 @@ CREATE TABLE IF NOT EXISTS edits (
     FOREIGN KEY (post_id) REFERENCES posts(post_id),
     FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
 );
+
+select * from users

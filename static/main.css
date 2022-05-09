@@ -104,6 +104,17 @@ label {
     background-color: #00703C;
 }
 
+.btn-outline-gold {
+    color: #B3A369;
+    background-color: transparent;
+    border: 1px solid #B3A369 !important;
+}
+
+.btn-outline-gold:hover {
+    color: white;
+    background-color: #B3A369;
+}
+
 /* Home Page & Movie Card */
 .movie-table {
     margin-left: auto;

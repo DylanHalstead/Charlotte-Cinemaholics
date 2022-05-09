@@ -54,6 +54,7 @@ def index():
         ratedMovies = get_rated_IDs()
     else:
         ratedMovies = []
+        updatedWatchlist = []
         userWatchlisted = 0
     
     return render_template('index.html', top_films=top_films, popular_films=trending, movies=updatedWatchlist, ratedMovies=ratedMovies)

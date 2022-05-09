@@ -33,7 +33,7 @@ def scrape_poster(imdb_id: str) -> str:
 # Take a movie from cinemagoer/imdbpy and import it into db 
 def add_movie(movie) -> None: 
     # Make sure movie isn't arleady in db
-    doesExist = Movie.query.filter_by(movie_id=movie.movieID).all().count()
+    doesExist = len(Movie.query.filter_by(movie_id=movie.movieID).all())
     if doesExist == 0:
         movie = imdbpy.get_movie(movie.movieID)
         poster_url = scrape_poster(f'tt{movie.movieID}')

@@ -35,17 +35,23 @@ def account_posts():
 @router.get('/<username>')
 def account_page(username):
     if 'user' in session:
-        sessionUser = User.query.filter_by(username = username).first()
+        print( User.query.filter_by(username=username).first())
+        sessionUser = User.query.filter_by(username=username).first()
         userWatchlisted = sessionUser.watchlistMovies
         posts = Post.query.filter_by(user_id=sessionUser.user_id).limit(2).all()
-        return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, posts = posts)
+        ratedMovies = []
+        for userRating in sessionUser.movie_rating:
+            ratedMov = userRating.movie.to_dict()
+            print(userRating)
+            ratedMovies.append(ratedMov)
+        return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, posts = posts, rated = ratedMovies)
     else:
         abort(403)
 
 @router.get('/<username>/posts')
 def account_posts_user(username):
     sessionUser = User.query.filter_by(username = username).first()
-    posts = Post.query.filter_by(user_id=sessionUser.user_id)
+    posts = Post.query.filter_by(user_id=sessionUser.user_id).all()
     return render_template('account_posts.html', user=sessionUser, posts = posts)
 
 @router.get('/username/edit')

@@ -54,7 +54,7 @@
             </tr>
             {% endif %}
 
-            {% if movies|length <3 %}\
+            {% if movies|length <3 %}
             <tr>
                 {% for b in range(movies|length) %}
                 <td>
@@ -139,7 +139,7 @@
             </tr>
             {% endif %}
             
-            {% if rated|length <3 %}\
+            {% if rated|length <3 %}
             <tr>
                 {% for b in range(rated|length) %}
                 <td>
@@ -188,15 +188,15 @@
 {% for post in posts %}
 
 <div class="card text-white post-card mb-3" style="max-width: 100%;">
-  <div class="card-header">
-      <h5><a href="/posts/{{post.post_id}}" class = "link-white">{{post.title}}</a></h5>
-  </div>
+    <div class="card-header">
+        <h5><a href="/posts/{{post.post_id}}" class = "link-white">{{post.title}}</a></h5>
+    </div>
         <div class="card-body">
-          <p class="card-text"><img src="../static/pfp/{{sessionUser.pfp}}" class="img-fluid pfp-allposts rounded" alt="">Posted by {{sessionUser.username}} {{post.readable_time()}}</p>
+            <p class="card-text"><img src="../static/pfp/{{sessionUser.pfp}}" class="img-fluid pfp-allposts rounded" alt="">Posted by {{sessionUser.username}} {{post.readable_time()}}</p>
         </div>
 </div>
 {% endfor %}
-<a class="btn btn-light" href="/{{sessionUser.username}}/posts" role="button">See all</a>
+<a class="btn btn-outline-gold" href="/{{sessionUser.username}}/posts" role="button">See all</a>
 </div>
 
 

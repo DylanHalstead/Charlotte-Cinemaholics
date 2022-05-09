@@ -14,5 +14,15 @@
           <p class="card-text"><img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp-allposts rounded" alt="">Posted by {{user.username}} {{post.readable_time()}}</p>
         </div>
 </div>
-  {% endfor %}
+{% endfor %}
+
+{% if posts|length <= 1 %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.footer').style.position = 'fixed'
+  document.querySelector('.footer').style.bottom = '0'
+  document.querySelector('.footer').style.width = '100%'
+  });
+</script>
+{% endif %}
 {% endblock %}
