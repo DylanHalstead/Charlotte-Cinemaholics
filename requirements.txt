@@ -6,7 +6,7 @@ beautifulsoup4==4.10.0
 certifi==2021.10.8
 cffi==1.15.0
 charset-normalizer==2.0.11
-cinemagoer==2022.2.11
+cinemagoer==2022.4.25
 click==8.1.2
 colorama==0.4.4
 env==0.1.0
@@ -32,7 +32,6 @@ pyparsing==3.0.7
 pytest==7.0.1
 python-dateutil==2.8.2
 python-dotenv==0.20.0
-pytz==2022.1
 requests==2.27.1
 six==1.16.0
 soupsieve==2.3.1
