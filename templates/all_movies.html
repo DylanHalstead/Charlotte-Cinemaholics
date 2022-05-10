@@ -50,8 +50,8 @@ Top Rated
     // Function used to update movie filter and page
     function updateMovies(movieArray, pageNum){
         // Grab 25 films based on page we're on
-        const startIndex = (pageNum-1)*25;
-        const endIndex = pageNum*25;
+        let startIndex = (pageNum-1)*25;
+        let endIndex = pageNum*25;
 
         // Make sure we dont go out of bounds
         if(endIndex > movieArray.length-1)
