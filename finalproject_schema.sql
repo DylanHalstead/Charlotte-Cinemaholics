@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS watchlist (
 CREATE TABLE IF NOT EXISTS user_ratings (
     user_id      INT,
     movie_id     VARCHAR(255),
-    user_rating  FLOAT          NOT NULL,
+    user_rating  FLOAT               NOT NULL,
+    user_review  TEXT(65535)             NULL,
     PRIMARY KEY (user_id, movie_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)

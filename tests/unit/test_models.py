@@ -43,8 +43,6 @@ def test_user_rating_model():
     assert test_user_rating.user == test_user
     assert test_user_rating.movie_rating == 8.2
 
-
-
 def test_watchlist_model():
     assert(True)
 

@@ -27,11 +27,11 @@ bcrypt = Bcrypt(app)
 app.secret_key = os.getenv('SECRET_KEY')
 
 db.init_app(app)
-db = SQLAlchemy(app)
 
 @app.get('/')
 def index():
     # Grab first 5 top films
+    session.clear()
     for movie in range(5):
         if not isinstance(top_films[movie], dict):
             pass

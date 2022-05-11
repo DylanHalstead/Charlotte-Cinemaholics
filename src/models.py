@@ -13,6 +13,7 @@ class UserRating(db.Model):
     user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
     movie_id = db.Column('movie_id', db.String, db.ForeignKey('movie.movie_id'), primary_key=True)
     movie_rating = db.Column('user_rating', db.Float, nullable=False)
+    movie_review = db.Column('user_review', db.String)
     user = db.relationship('User', back_populates='movie_rating')
     movie = db.relationship('Movie', back_populates='user_rating')
 
