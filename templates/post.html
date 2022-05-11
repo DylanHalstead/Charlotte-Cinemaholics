@@ -54,7 +54,11 @@
     <div class="card-footer">
       <div class="row">
         <div class="col-sm-2">
+          {% if post.likes.count() == 1 %}
+          {{ post.likes.count() }} like
+          {% else %}
           {{ post.likes.count() }} likes
+          {% endif %}
         </div>
         <div class="col-sm-8">
           
