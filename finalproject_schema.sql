@@ -36,7 +36,8 @@ CREATE TABLE IF NOT EXISTS watchlist (
 CREATE TABLE IF NOT EXISTS user_ratings (
     user_id      INT,
     movie_id     VARCHAR(255),
-    user_rating  FLOAT          NOT NULL,
+    user_rating  FLOAT               NOT NULL,
+    user_review  TEXT(65535)             NULL,
     PRIMARY KEY (user_id, movie_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (movie_id) REFERENCES movie(movie_id)
@@ -114,4 +115,10 @@ CREATE TABLE IF NOT EXISTS ranks (
     PRIMARY KEY (rank_id)
 );
 
-select * from users
+CREATE TABLE IF NOT EXISTS issue (
+	issue_id INT AUTO_INCREMENT,
+	users_email VARCHAR(255) NOT NULL,
+    issue_title VARCHAR(255) NOT NULL,
+    issue_text TEXT(65535) NOT NULL,
+    PRIMARY KEY (issue_id)
+);

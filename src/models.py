@@ -13,6 +13,7 @@ class UserRating(db.Model):
     user_id = db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
     movie_id = db.Column('movie_id', db.String, db.ForeignKey('movie.movie_id'), primary_key=True)
     movie_rating = db.Column('user_rating', db.Float, nullable=False)
+    movie_review = db.Column('user_review', db.String)
     user = db.relationship('User', back_populates='movie_rating')
     movie = db.relationship('Movie', back_populates='user_rating')
 
@@ -254,3 +255,13 @@ class Ranks(db.Model):
     __tablename__ = 'ranks'
     rank_id = db.Column(db.Integer, primary_key=True)
     rank_name = db.Column(db.String, nullable = False)
+    
+class Issue(db.Model):
+    __tablename__ = 'issue'
+    issue_id = db.Column(db.Integer, primary_key=True)
+    users_email = db.Column(db.String, nullable=False)
+    issue_title = db.Column(db.String, nullable=False)
+    issue_text = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return f'Issue({self.users_email}, {self.issue_title}, {self.issue_text})'
