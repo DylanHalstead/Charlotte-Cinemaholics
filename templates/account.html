@@ -93,7 +93,7 @@
             {% endif %}
             
             {% if movies|length == 0 %}
-                <h4 class="whitetext mb-3">No movies watchlisted!</h4>
+                <p class="whitetext mb-3">User has not added any movies to their watchlist</p>
             {% endif %}
             </table>
         
@@ -178,13 +178,16 @@
             {% endif %}
             
             {% if rated|length == 0 %}
-                <h4 class="whitetext mb-3">You have no movies rated!</h4>
+                <p class="whitetext mb-3">User has not rated any movies</p>
             {% endif %}
             </table>
         </div>
     </div>
     
 <h2 class="whitetext mb-3">Recent posts</h2>
+{% if post|length == 0 %}
+    <p class="whitetext mb-3">No posts to show</p>
+{% endif %}
 {% for post in posts %}
 
 <div class="card text-white post-card mb-3" style="max-width: 100%;">

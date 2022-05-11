@@ -1,0 +1,5 @@
+INSERT INTO `cinemaholics_db`.`ranks`
+(`rank_id`,
+`rank_name`)
+VALUES
+(0,"Rookie"), (100,"Extras Crew"), (500,"Assistant Director"), (1000,"Director"), (2000,"Cinemaholic");

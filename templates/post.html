@@ -34,6 +34,10 @@
           <img src="../static/pfp/{{user.pfp}}" class="img-fluid pfp rounded" alt="">
           <br>
           <h5><a href="/{{post.getUser().username}}" class="link-white">{{post.getUser().username}}</a></h5>
+          {% if user.get_rank() != "" %}
+          {{user.get_rank()}}
+          <br>
+          {% endif %}
           Reputation: {{user.get_reputation()}}
           <br>
           Posts: {{user.get_posts_and_reply_count()}}
@@ -114,6 +118,10 @@
           <img src="../static/pfp/{{reply.getUser().pfp}}" class="img-fluid pfp rounded" alt="">
           <br>
           <h5><a href="/{{reply.getUser().username}}" class="link-white">{{reply.getUser().username}}</a></h5>
+          {% if reply.getUser().get_rank() != "" %}
+          {{reply.getUser().get_rank()}}
+          <br>
+          {% endif %}
           Reputation: {{reply.getUser().get_reputation()}}
           <br>
           Posts: {{reply.getUser().get_posts_and_reply_count()}}
@@ -169,7 +177,11 @@
     <div class="card-footer">
       <div class="row">
         <div class="col-sm-2">
+          {% if reply.likes.count() == 1 %}
+          {{ reply.likes.count() }} like
+          {% else %}
           {{ reply.likes.count() }} likes
+          {% endif %}
         </div>
         <div class="col-sm-8">
           

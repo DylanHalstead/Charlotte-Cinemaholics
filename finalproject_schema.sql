@@ -109,6 +109,12 @@ CREATE TABLE IF NOT EXISTS edits (
     FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
 );
 
+CREATE TABLE IF NOT EXISTS ranks (
+    rank_id    			INT       		NOT NULL,
+    rank_name     		VARCHAR(255) 	NOT NULL,
+    PRIMARY KEY (rank_id)
+);
+
 CREATE TABLE IF NOT EXISTS issue (
 	issue_id INT AUTO_INCREMENT,
 	users_email VARCHAR(255) NOT NULL,
