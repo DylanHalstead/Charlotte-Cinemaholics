@@ -131,6 +131,17 @@ class User(db.Model):
         reputation -= user_replies.count()
         return reputation
 
+    def get_rank(self):
+        reputation = self.get_reputation()
+        all_ranks = Ranks.query.all()
+        r = ""
+        for rank in all_ranks:
+            if reputation > rank.rank_id:
+                r = rank.rank_name
+            else:
+                return r
+        return r
+
     def isAdmin(self):
         return Admin.query.filter(Admin.user_id == self.user_id).count() > 0
 
@@ -238,3 +249,8 @@ class Edits(db.Model):
 
     def __repr__(self):
         return f'Edits({self.post_id}, {self.user_id}, {self.post_id}, {self.reply_id}, {self.reason}, {self.time})'
+
+class Ranks(db.Model):
+    __tablename__ = 'ranks'
+    rank_id = db.Column(db.Integer, primary_key=True)
+    rank_name = db.Column(db.String, nullable = False)
