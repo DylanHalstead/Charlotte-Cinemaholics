@@ -1,28 +1,13 @@
 from flask import Blueprint, abort, redirect, render_template, request, redirect
 from src.models import Movie, UserRating, db, User, Post
+from src.blueprints.movie_blueprint import get_rated_IDs
 from datetime import datetime
 from app import session
 #from app import user
 
 router = Blueprint('account_router', __name__)
 
-
-@router.get('/username')
-def account():
-    sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
-    if 'user' not in session:
-        abort('/login')
-    userWatchlisted = sessionUser.watchlistMovies
-    user = User.query.filter_by(user_id = session['user']['user_id']).first()
-    ratedMovies = []
-    for userRating in user.movie_rating:
-        ratedMov = userRating.movie.to_dict()
-        print(userRating)
-        ratedMovies.append(ratedMov)
-    db.session.commit()
-    return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, rated = ratedMovies)
-
-@router.get('/username/posts')
+@router.get('/<username>/posts')
 def account_posts():
     
     if 'user' not in session:
@@ -35,16 +20,18 @@ def account_posts():
 @router.get('/<username>')
 def account_page(username):
     if 'user' in session:
-        print( User.query.filter_by(username=username).first())
         sessionUser = User.query.filter_by(username=username).first()
         userWatchlisted = sessionUser.watchlistMovies
         posts = Post.query.filter_by(user_id=sessionUser.user_id).limit(2).all()
         ratedMovies = []
         for userRating in sessionUser.movie_rating:
             ratedMov = userRating.movie.to_dict()
-            print(userRating)
             ratedMovies.append(ratedMov)
-        return render_template('account.html', sessionUser=sessionUser, movies = userWatchlisted, posts = posts, rated = ratedMovies)
+        watchlistedFilms = []
+        for movie in range(len(userWatchlisted)):
+            watchlistedFilms.append(userWatchlisted[movie].to_dict())
+        ratedIDs = get_rated_IDs()
+        return render_template('account.html', sessionUser=sessionUser, movies = watchlistedFilms, posts = posts, rated = ratedMovies, ratedIDs=ratedIDs)
     else:
         abort(403)
 
@@ -68,7 +55,6 @@ def edit_account():
         if User.query.filter_by(username = username).count() > 0:
             return render_template('edit_account.html', error = f'{username} is not available')
         
-        print(user.pfp)
         if username != '':
             user.username = username
         if profilePhoto != '':

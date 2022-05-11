@@ -44,13 +44,13 @@ def index():
         # Regrab data incase rated
         for watchlist in range(len(userWatchlisted)):
             updatedWatchlist.append(userWatchlisted[watchlist].to_dict())
-        ratedMovies = get_rated_IDs()
+        ratedIDs = get_rated_IDs()
     else:
-        ratedMovies = []
+        ratedIDs = []
         updatedWatchlist = []
         userWatchlisted = 0
     
-    return render_template('index.html', top_films=top_films, popular_films=trending, movies=updatedWatchlist, ratedMovies=ratedMovies)
+    return render_template('index.html', top_films=top_films, popular_films=trending, movies=updatedWatchlist, ratedMovies=ratedIDs)
 
 app.register_blueprint(posts_router)
 app.register_blueprint(movie_router)
@@ -157,9 +157,13 @@ def filter_watchlist():
     if 'user' in session:
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         userWatchlisted = sessionUser.watchlistMovies
+        watchlistedFilms = []
+        for movie in range(len(userWatchlisted)):
+            watchlistedFilms.append(userWatchlisted[movie].to_dict())
+        ratedIDs = get_rated_IDs()
     else:
         abort(401)
-    return render_template('watchlist.html', movies = userWatchlisted, user = sessionUser)
+    return render_template('watchlist.html', movies = watchlistedFilms, user = sessionUser, ratedIDs=ratedIDs)
 
 @app.get('/filter/rated')
 def filter_ratings():
