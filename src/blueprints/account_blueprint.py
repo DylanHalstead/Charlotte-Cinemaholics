@@ -8,19 +8,19 @@ from app import session
 router = Blueprint('account_router', __name__)
 
 @router.get('/<username>/posts')
-def account_posts():
+def account_posts(username):
     
     if 'user' not in session:
         abort('/login')
     else:
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
-        posts = Post.query.filter_by(user_id=sessionUser.user_id)
+        posts = Post.query.filter_by(user_id=sessionUser.user_id).all()
         return render_template('account_posts.html', user=sessionUser, posts = posts)
 
 @router.get('/<username>')
 def account_page(username):
     if 'user' in session:
-        sessionUser = User.query.filter_by(username=username).first()
+        sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         userWatchlisted = sessionUser.watchlistMovies
         posts = Post.query.filter_by(user_id=sessionUser.user_id).limit(2).all()
         ratedMovies = []
@@ -41,12 +41,12 @@ def account_posts_user(username):
     posts = Post.query.filter_by(user_id=sessionUser.user_id).all()
     return render_template('account_posts.html', user=sessionUser, posts = posts)
 
-@router.get('/username/edit')
-def get_edit_account():
+@router.get('/<username>/edit')
+def get_edit_account(username):
     return render_template("edit_account.html")
 
-@router.post('/username/edit')
-def edit_account():
+@router.post('/<username>/edit')
+def edit_account(username):
     if 'user' in session:
         profilePhoto = request.form.get('profilePhoto')
         username = request.form.get('username')

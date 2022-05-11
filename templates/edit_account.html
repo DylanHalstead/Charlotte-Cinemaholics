@@ -3,7 +3,7 @@
 {% block title %}Edit Account{% endblock %}
 
 {% block body %}
-<form action="/username/edit" method="post">
+<form action="/{{ session['user']['username'] }}/edit" method="post">
     <table>
         <td>
             <tr>

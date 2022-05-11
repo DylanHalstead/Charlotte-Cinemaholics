@@ -66,12 +66,6 @@ def favicon():
 def report():
     return render_template('report.html')
 
-@app.get('/username/edit')
-def edit_account():
-    if 'user' in session:
-        return render_template("edit_account.html")
-    abort(401)
-
 # Login and Sign in Page
 @app.get('/login')
 def get_login():
@@ -148,12 +142,8 @@ def logout():
     del session['user']
     return redirect('/')
 
-@app.get('/fail')
-def fail():
-    return render_template('fail.html')
-
-@app.get('/filter/watchlist')
-def filter_watchlist():
+@app.get('/<username>/filter/watchlist')
+def filter_watchlist(username):
     if 'user' in session:
         sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
         userWatchlisted = sessionUser.watchlistMovies
@@ -165,8 +155,8 @@ def filter_watchlist():
         abort(401)
     return render_template('watchlist.html', movies = watchlistedFilms, user = sessionUser, ratedIDs=ratedIDs)
 
-@app.get('/filter/rated')
-def filter_ratings():
+@app.get('/<username>/filter/rated')
+def filter_ratings(username):
     if 'user' in session:
         user = User.query.filter_by(user_id = session['user']['user_id']).first()
         ratedMovies = []

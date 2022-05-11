@@ -104,6 +104,19 @@ label {
     background-color: #00703C;
 }
 
+.btn-gold{
+    color: white;
+    background-color: #B3A369;
+    border: 1px solid #B3A369 !important;
+}
+
+.btn-gold:hover{
+    color: white;
+    background-color: #988d65;
+    border: 1px solid #988d65 !important;
+}
+
+
 .btn-outline-gold {
     color: #B3A369;
     background-color: transparent;

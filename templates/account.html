@@ -14,7 +14,7 @@
         </div>
         <div class="col">
             <h1 class="username-large mb-3">{{sessionUser.username}}</h1>
-            <a href="/filter/watchlist" class="movie-row-link"><h2 class="movie-row-title">Your Watchlist</h2></a>
+            <a href="/{{session['user']['username']}}/filter/watchlist" class="movie-row-link"><h2 class="movie-row-title">Your Watchlist</h2></a>
             <table>
             {% if movies|length >= 3 %}
             <tr>
@@ -108,7 +108,7 @@
         
             
             <table>
-                <a href="/filter/rated" class="movie-row-link"><h2 class="movie-row-title">Your Rated Movies</h2></a>
+                <a href="/{{session['user']['username']}}/filter/rated" class="movie-row-link"><h2 class="movie-row-title">Your Rated Movies</h2></a>
             {% if rated|length >= 3 %}
             <tr>
             {% for b in range(3) %}
@@ -217,6 +217,4 @@
 {% endfor %}
 <a class="btn btn-outline-gold" href="/{{sessionUser.username}}/posts" role="button">See all</a>
 </div>
-
-
 {% endblock %}
