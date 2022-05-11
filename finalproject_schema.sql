@@ -109,4 +109,10 @@ CREATE TABLE IF NOT EXISTS edits (
     FOREIGN KEY (reply_id) REFERENCES replies(reply_id)
 );
 
-select * from users
+CREATE TABLE IF NOT EXISTS issue (
+	issue_id INT AUTO_INCREMENT,
+	users_email VARCHAR(255) NOT NULL,
+    issue_title VARCHAR(255) NOT NULL,
+    issue_text TEXT(65535) NOT NULL,
+    PRIMARY KEY (issue_id)
+);
