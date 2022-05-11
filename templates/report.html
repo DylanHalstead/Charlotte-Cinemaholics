@@ -3,7 +3,7 @@
 {% block title %}Report a Problem{% endblock %}
 
 {% block body %}
-<form>
+<form class='reportissue' action="/report" method="post">
     <div class="container">
         <div class="row">
             <div class="col">
@@ -14,7 +14,7 @@
                 &nbsp;
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1">Title of Issue</label>
-                    <input type="issuetitle" name="issuetitle" class="form-control" id="exampleFormControlInput1" placeholder="Title of Issue">
+                    <input type="text" name="issuetitle" class="form-control" id="exampleFormControlInput1" placeholder="Title of Issue">
                 </div>
                 &nbsp;
                 <div class="form-group">
@@ -34,7 +34,9 @@
                 <div class="col-md-auto">
                 </div>
             <div class="col col-lg-2">
-                <button type="button" class="btn btn-primary" id="submit-report">Submit</button>
+                
+                <button type="submit" class="btn btn-primary" id="submit-report">Submit</button>
+                
             </div>
         </div>
     </div>

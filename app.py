@@ -182,7 +182,25 @@ def filter_ratings():
     else:
         abort(400)
     return render_template('rated_movies.html', movies = ratedMovies, user = user)
+
+@app.post('/report')
+def report_email():
+    port = 465  # For SSL
+    smtp_server = "smtp.gmail.com"
+    sender_email = os.getenv('EMAIL')  # Enter your address
+    receiver_email = os.getenv('EMAIL')  # Enter receiver address
+    issueTitle = request.form.get('issuetitle')
+    issueText = request.form.get('issuetext')
+    userEmail = request.form.get('email')
+    password = os.getenv('EMAILPASS')
+    message = f"""\
+    Subject: {issueTitle}
+
+    Users email: {userEmail}
+    {issueText}"""
     
+    
+
 # Server Errors
 # Server cant return response bc an issue with user browser
 @app.errorhandler(400)

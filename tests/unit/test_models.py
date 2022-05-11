@@ -1,3 +1,5 @@
+from cgi import test
+from csv import unregister_dialect
 from src.models import * 
 
 def test_user_model():
@@ -20,9 +22,6 @@ def test_user_model():
     assert test_user.about == 'This is an about.'
     assert test_user.about == 'This is an about.'
 
-def test_admin_model():
-    assert(True)
-
 def test_movie_model():
     test_movie = Movie(movie_id='0029364', title='Shawshank Titration', director='Brayden Pitts', about='2018 extra credit for MHS Chemestry', poster_url='testurl.com', imdb_rating=9.4, imdb_votes=93237)
     assert test_movie.movie_id == '0029364'
@@ -43,10 +42,13 @@ def test_user_rating_model():
     assert test_user_rating.user == test_user
     assert test_user_rating.movie_rating == 8.2
 
-
-
-def test_watchlist_model():
-    assert(True)
+# tried to test watchlist but you cannot call the watchlist table
+#def test_watchlist_model():
+#   test_user = User(user_id = 1, email="test123@uncc.edu", username="test", passkey="12345", pfp="default_user.png")
+#    test_movie = Movie(movie_id='0029364', title='Shawshank Titration', director='Brayden Pitts', about='2018 extra credit for MHS Chemestry', poster_url='testurl.com', imdb_rating=9.4, imdb_votes=93237)
+#    watchlist(movie_id = '0029364', user_id = 1)
+#    assert test_movie.userWatchlist == test_movie.movie_id
+#    assert test_user.watchlistmovies == test_user.user_id
 
 def test_post_model():
     test_post = Post(title="Title", user_id=1, body="Body", post_time = '2021-05-01 12:00:00')
