@@ -16,8 +16,7 @@ def all_posts():
         if sort == "oldest":
             all_posts = all_posts.order_by(Post.post_id).all()
         elif sort == "latest":
-            all_posts =all_posts.order_by(Post.post_id.desc()).all()
-            
+            all_posts =all_posts.order_by(Post.post_id.desc()).all()  
         elif sort == "liked":
             query_posts = db.session.query(Post, func.count(PostLike.user_id).label('total')).join(PostLike).group_by(Post).order_by(sqlalchemy.sql.text('total DESC'))
             all_posts = []
@@ -77,9 +76,9 @@ def create_post():
     new_post = Post(title=title, user_id=user_id, body=body, post_time = time)
     db.session.add(new_post)
     db.session.commit()
-    #current_user = User.query.get(user_id)
-    #current_user.like_post(new_post)
-    #db.session.commit()
+    current_user = User.query.get(user_id)
+    current_user.like_post(new_post)
+    db.session.commit()
 
     return redirect(f'/posts/{new_post.post_id}')
 
@@ -107,9 +106,9 @@ def create_quote_reply(post_id, reply_id):
         db.session.add(quote)
         db.session.commit()
 
-        #current_user = User.query.get(user_id)
-        #current_user.like_reply(reply)
-        #db.session.commit()
+        current_user = User.query.get(user_id)
+        current_user.like_reply(reply)
+        db.session.commit()
     return redirect(f'/posts/{reply.post_id}#reply-{reply.reply_id}')
 
 @router.post('/<int:post_id>')
@@ -127,9 +126,9 @@ def create_reply(post_id):
         db.session.add(reply)
         db.session.commit()
 
-        #current_user = User.query.get(user_id)
-        #current_user.like_reply(reply)
-        #db.session.commit()
+        current_user = User.query.get(user_id)
+        current_user.like_reply(reply)
+        db.session.commit()
 
     return redirect(f'/posts/{post_id}#reply-{reply.reply_id}')
 
@@ -264,11 +263,6 @@ def like_action_reply(post_id,reply_id, action):
             db.session.commit()
         return redirect(request.referrer)
 
-@router.post('/search')
-def search_movie():
-    searched = request.form.get('search')
-    posts = Post.query.filter(Post.title.contains(searched) or Post.body.contains(searched))
-    return render_template('post_search.html', searched=searched, posts = posts)
 
 # ⣞⢽⢪⢣⢣⢣⢫⡺⡵⣝⡮⣗⢷⢽⢽⢽⣮⡷⡽⣜⣜⢮⢺⣜⢷⢽⢝⡽⣝ 
 #⠸⡸⠜⠕⠕⠁⢁⢇⢏⢽⢺⣪⡳⡝⣎⣏⢯⢞⡿⣟⣷⣳⢯⡷⣽⢽⢯⣳⣫⠇ 
