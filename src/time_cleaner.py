@@ -34,5 +34,7 @@ def getTime(time_str):
             if minute == 1:
                 return str(minute) + " minute ago"
             return str(minute) + " minutes ago"
+    elif time.days == 1:
+        return str(time.days) + " day ago"
     else: 
         return str(time.days) + " days ago"
