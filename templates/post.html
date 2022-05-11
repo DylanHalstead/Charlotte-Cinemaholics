@@ -169,7 +169,11 @@
     <div class="card-footer">
       <div class="row">
         <div class="col-sm-2">
+          {% if reply.likes.count() == 1 %}
+          {{ reply.likes.count() }} like
+          {% else %}
           {{ reply.likes.count() }} likes
+          {% endif %}
         </div>
         <div class="col-sm-8">
           
