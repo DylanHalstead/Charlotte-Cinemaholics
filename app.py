@@ -4,7 +4,7 @@ from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
 from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, trending, worst_films, add_movie, get_rated_IDs
 from src.blueprints.account_blueprint import router as account_router
-from src.models import db, User, Movie
+from src.models import db, User, Movie, Issue
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
@@ -27,11 +27,11 @@ bcrypt = Bcrypt(app)
 app.secret_key = os.getenv('SECRET_KEY')
 
 db.init_app(app)
-db = SQLAlchemy(app)
 
 @app.get('/')
 def index():
     # Grab first 5 top films
+    session.clear()
     for movie in range(5):
         if not isinstance(top_films[movie], dict):
             pass
@@ -182,7 +182,17 @@ def filter_ratings():
     else:
         abort(400)
     return render_template('rated_movies.html', movies = ratedMovies, user = user)
-    
+
+@app.post('/report')
+def report_email():
+    issueTitle = request.form.get('issuetitle')
+    issueText = request.form.get('issuetext')
+    userEmail = request.form.get('email')
+    newIssue = Issue(users_email = userEmail, issue_title = issueTitle, issue_text = issueText)
+    db.session.add(newIssue)
+    db.session.commit()
+    return redirect('/')
+
 # Server Errors
 # Server cant return response bc an issue with user browser
 @app.errorhandler(400)
