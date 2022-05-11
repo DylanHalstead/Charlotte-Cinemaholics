@@ -1,5 +1,5 @@
 from typing import List
-from flask import Blueprint, abort, jsonify, redirect, render_template, request, session, url_for
+from flask import Blueprint, abort, jsonify, redirect, render_template, request, session
 from src.models import db, Movie, User, UserRating
 import requests
 from bs4 import BeautifulSoup
@@ -102,7 +102,7 @@ def post_rating(movie_id):
 def search_movie():
     searched = request.form.get('search')
     movies = imdbpy.search_movie(searched)
-    for movie in range(len(movies)):
+    for movie in range(10):
         add_movie(movies[movie])
         movies[movie] = Movie.query.get_or_404(movies[movie].movieID).to_dict()
     ratedMovies = get_rated_IDs()
