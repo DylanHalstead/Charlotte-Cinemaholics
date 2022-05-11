@@ -4,7 +4,7 @@ from datetime import datetime
 from src.blueprints.posts_blueprint import router as posts_router
 from src.blueprints.movie_blueprint import router as movie_router, imdbpy, top_films, trending, worst_films, add_movie, get_rated_IDs
 from src.blueprints.account_blueprint import router as account_router
-from src.models import db, User, Movie
+from src.models import db, User, Movie, Issue
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
@@ -185,21 +185,13 @@ def filter_ratings():
 
 @app.post('/report')
 def report_email():
-    port = 465  # For SSL
-    smtp_server = "smtp.gmail.com"
-    sender_email = os.getenv('EMAIL')  # Enter your address
-    receiver_email = os.getenv('EMAIL')  # Enter receiver address
     issueTitle = request.form.get('issuetitle')
     issueText = request.form.get('issuetext')
     userEmail = request.form.get('email')
-    password = os.getenv('EMAILPASS')
-    message = f"""\
-    Subject: {issueTitle}
-
-    Users email: {userEmail}
-    {issueText}"""
-    
-    
+    newIssue = Issue(users_email = userEmail, issue_title = issueTitle, issue_text = issueText)
+    db.session.add(newIssue)
+    db.session.commit()
+    return redirect('/')
 
 # Server Errors
 # Server cant return response bc an issue with user browser

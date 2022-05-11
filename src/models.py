@@ -236,3 +236,13 @@ class Edits(db.Model):
 
     def __repr__(self):
         return f'Edits({self.post_id}, {self.user_id}, {self.post_id}, {self.reply_id}, {self.reason}, {self.time})'
+
+class Issue(db.Model):
+    __tablename__ = 'issue'
+    issue_id = db.Column(db.Integer, primary_key=True)
+    users_email = db.Column(db.String, nullable=False)
+    issue_title = db.Column(db.String, nullable=False)
+    issue_text = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return f'Issue({self.users_email}, {self.issue_title}, {self.issue_text})'
