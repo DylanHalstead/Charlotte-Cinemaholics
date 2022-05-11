@@ -23,7 +23,7 @@ app.secret_key = os.getenv('SECRET_KEY')
 db.init_app(app)
 
 @app.get('/')
-def index():
+def index(): 
     # Grab first 5 top films
     for movie in range(5):
         if not isinstance(top_films[movie], dict):
