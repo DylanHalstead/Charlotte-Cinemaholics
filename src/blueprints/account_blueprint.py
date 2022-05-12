@@ -40,6 +40,7 @@ def account_page(username):
 @router.get('/<username>/posts')
 def account_posts_user(username):
     sessionUser = User.query.filter_by(username = username).first()
+    print(sessionUser.username)
     posts = Post.query.filter_by(user_id=sessionUser.user_id).all()
     return render_template('account_posts.html', user=sessionUser, posts = posts)
 

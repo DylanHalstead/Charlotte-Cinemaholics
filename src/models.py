@@ -128,8 +128,6 @@ class User(db.Model):
             reputation += p.likes.count()
         for r in user_replies:
             reputation += r.likes.count()
-        reputation -= user_posts.count() #since posts are automatically liked by users
-        reputation -= user_replies.count()
         return reputation
 
     def get_rank(self):
