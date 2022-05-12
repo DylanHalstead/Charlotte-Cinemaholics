@@ -20,18 +20,20 @@ def account_posts(username):
 @router.get('/<username>')
 def account_page(username):
     if 'user' in session:
-        sessionUser = User.query.filter_by(user_id=session['user']['user_id']).first()
-        userWatchlisted = sessionUser.watchlistMovies
-        posts = Post.query.filter_by(user_id=sessionUser.user_id).limit(2).all()
+        if(not User.query.filter_by(username=username).first()):
+            abort(404)
+        user_page = User.query.filter_by(username=username).first()
+        userWatchlisted = user_page.watchlistMovies
+        posts = Post.query.filter_by(user_id=user_page.user_id).limit(2).all()
         ratedMovies = []
-        for userRating in sessionUser.movie_rating:
+        for userRating in user_page.movie_rating:
             ratedMov = userRating.movie.to_dict()
             ratedMovies.append(ratedMov)
         watchlistedFilms = []
         for movie in range(len(userWatchlisted)):
             watchlistedFilms.append(userWatchlisted[movie].to_dict())
         ratedIDs = get_rated_IDs()
-        return render_template('account.html', sessionUser=sessionUser, movies = watchlistedFilms, posts = posts, rated = ratedMovies, ratedIDs=ratedIDs)
+        return render_template('account.html', sessionUser=user_page, movies = watchlistedFilms, posts = posts, rated = ratedMovies, ratedIDs=ratedIDs)
     else:
         abort(403)
 
