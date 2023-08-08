@@ -1,7 +1,7 @@
 # Charlotte Cinemaholics Web Application
 **This project was created by Dylan Halstead, Austin Hadinger, and Alex Stahlman. Created for the final of ITSC 3155, Software Engineering**
 
-Over 4 months, we've gone from planning to [deployment](charlottecinemaholics.herokuapp.com/) of this app. This website serves as a platform for Charlotte Cinemaholics, a club at UNCC, talk about films. Users can do things like post, rate, reply, review, and like.
+Over 4 months, we've gone from planning to deployment of this app. This website serves as a platform for Charlotte Cinemaholics, a club at UNCC, talk about films. Users can do things like post, rate, reply, review, and like.
 
 Key Topics Learned Throughout Project:
 - Git
